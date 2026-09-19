@@ -13,7 +13,7 @@ Features:
 """
 
 import os, sys, threading, subprocess, time, logging
-import requests, json, tempfile, base64, re
+import requests, json, tempfile, base64, re, random
 from datetime import datetime
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from pathlib import Path
@@ -71,83 +71,118 @@ def run_health():
 # ═══════════════════════════════════════════════
 import concurrent.futures
 
-def get_working_proxy():
-    """Background mein proxy dhundho — bot chal raha hoga tab bhi"""
-    log.info("🔍 Searching for proxy in background...")
-    try:
-        r = requests.get("https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt", timeout=10)
-        proxies = [p for p in r.text.splitlines() if ":" in p][:100]
-    except Exception as e:
-        log.warning(f"Proxy list fetch failed: {e}")
+PROXY_SOURCES = [
+    "https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt",
+    "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
+]
+GEMINI_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+def get_working_proxy(exclude=()):
+    """
+    Random sample of proxies -> sirf wahi proxy accept jo gemini.google.com/app ka
+    ASLI page (boq_assistant BL string ke saath) de. Sirf status 200 kaafi nahi hai —
+    block/consent page bhi 200 deta hai. `exclude` = pehle fail ho chuki proxies.
+    """
+    log.info("🔍 Searching for a working proxy...")
+    pool = set()
+    for src_url in PROXY_SOURCES:
+        try:
+            r = requests.get(src_url, timeout=8)
+            if r.ok:
+                pool.update(p.strip() for p in r.text.splitlines() if ":" in p and "//" not in p)
+        except Exception as e:
+            log.warning(f"Proxy list fetch failed ({src_url}): {e}")
+    pool -= {p.replace("http://", "") for p in exclude}
+    if not pool:
         return None
+    candidates = random.sample(sorted(pool), min(150, len(pool)))
 
     def test_p(p):
+        px = f"http://{p}"
         try:
-            r = requests.get("https://gemini.google.com",
-                             proxies={"http": f"http://{p}", "https": f"http://{p}"},
-                             timeout=4)
-            if r.status_code == 200: return p
-        except: return None
+            r = requests.get("https://gemini.google.com/app",
+                             proxies={"http": px, "https": px},
+                             headers={"User-Agent": GEMINI_UA}, timeout=6)
+            if r.status_code == 200 and "boq_assistant-bard-web-server" in r.text:
+                return px
+        except Exception:
+            pass
+        return None
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=30) as exe:
-        for res in exe.map(test_p, proxies):
+    exe = concurrent.futures.ThreadPoolExecutor(max_workers=40)
+    try:
+        futs = [exe.submit(test_p, p) for p in candidates]
+        for f in concurrent.futures.as_completed(futs, timeout=45):
+            res = f.result()
             if res:
                 log.info(f"✅ Found proxy: {res}")
-                return f"http://{res}"
+                return res
+    except concurrent.futures.TimeoutError:
+        log.warning("Proxy search timed out")
+    finally:
+        exe.shutdown(wait=False, cancel_futures=True)
     return None
+
+# gemini_web2api.py ki log lines: "Retry 1/3: HTTP Error 429..." (fail) aur
+# '127.0.0.1 "POST /v1/chat/completions HTTP/1.1" 200 -' (success)
+_FAIL_RE = re.compile(r"Retry \d+/\d+:")
+_OK_RE   = re.compile(r'"POST /v1/chat/completions[^"]*" 200')
 
 def start_gemini():
     """
-    Phase 1: Bina proxy ke turant start karo (bot immediately online)
-    Phase 2: Agar 429 aaya → background mein proxy dhundo → restart with proxy
+    Direct start (bot turant online). Lagataar fail (429/dead proxy) hone pe:
+    pehle NAYI proxy dhundo (server chalta rehta hai), mil jaye tabhi restart —
+    downtime kam. Fail hui proxy `bad` mein jaati hai, dobara use nahi hoti.
+    Success milte hi counter + backoff reset.
     """
-    while True:
-        # --- Phase 1: No proxy, instant start ---
-        log.info("🚀 Starting Gemini (no proxy, instant start)...")
-        proc = subprocess.Popen(
-            [sys.executable, "gemini_web2api.py"],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
+    bad = set()
+    proxy = None          # None = direct
+    backoff = 5
 
-        error_429_count = 0
+    while True:
+        cmd = [sys.executable, "gemini_web2api.py"]
+        if proxy:
+            cmd += ["--proxy", proxy]
+        log.info(f"🚀 Starting Gemini ({'proxy ' + proxy if proxy else 'direct'})...")
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        fails, last_fail, switched = 0, 0.0, False
         for line in proc.stdout:
-            line_str = line.decode().strip()
-            log.info(f"[gemini] {line_str}")
-            if "HTTP Error 429" in line_str:
-                error_429_count += 1
-                if error_429_count >= 3:
-                    log.warning("⚠️ 429s hit. Finding proxy in background...")
+            s = line.decode(errors="replace").strip()
+            log.info(f"[gemini] {s}")
+
+            if _OK_RE.search(s):
+                fails, backoff = 0, 5
+            elif _FAIL_RE.search(s):
+                now = time.time()
+                if now - last_fail > 90:      # purani failures ignore
+                    fails = 0
+                last_fail = now
+                fails += 1
+                # 1 poori failed request = 2 "Retry" lines, to 4 = 2 requests lagataar fail
+                if fails >= 4:
+                    log.warning("⚠️ Lagataar failures (429/proxy). Naya route dhundh raha hoon...")
+                    if proxy:
+                        bad.add(proxy)
+                        if len(bad) > 300:
+                            bad.clear()
+                    new_proxy = get_working_proxy(bad)
+                    if new_proxy is None and proxy is None:
+                        log.warning("Proxy nahi mili — direct hi chalne do, baad mein phir check hoga")
+                        fails, last_fail = 0, time.time()
+                        continue
+                    proxy = new_proxy          # None ho to wapas direct (cooldown ke baad)
+                    switched = True
                     proc.kill()
                     break
 
         proc.wait()
-
-        # --- Phase 2: 429 hit → get proxy → restart ---
-        proxy = get_working_proxy()
-        if not proxy:
-            log.warning("No proxy found, retrying direct in 10s...")
-            time.sleep(10)
-            continue
-
-        log.info(f"🔄 Restarting with proxy: {proxy}")
-        proc2 = subprocess.Popen(
-            [sys.executable, "gemini_web2api.py", "--proxy", proxy],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT
-        )
-        error_429_count = 0
-        for line in proc2.stdout:
-            line_str = line.decode().strip()
-            log.info(f"[gemini+proxy] {line_str}")
-            if "HTTP Error 429" in line_str:
-                error_429_count += 1
-                if error_429_count >= 3:
-                    log.warning("Proxy also 429'd. Getting new proxy...")
-                    proc2.kill()
-                    break
-
-        proc2.wait()
-        log.warning("🔄 Gemini server stopped. Restarting in 5s...")
-        time.sleep(5)
+        if switched:
+            time.sleep(2)
+        else:
+            log.warning(f"🔄 Gemini server stopped. Restarting in {backoff}s...")
+            time.sleep(backoff)
+            backoff = min(backoff * 2, 120)
 
 
 def wait_gemini():
@@ -160,16 +195,27 @@ def wait_gemini():
         time.sleep(1)
     return False
 
-def call_gemini(messages, model="gemini-3.6-flash"):
-    try:
-        r = requests.post(GEMINI_API,
-            headers={"Content-Type": "application/json", "Authorization": "Bearer sk-gemini"},
-            json={"model": model, "messages": messages}, timeout=90)
-        d = r.json()
-        if "choices" in d: return d["choices"][0]["message"]["content"]
-        return f"⚠️ Error: {d}"
-    except Exception as e:
-        return f"❌ Gemini error: {e}"
+def call_gemini(messages, model="gemini-3.6-flash", retries=2):
+    """429/502 ya Gemini server restart ke waqt: 4s, 8s backoff ke saath retry."""
+    last = ""
+    for attempt in range(retries + 1):
+        try:
+            r = requests.post(GEMINI_API,
+                headers={"Content-Type": "application/json", "Authorization": "Bearer sk-gemini"},
+                json={"model": model, "messages": messages}, timeout=90)
+            d = r.json()
+            if "choices" in d:
+                return d["choices"][0]["message"]["content"]
+            last = f"⚠️ Error: {d}"
+        except requests.exceptions.Timeout:
+            return "❌ Gemini error: timeout (90s)"
+        except Exception as e:
+            last = f"❌ Gemini error: {e}"
+        if attempt < retries:
+            wait = 4 * (2 ** attempt)
+            log.warning(f"call_gemini failed ({last[:120]}) — retry {attempt+1}/{retries} in {wait}s")
+            time.sleep(wait)
+    return last
 
 def execute_python_code(code, retries=2):
     """Executes python code via Judge0 CE (free public sandbox)"""
@@ -293,20 +339,11 @@ def gh_upload_file(repo, path, content, message="Upload via Sasta Coder"):
 # WEB SEARCH
 # ═══════════════════════════════════════════════
 def web_search(query, model="gemini-3.6-flash"):
-    """Gemini ka built-in web search use karo — koi external API nahi, koi rate limit nahi"""
-    try:
-        r = requests.post(GEMINI_API,
-            headers={"Content-Type": "application/json", "Authorization": "Bearer sk-gemini"},
-            json={"model": model, "messages": [
-                {"role": "system", "content": "You have internet access via Gemini's web search. Search and give latest accurate info with sources."},
-                {"role": "user", "content": f"Search the web for: {query}\n\nGive key facts and latest information."}
-            ]}, timeout=60)
-        d = r.json()
-        if "choices" in d:
-            return d["choices"][0]["message"]["content"]
-        return "Search failed."
-    except Exception as e:
-        return f"Error: {e}"
+    """Gemini ka built-in web search use karo — call_gemini ke retry/backoff ke saath"""
+    return call_gemini([
+        {"role": "system", "content": "You have internet access via Gemini's web search. Search and give latest accurate info with sources."},
+        {"role": "user", "content": f"Search the web for: {query}\n\nGive key facts and latest information."}
+    ], model=model)
 
 # ═══════════════════════════════════════════════
 # IMAGE GENERATION (Pollinations - FREE)
