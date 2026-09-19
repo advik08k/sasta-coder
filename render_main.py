@@ -322,9 +322,19 @@ def run_bot():
 
     async def handle_msg(u: Update, c):
         if not auth(u): return
-        text = u.message.text
+        
+        # Text ya Photo+Caption dono allow karna hai
+        text = u.message.text or u.message.caption or ""
         uid  = MY_USER_ID
         mode = c.user_data.get("mode")
+
+        # Handle Photo / Vision
+        image_b64 = None
+        if u.message.photo:
+            photo_file = await u.message.photo[-1].get_file()
+            img_bytes = await photo_file.download_as_bytearray()
+            image_b64 = base64.b64encode(img_bytes).decode('utf-8')
+            text = text or "Explain this image in detail."
 
         # ── File mode: get filename ─────────────────────
         if c.user_data.get("awaiting_filename"):
@@ -395,13 +405,24 @@ def run_bot():
                 await msg.edit_text("❌ Image generation failed. Dobara try karo.")
             return
 
-        # ── Normal chat ─────────────────────────────────
+        # ── Normal chat / Vision ────────────────────────
         await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
         mem = get_mem(uid)
         model = mem.get("model", "gemini-3.6-flash")
         h = mem.setdefault("history", [])
 
-        h.append({"role": "user", "content": text})
+        if image_b64:
+            # Multimodal OpenAI format
+            h.append({
+                "role": "user", 
+                "content": [
+                    {"type": "text", "text": text},
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}}
+                ]
+            })
+        else:
+            h.append({"role": "user", "content": text})
+            
         if len(h) > 30: mem["history"] = h[-30:]
 
         msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + mem["history"]
@@ -543,7 +564,7 @@ def run_bot():
     app.add_handler(CommandHandler("memory",   cmd_memory))
     app.add_handler(CommandHandler("savefile", cmd_savefile))
     app.add_handler(CallbackQueryHandler(button_handler))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_msg))
+    app.add_handler(MessageHandler((filters.TEXT | filters.PHOTO) & ~filters.COMMAND, handle_msg))
 
     log.info("✅ Sasta Coder Bot started!")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
