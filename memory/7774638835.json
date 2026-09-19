@@ -63,6 +63,14 @@
     {
       "role": "assistant",
       "content": "⚠️ Error: {'error': {'message': 'upstream error: HTTP Error 429: Too Many Requests'}}"
+    },
+    {
+      "role": "user",
+      "content": "advik08k/sasta-coder/test.txt"
+    },
+    {
+      "role": "assistant",
+      "content": "❌ Gemini error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
