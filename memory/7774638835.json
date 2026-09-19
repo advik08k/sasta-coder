@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "user",
-      "content": "Who is SNTxabhi ?"
-    },
-    {
       "role": "assistant",
       "content": "**SNTxABHI** ek content creator aur Free Fire gamer/esports player hain (jinhein *Sanatani Esports* team aur gaming highlights ke liye jana jata hai). \n\nAap shayad unhi ke baare mein baat kar rahe hain ya unka naam mention kar rahe hain! \n\nBataiye, kya SNTxABHI se judi kisi cheez ke baare mein kuch discuss karna hai, ya aap koicoding ya dusra task shuru karna chahte hain?"
     },
@@ -111,6 +107,10 @@
     {
       "role": "user",
       "content": "To Teri memory hai??"
+    },
+    {
+      "role": "user",
+      "content": "advik08k/sasta-coder/test.txt"
     },
     {
       "role": "user",
