@@ -137,34 +137,74 @@ def get_working_proxy(exclude=()):
 
 # gemini_web2api.py ki log lines: "Retry 1/3: HTTP Error 429..." (fail) aur
 # '127.0.0.1 "POST /v1/chat/completions HTTP/1.1" 200 -' (success)
+# call_gemini yahan likhta hai: Gemini ne HTTP 200 diya par content khaali/None (bekaar proxy / Google block page)
+_STATE = {"empty": 0}
 _FAIL_RE = re.compile(r"Retry \d+/\d+:")
 _OK_RE   = re.compile(r'"POST /v1/chat/completions[^"]*" 200')
 
 def start_gemini():
     """
-    Direct start (bot turant online). Lagataar fail (429/dead proxy) hone pe:
-    pehle NAYI proxy dhundo (server chalta rehta hai), mil jaye tabhi restart —
-    downtime kam. Fail hui proxy `bad` mein jaati hai, dobara use nahi hoti.
-    Success milte hi counter + backoff reset.
+    Direct start (bot turant online). Route badalne ke 2 triggers:
+      1) lagataar fail (4 "Retry" lines = 2 requests, 429 / dead proxy)
+      2) 2 lagataar KHAALI replies (HTTP 200 par content None) — call_gemini _STATE["empty"] badhata hai
+    Pehle NAYI proxy dhundo (server chalta rehta hai), mil jaye tabhi restart — downtime kam.
+    Fail hui proxy `bad` mein jaati hai, dobara use nahi hoti. Success pe counters reset.
     """
     bad = set()
-    proxy = None          # None = direct
+    state = {"proxy": None, "switched": False}   # proxy None = direct
+    lock = threading.Lock()
     backoff = 5
 
+    def try_switch(proc, why):
+        if not lock.acquire(blocking=False):      # koi aur already dhundh raha hai
+            return
+        try:
+            if proc.poll() is not None:
+                return
+            log.warning(f"⚠️ {why}. Naya route dhundh raha hoon...")
+            if state["proxy"]:
+                bad.add(state["proxy"])
+                if len(bad) > 300:
+                    bad.clear()
+            new_proxy = get_working_proxy(bad)
+            _STATE["empty"] = 0
+            if new_proxy is None and state["proxy"] is None:
+                log.warning("Proxy nahi mili — direct hi chalne do, baad mein phir check hoga")
+                return
+            state["proxy"] = new_proxy            # None ho to wapas direct (cooldown ke baad)
+            state["switched"] = True
+            proc.kill()
+        finally:
+            lock.release()
+
+    def watcher(proc):
+        # khaali replies ke baad koi nayi log line na aaye tab bhi route badle
+        while proc.poll() is None:
+            time.sleep(1)
+            if _STATE["empty"] >= 2:
+                try_switch(proc, "2 lagataar khaali replies (200 par content None)")
+                time.sleep(15)
+
     while True:
+        proxy = state["proxy"]
         cmd = [sys.executable, "gemini_web2api.py"]
         if proxy:
             cmd += ["--proxy", proxy, "--config", _proxy_cfg()]
         log.info(f"🚀 Starting Gemini ({'proxy ' + proxy if proxy else 'direct'})...")
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        state["switched"] = False
+        _STATE["empty"] = 0
+        threading.Thread(target=watcher, args=(proc,), daemon=True).start()
 
-        fails, last_fail, switched = 0, 0.0, False
+        fails, last_fail = 0, 0.0
         for line in proc.stdout:
             s = line.decode(errors="replace").strip()
             log.info(f"[gemini] {s}")
 
             if _OK_RE.search(s):
-                fails, backoff = 0, 5
+                fails = 0
+                if _STATE["empty"] == 0:
+                    backoff = 5
             elif _FAIL_RE.search(s):
                 now = time.time()
                 if now - last_fail > 90:      # purani failures ignore
@@ -173,23 +213,11 @@ def start_gemini():
                 fails += 1
                 # 1 poori failed request = 2 "Retry" lines, to 4 = 2 requests lagataar fail
                 if fails >= 4:
-                    log.warning("⚠️ Lagataar failures (429/proxy). Naya route dhundh raha hoon...")
-                    if proxy:
-                        bad.add(proxy)
-                        if len(bad) > 300:
-                            bad.clear()
-                    new_proxy = get_working_proxy(bad)
-                    if new_proxy is None and proxy is None:
-                        log.warning("Proxy nahi mili — direct hi chalne do, baad mein phir check hoga")
-                        fails, last_fail = 0, time.time()
-                        continue
-                    proxy = new_proxy          # None ho to wapas direct (cooldown ke baad)
-                    switched = True
-                    proc.kill()
-                    break
+                    fails, last_fail = 0, time.time()
+                    try_switch(proc, "lagataar failures (429/proxy)")
 
         proc.wait()
-        if switched:
+        if state["switched"]:
             time.sleep(2)
         else:
             log.warning(f"🔄 Gemini server stopped. Restarting in {backoff}s...")
@@ -211,12 +239,12 @@ def wait_gemini():
 SHOW_GEMINI_ERRORS = False
 
 def is_gemini_error(text):
-    return isinstance(text, str) and text.startswith(("❌ Gemini error", "⚠️ Error"))
+    return (not isinstance(text, str)) or (not text.strip()) or text.startswith(("❌ Gemini error", "⚠️ Error"))
 
 def hide_error(text):
     """True => ye Gemini error hai aur chat mein nahi bhejna. Log mein rakhta hai."""
     if is_gemini_error(text) and not SHOW_GEMINI_ERRORS:
-        log.warning(f"Gemini failed (chat mein nahi bheja): {text[:200]}")
+        log.warning(f"Gemini failed (chat mein nahi bheja): {str(text)[:200]}")
         return True
     return False
 
@@ -234,8 +262,14 @@ def call_gemini(messages, model="gemini-3.6-flash", retries=2):
                 json={"model": model, "messages": messages}, timeout=GEMINI_CALL_TIMEOUT)
             d = r.json()
             if "choices" in d:
-                return d["choices"][0]["message"]["content"]
-            last = f"⚠️ Error: {d}"
+                content = d["choices"][0]["message"].get("content")
+                if isinstance(content, str) and content.strip():
+                    _STATE["empty"] = 0
+                    return content
+                _STATE["empty"] += 1
+                last = "⚠️ Error: Gemini ne khaali reply diya (content None/empty)"
+            else:
+                last = f"⚠️ Error: {d}"
         except requests.exceptions.Timeout:
             return f"❌ Gemini error: timeout ({GEMINI_CALL_TIMEOUT}s)"
         except requests.exceptions.ConnectionError as e:
@@ -829,18 +863,18 @@ def run_bot():
 
     # Build app
     app = Application.builder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start",    start))
-    app.add_handler(CommandHandler("menu",     cmd_menu))
-    app.add_handler(CommandHandler("search",   cmd_search))
-    app.add_handler(CommandHandler("image",    cmd_image))
-    app.add_handler(CommandHandler("github",   cmd_github))
-    app.add_handler(CommandHandler("clear",    cmd_clear))
-    app.add_handler(CommandHandler("think",    cmd_think))
-    app.add_handler(CommandHandler("model",    cmd_model))
-    app.add_handler(CommandHandler("memory",   cmd_memory))
-    app.add_handler(CommandHandler("savefile", cmd_savefile))
+    app.add_handler(CommandHandler("start",    start, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("menu",     cmd_menu, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("search",   cmd_search, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("image",    cmd_image, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("github",   cmd_github, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("clear",    cmd_clear, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("think",    cmd_think, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("model",    cmd_model, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("memory",   cmd_memory, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("savefile", cmd_savefile, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CallbackQueryHandler(button_handler))
-    app.add_handler(MessageHandler((filters.TEXT | filters.PHOTO) & ~filters.COMMAND, handle_msg))
+    app.add_handler(MessageHandler((filters.TEXT | filters.PHOTO) & ~filters.COMMAND & filters.UpdateType.MESSAGE, handle_msg))
 
     log.info("✅ Sasta Coder Bot started!")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
