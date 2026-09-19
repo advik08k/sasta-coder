@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "assistant",
-      "content": "Aapka matlab \"Sasta Coder\" ke creator ya iske peeche ke system prompt ke baare mein hai kya? \n\nYadi aap is roleplay ya prompt ke source ki baat kar rahe hain, toh yeh ek custom system instruction thi jo mujhe di gayi thi taaki main ek coding assistant ke roop mein baat kar sakoon. \n\nAgar aap kisi specific developer, project, ya context ke baare mein puch rahe hain, toh thoda aur detail dijiye—main poori koshish karunga ki aapko sahi jankari doon!"
-    },
-    {
       "role": "user",
       "content": "Who is SNTxabhi ?"
     },
@@ -115,6 +111,10 @@
     {
       "role": "user",
       "content": "To Teri memory hai??"
+    },
+    {
+      "role": "user",
+      "content": "advik08k/sasta-coder/test.txt"
     },
     {
       "role": "user",
