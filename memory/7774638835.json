@@ -121,6 +121,6 @@
       "content": "advik08k/sasta-coder/test.txt"
     }
   ],
-  "model": "gemini-3.5-flash-thinking",
+  "model": "gemini-3.7-flash",
   "created": "2026-09-19 15:43:59.346120"
 }
