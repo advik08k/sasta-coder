@@ -1,4 +1,3 @@
 httpx
 python-telegram-bot
 requests
-duckduckgo-search

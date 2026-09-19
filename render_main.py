@@ -153,18 +153,21 @@ def gh_upload_file(repo, path, content, message="Upload via Sasta Coder"):
 # ═══════════════════════════════════════════════
 # WEB SEARCH
 # ═══════════════════════════════════════════════
-def web_search(query):
-    """Search using duckduckgo-search library (no rate limits)"""
+def web_search(query, model="gemini-3.6-flash"):
+    """Gemini ka built-in web search use karo — koi external API nahi, koi rate limit nahi"""
     try:
-        from duckduckgo_search import DDGS
-        with DDGS() as ddgs:
-            results = list(ddgs.text(query, max_results=5))
-        if results:
-            parts = [f"• *{r['title']}*\n  {r['body'][:200]}" for r in results]
-            return "\n\n".join(parts)
-        return "No results found."
+        r = requests.post(GEMINI_API,
+            headers={"Content-Type": "application/json", "Authorization": "Bearer sk-gemini"},
+            json={"model": model, "messages": [
+                {"role": "system", "content": "You have internet access via Gemini's web search. Search and give latest accurate info with sources."},
+                {"role": "user", "content": f"Search the web for: {query}\n\nGive key facts and latest information."}
+            ]}, timeout=60)
+        d = r.json()
+        if "choices" in d:
+            return d["choices"][0]["message"]["content"]
+        return "Search failed."
     except Exception as e:
-        return f"(Search error: {e} — Gemini will answer from knowledge)"
+        return f"Error: {e}"
 
 # ═══════════════════════════════════════════════
 # IMAGE GENERATION (Pollinations - FREE)
