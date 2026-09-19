@@ -133,6 +133,21 @@ def call_gemini(messages, model="gemini-3.6-flash"):
     except Exception as e:
         return f"❌ Gemini error: {e}"
 
+def fetch_url_content(url):
+    """Fetch content from a URL (automatically formats GitHub links to raw)."""
+    try:
+        if "github.com" in url and "/blob/" in url:
+            url = url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
+        
+        r = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
+        r.raise_for_status()
+        text = r.text
+        if len(text) > 20000:
+            text = text[:20000] + "\n...[TRUNCATED]"
+        return text
+    except Exception as e:
+        return f"[Failed to fetch {url}: {e}]"
+
 # ═══════════════════════════════════════════════
 # GITHUB MEMORY
 # ═══════════════════════════════════════════════
@@ -455,8 +470,20 @@ def run_bot():
                 await msg.edit_text("❌ Image generation failed. Dobara try karo.")
             return
 
-        # ── Normal chat / Vision ────────────────────────
+        # ── Normal chat / Vision / URL Reader ────────────────────────
         await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+        
+        urls = re.findall(r'(https?://[^\s]+)', text)
+        url_contexts = []
+        if urls:
+            for url in set(urls[:3]):  # Limit to 3 unique URLs max
+                content = fetch_url_content(url)
+                url_contexts.append(f"--- Content from {url} ---\n{content}\n-------------------")
+        
+        final_text = text
+        if url_contexts:
+            final_text += "\n\n" + "\n\n".join(url_contexts) + "\n\n(Note for AI: The user provided these links. Use the extracted content above to answer their prompt.)"
+
         mem = get_mem(uid)
         model = mem.get("model", "gemini-3.6-flash")
         h = mem.setdefault("history", [])
@@ -466,12 +493,12 @@ def run_bot():
             h.append({
                 "role": "user", 
                 "content": [
-                    {"type": "text", "text": text},
+                    {"type": "text", "text": final_text},
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_b64}"}}
                 ]
             })
         else:
-            h.append({"role": "user", "content": text})
+            h.append({"role": "user", "content": final_text})
             
         if len(h) > 30: mem["history"] = h[-30:]
 
