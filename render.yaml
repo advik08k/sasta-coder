@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: gemini-telegram-bot
+    runtime: python
+    buildCommand: |
+      pip install -r requirements.txt
+      curl -sL https://raw.githubusercontent.com/Sophomoresty/gemini-web2api/main/gemini_web2api.py -o gemini_web2api.py
+    startCommand: python render_main.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false          # Render dashboard pe manually set karo
+      - key: GEMINI_MODEL
+        value: gemini-3.6-flash
+    plan: free
