@@ -55,6 +55,14 @@
     {
       "role": "assistant",
       "content": "❌ Gemini error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+    },
+    {
+      "role": "user",
+      "content": "Well Maine save nhi Kara tha render.com ke env me lol 🙃 abhi try karo"
+    },
+    {
+      "role": "assistant",
+      "content": "⚠️ Error: {'error': {'message': 'upstream error: HTTP Error 429: Too Many Requests'}}"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
