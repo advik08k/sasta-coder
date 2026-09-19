@@ -2,10 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Are you alive??"
-    },
-    {
-      "role": "user",
       "content": "Well are you alive?"
     },
     {
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "Hello"
+    },
+    {
+      "role": "user",
+      "content": "Heyy"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
