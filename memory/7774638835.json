@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "user",
-      "content": "advik08k/sasta-coder/test.txt"
-    },
-    {
       "role": "assistant",
       "content": "❌ Gemini error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
     },
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "Hello"
+    },
+    {
+      "role": "user",
+      "content": "Well"
     }
   ],
   "model": "gemini-3.6-flash",
