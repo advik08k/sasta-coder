@@ -2,10 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "To Teri memory hai??"
-    },
-    {
-      "role": "user",
       "content": "advik08k/sasta-coder/test.txt"
     },
     {
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "Ok"
+    },
+    {
+      "role": "user",
+      "content": "Okay"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
