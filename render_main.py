@@ -154,33 +154,17 @@ def gh_upload_file(repo, path, content, message="Upload via Sasta Coder"):
 # WEB SEARCH
 # ═══════════════════════════════════════════════
 def web_search(query):
-    """Search with multiple fallbacks to avoid rate limits"""
-    # Primary: DDG HTML (most reliable, no rate limit)
+    """Search using duckduckgo-search library (no rate limits)"""
     try:
-        r = requests.get("https://html.duckduckgo.com/html/",
-            params={"q": query},
-            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
-            timeout=12)
-        import re
-        snippets = re.findall(r'class="result__snippet"[^>]*>(.*?)</a>', r.text, re.DOTALL)
-        snippets = [re.sub(r'<[^>]+>', '', s).strip() for s in snippets[:5] if s.strip()]
-        if snippets:
-            return "\n\n".join([f"• {s[:250]}" for s in snippets])
-    except: pass
-    # Fallback: DDG Instant Answer
-    try:
-        r = requests.get("https://api.duckduckgo.com/",
-            params={"q": query, "format": "json", "no_html": 1},
-            headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
-        d = r.json()
-        parts = []
-        if d.get("Abstract"): parts.append(f"📌 {d['Abstract']}")
-        for t in d.get("RelatedTopics", [])[:4]:
-            if isinstance(t, dict) and t.get("Text"):
-                parts.append(f"• {t['Text'][:200]}")
-        if parts: return "\n\n".join(parts)
-    except: pass
-    return f"(Web search unavailable — Gemini will answer from knowledge)"
+        from duckduckgo_search import DDGS
+        with DDGS() as ddgs:
+            results = list(ddgs.text(query, max_results=5))
+        if results:
+            parts = [f"• *{r['title']}*\n  {r['body'][:200]}" for r in results]
+            return "\n\n".join(parts)
+        return "No results found."
+    except Exception as e:
+        return f"(Search error: {e} — Gemini will answer from knowledge)"
 
 # ═══════════════════════════════════════════════
 # IMAGE GENERATION (Pollinations - FREE)
@@ -387,8 +371,7 @@ def run_bot():
             ], model=model)
             await msg.edit_text(
                 f"🔍 *{text}*\n━━━━━━━━━━━━━━━\n{summary[:3500]}",
-                parse_mode=ParseMode.MARKDOWN,
-                reply_markup=main_keyboard()
+                parse_mode=ParseMode.MARKDOWN
             )
             return
 
@@ -401,8 +384,7 @@ def run_bot():
                 await u.message.reply_photo(
                     open(img_path, "rb"),
                     caption=f"🎨 *{text[:100]}*\n_Powered by Pollinations.ai (Free)_",
-                    parse_mode=ParseMode.MARKDOWN,
-                    reply_markup=main_keyboard()
+                    parse_mode=ParseMode.MARKDOWN
                 )
                 os.unlink(img_path)
                 await msg.delete()
@@ -426,12 +408,13 @@ def run_bot():
         # Save to GitHub (async - don't block response)
         threading.Thread(target=save_mem, args=(uid,), daemon=True).start()
 
-        # Split + send
+        # Store last reply for /savefile command
+        c.user_data["last_reply"] = reply
+
+        # Split + send (NO keyboard — use /menu for that)
         chunks = [reply[i:i+4000] for i in range(0, len(reply), 4000)]
-        for i, chunk in enumerate(chunks):
-            kb = main_keyboard() if i == len(chunks)-1 else None
-            await u.message.reply_text(chunk, parse_mode=ParseMode.MARKDOWN,
-                                        reply_markup=kb)
+        for chunk in chunks:
+            await u.message.reply_text(chunk, parse_mode=ParseMode.MARKDOWN)
 
     # ── COMMANDS ────────────────────────────────────────
     async def cmd_search(u: Update, c):
@@ -515,16 +498,47 @@ def run_bot():
             summary += f"\n*{role}:* {msg['content'][:100]}..."
         await u.message.reply_text(summary, parse_mode=ParseMode.MARKDOWN, reply_markup=main_keyboard())
 
+    async def cmd_menu(u: Update, c):
+        """Show main keyboard — sirf is command pe aayega"""
+        if not auth(u): return
+        mem = get_mem(MY_USER_ID)
+        await u.message.reply_text(
+            f"🎛 *Menu* — Model: `{mem.get('model','gemini-3.6-flash')}`",
+            parse_mode=ParseMode.MARKDOWN,
+            reply_markup=main_keyboard()
+        )
+
+    async def cmd_savefile(u: Update, c):
+        """/savefile filename.py — last bot reply ko file ke roop mein bhejo"""
+        if not auth(u): return
+        last = c.user_data.get("last_reply")
+        if not last:
+            await u.message.reply_text("❌ Koi reply nahi mili abhi tak. Pehle kuch poochho!")
+            return
+        filename = c.args[0] if c.args else "output.txt"
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix=f"_{filename}",
+                                          mode='w', encoding='utf-8')
+        tmp.write(last); tmp.close()
+        await u.message.reply_document(
+            open(tmp.name, "rb"),
+            filename=filename,
+            caption=f"📁 `{filename}`",
+            parse_mode=ParseMode.MARKDOWN
+        )
+        os.unlink(tmp.name)
+
     # Build app
     app = Application.builder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start",   start))
-    app.add_handler(CommandHandler("search",  cmd_search))
-    app.add_handler(CommandHandler("image",   cmd_image))
-    app.add_handler(CommandHandler("github",  cmd_github))
-    app.add_handler(CommandHandler("clear",   cmd_clear))
-    app.add_handler(CommandHandler("think",   cmd_think))
-    app.add_handler(CommandHandler("model",   cmd_model))
-    app.add_handler(CommandHandler("memory",  cmd_memory))
+    app.add_handler(CommandHandler("start",    start))
+    app.add_handler(CommandHandler("menu",     cmd_menu))
+    app.add_handler(CommandHandler("search",   cmd_search))
+    app.add_handler(CommandHandler("image",    cmd_image))
+    app.add_handler(CommandHandler("github",   cmd_github))
+    app.add_handler(CommandHandler("clear",    cmd_clear))
+    app.add_handler(CommandHandler("think",    cmd_think))
+    app.add_handler(CommandHandler("model",    cmd_model))
+    app.add_handler(CommandHandler("memory",   cmd_memory))
+    app.add_handler(CommandHandler("savefile", cmd_savefile))
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_msg))
 
