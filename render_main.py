@@ -154,20 +154,33 @@ def gh_upload_file(repo, path, content, message="Upload via Sasta Coder"):
 # WEB SEARCH
 # ═══════════════════════════════════════════════
 def web_search(query):
+    """Search with multiple fallbacks to avoid rate limits"""
+    # Primary: DDG HTML (most reliable, no rate limit)
+    try:
+        r = requests.get("https://html.duckduckgo.com/html/",
+            params={"q": query},
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
+            timeout=12)
+        import re
+        snippets = re.findall(r'class="result__snippet"[^>]*>(.*?)</a>', r.text, re.DOTALL)
+        snippets = [re.sub(r'<[^>]+>', '', s).strip() for s in snippets[:5] if s.strip()]
+        if snippets:
+            return "\n\n".join([f"• {s[:250]}" for s in snippets])
+    except: pass
+    # Fallback: DDG Instant Answer
     try:
         r = requests.get("https://api.duckduckgo.com/",
-            params={"q": query, "format": "json", "no_html": 1, "skip_disambig": 1},
+            params={"q": query, "format": "json", "no_html": 1},
             headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         d = r.json()
         parts = []
-        if d.get("Abstract"):
-            parts.append(f"📌 {d['Abstract']}\n🔗 {d.get('AbstractURL','')}")
+        if d.get("Abstract"): parts.append(f"📌 {d['Abstract']}")
         for t in d.get("RelatedTopics", [])[:4]:
             if isinstance(t, dict) and t.get("Text"):
                 parts.append(f"• {t['Text'][:200]}")
-        return "\n\n".join(parts) if parts else "No results found."
-    except Exception as e:
-        return f"Search error: {e}"
+        if parts: return "\n\n".join(parts)
+    except: pass
+    return f"(Web search unavailable — Gemini will answer from knowledge)"
 
 # ═══════════════════════════════════════════════
 # IMAGE GENERATION (Pollinations - FREE)
