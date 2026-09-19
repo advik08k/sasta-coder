@@ -39,10 +39,20 @@ MODELS = {
 }
 
 SYSTEM_PROMPT = """You are Sasta Coder, a powerful AI assistant similar to Antigravity CLI.
-You help with coding, analysis, debugging, writing, math, and everything else.
-For code: always use proper markdown code blocks with language tags.
-For long responses: structure with headers and bullet points.
-Be concise but complete. Respond in user's language (Hindi/English mix is fine)."""
+You have Agentic Capabilities. 
+
+1. PYTHON EXECUTION (Sandbox):
+If you need to run Python code to solve math, process data, scrape, or test an API, you MUST wrap your code EXACTLY like this:
+```python
+# EXECUTE
+import requests
+print(requests.get("https://api.github.com").status_code)
+```
+The system will run this code in a secure cloud sandbox (Piston API) and feed the STDOUT back to you in the next message. 
+
+2. GENERAL INSTRUCTIONS:
+- For long responses: structure with headers and bullet points.
+- Be concise but complete. Respond in user's language (Hindi/English mix is fine)."""
 
 # ═══════════════════════════════════════════════
 # HEALTH SERVER (Render needs open port)
@@ -133,17 +143,36 @@ def call_gemini(messages, model="gemini-3.6-flash"):
     except Exception as e:
         return f"❌ Gemini error: {e}"
 
-def fetch_url_content(url):
-    """Fetch content from a URL (automatically formats GitHub links to raw)."""
+def execute_python_code(code):
+    """Executes python code via Piston API (Free external sandbox)"""
     try:
-        if "github.com" in url and "/blob/" in url:
-            url = url.replace("github.com", "raw.githubusercontent.com").replace("/blob/", "/")
+        r = requests.post("https://emkc.org/api/v2/piston/execute", json={
+            "language": "python",
+            "version": "3.10.0",
+            "files": [{"content": code}]
+        }, timeout=15)
+        d = r.json()
+        if "run" in d and "output" in d["run"]:
+            out = d["run"]["output"].strip()
+            return out if out else "[Executed successfully with no output]"
+        return f"Execution Error: {d.get('message', str(d))}"
+    except Exception as e:
+        return f"Failed to execute code: {e}"
+
+def fetch_url_content(url):
+    """Fetch content using Jina Reader API (renders JS, outputs clean markdown)"""
+    try:
+        # If raw github url, fetch directly
+        if "raw.githubusercontent.com" in url:
+            r = requests.get(url, timeout=10)
+        else:
+            # Bypass JS/React/Cloudflare using Jina headless browser API
+            r = requests.get(f"https://r.jina.ai/{url}", headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
         
-        r = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=10)
         r.raise_for_status()
         text = r.text
-        if len(text) > 20000:
-            text = text[:20000] + "\n...[TRUNCATED]"
+        if len(text) > 30000:
+            text = text[:30000] + "\n...[TRUNCATED TO 30KB]"
         return text
     except Exception as e:
         return f"[Failed to fetch {url}: {e}]"
@@ -502,15 +531,40 @@ def run_bot():
             
         if len(h) > 30: mem["history"] = h[-30:]
 
-        msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + mem["history"]
-        reply = call_gemini(msgs, model=model)
-        h.append({"role": "assistant", "content": reply})
+        # Agentic Loop for Python Execution
+        max_turns = 3
+        current_turn = 0
+        final_reply = ""
+
+        while current_turn < max_turns:
+            msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + mem["history"]
+            reply = call_gemini(msgs, model=model)
+            h.append({"role": "assistant", "content": reply})
+            
+            # Check if Gemini wants to execute code
+            code_match = re.search(r'```python\s*# EXECUTE\s*(.*?)```', reply, re.DOTALL)
+            if code_match:
+                code_to_run = code_match.group(1).strip()
+                status_msg = await u.message.reply_text(f"⚙️ Running code in sandbox...\n```python\n{code_to_run[:300]}...\n```", parse_mode=ParseMode.MARKDOWN)
+                
+                output = execute_python_code(code_to_run)
+                h.append({"role": "user", "content": f"Code Output:\n```text\n{output}\n```\nAnalyze this output and answer the user."})
+                await status_msg.edit_text(f"⚙️ Output received:\n```text\n{output[:500]}\n```", parse_mode=ParseMode.MARKDOWN)
+                
+                # Send typing action for the next turn
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            else:
+                final_reply = reply
+                break
 
         # Save to GitHub (async - don't block response)
         threading.Thread(target=save_mem, args=(uid,), daemon=True).start()
 
         # Store last reply for /savefile command
-        c.user_data["last_reply"] = reply
+        c.user_data["last_reply"] = final_reply
+        reply = final_reply
 
         # Split + send (NO keyboard — use /menu for that)
         chunks = [reply[i:i+4000] for i in range(0, len(reply), 4000)]
