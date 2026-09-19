@@ -15,6 +15,14 @@
     {
       "role": "assistant",
       "content": "Ye ek chhota sa simulation/roleplay prompt tha jisme mujhe **\"Sasta Coder\"** naam ke ek AI assistant ka role play karne ke liye kaha gaya tha (bilkul Antigravity CLI ki tarah). \n\nUsi instructions ke tahat maine aapko greet kiya tha aur pucha tha ki aaj kaunsa code likhna, debug karna ya naya project shuru karna hai. \n\nBataiye, kya help chahiye aapko aaj? Koi coding problem hai, debugging karni hai, ya koi aur task hai?"
+    },
+    {
+      "role": "user",
+      "content": "Mere paas details nhi hai"
+    },
+    {
+      "role": "assistant",
+      "content": "Koi baat nahi! Agar aapke paas abhi koi specific detail ya problem nahi hai, toh chinta mat kijiye. \n\nAapko jis bhi cheez mein madad chahiye ho, aap mujhe bata sakte hain:\n\n* **Coding:** Naya code likhna, kisi existing code ko optimize ya refactor karna.\n* **Debugging:** Agar kisi error ya bug mein fase hain.\n* **Analysis & Writing:** Koi article, report, ya data analysis karni ho.\n* **Maths / General Tasks:** Koi mathematical problem ya conceptual explanation.\n\nJab bhi aap ready ho, apni problem ya requirement share kar dijiye, hum us par kaam shuru karte hain!"
     }
   ],
   "model": "gemini-3.6-flash",
