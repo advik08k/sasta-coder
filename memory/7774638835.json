@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "user",
-      "content": "advik08k/sasta-coder/test.txt"
-    },
-    {
       "role": "assistant",
       "content": "❌ Gemini error: HTTPConnectionPool(host='localhost', port=8081): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8081): Failed to establish a new connection: [Errno 111] Connection refused\"))"
     },
@@ -103,6 +99,10 @@
     {
       "role": "user",
       "content": "Heyy"
+    },
+    {
+      "role": "user",
+      "content": "advik08k/sasta-coder/hello.txt"
     },
     {
       "role": "user",
