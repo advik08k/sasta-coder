@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "assistant",
-      "content": "❌ Gemini error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
-    },
-    {
       "role": "user",
       "content": "Hello"
     },
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "Well"
+    },
+    {
+      "role": "user",
+      "content": "Heyy"
     }
   ],
   "model": "gemini-3.6-flash",
