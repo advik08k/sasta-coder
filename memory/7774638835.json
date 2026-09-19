@@ -2,10 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Hua?"
-    },
-    {
-      "role": "user",
       "content": "To Teri memory hai??"
     },
     {
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "Hello"
+    },
+    {
+      "role": "user",
+      "content": "Ok"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
