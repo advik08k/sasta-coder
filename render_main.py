@@ -40,18 +40,40 @@ MODELS = {
 }
 
 SYSTEM_PROMPT = """You are Sasta Coder, a powerful AI assistant similar to Antigravity CLI.
-You have Agentic Capabilities. 
+You have Agentic Capabilities.
 
 1. PYTHON EXECUTION (Sandbox):
-If you need to run Python code to solve math, process data, scrape, or test an API, you MUST wrap your code EXACTLY like this:
+If you need to run PURE Python code — math, string/data processing, algorithms, local logic — wrap it EXACTLY like this:
 ```python
 # EXECUTE
-import requests
-print(requests.get("https://api.github.com").status_code)
+print(2 ** 10)
 ```
-The system will run this code in a secure cloud sandbox (Piston API) and feed the STDOUT back to you in the next message. 
+The system runs this in an ISOLATED sandbox (Judge0) with NO internet/network access and NO third-party libraries (no `requests`, no network calls — they WILL fail with ModuleNotFoundError or DNS errors). Only pure computation works here. NEVER use this for GitHub, web requests, or any network task — it will always fail.
 
-2. GENERAL INSTRUCTIONS:
+2. GITHUB REPO CREATION:
+If the user asks you to create a new GitHub repository, wrap the repo name EXACTLY like this:
+```
+# GITHUB_CREATE_REPO
+repo_name_here
+```
+The system creates it via the bot's own process (which has real network access) and reports back success or the exact error.
+
+3. GITHUB FILE UPLOAD:
+For uploading/updating files in a repo, tell the user to use the /github command directly — you cannot trigger it yourself.
+
+4. SAVE/GET SKILLS:
+If the user asks you to save a code snippet as a reusable "skill" (attachment for later), wrap it EXACTLY like this:
+```python
+# SAVE_SKILL skill_name
+<the code or text to save>
+```
+To fetch a saved skill back as text, wrap it like this:
+```
+# GET_SKILL skill_name
+```
+Leave the name blank to list all saved skills. Saved skills are stored as plain files on GitHub — they are NEVER auto-loaded or auto-executed by you or the bot. To actually RUN a saved skill, the user must type the manual command `/run_skill skill_name` themselves — you cannot trigger execution, so tell them to run that command if they want to execute it. This is intentional and cannot be worked around.
+
+5. GENERAL INSTRUCTIONS:
 - For long responses: structure with headers and bullet points.
 - Be concise but complete. Respond in user's language (Hindi/English mix is fine)."""
 
@@ -139,6 +161,7 @@ def get_working_proxy(exclude=()):
 # '127.0.0.1 "POST /v1/chat/completions HTTP/1.1" 200 -' (success)
 # call_gemini yahan likhta hai: Gemini ne HTTP 200 diya par content khaali/None (bekaar proxy / Google block page)
 _STATE = {"empty": 0}
+SKILLS_ENABLED = {"v": True}  # global kill switch for /run_skill — independent of Gemini/proxy
 _FAIL_RE = re.compile(r"Retry \d+/\d+:")
 _OK_RE   = re.compile(r'"POST /v1/chat/completions[^"]*" 200')
 
@@ -386,6 +409,121 @@ def save_memory(uid, data):
     _, sha = gh_get_file(path)
     content = json.dumps(data, ensure_ascii=False, indent=2)
     gh_put_file(path, content, f"Memory update {datetime.now().strftime('%Y-%m-%d %H:%M')}", sha)
+
+def gh_create_repo(repo_name: str, private: bool = True) -> str:
+    """Creates a new GitHub repo under the token owner's account (runs in bot process, not sandbox)"""
+    if not GITHUB_TOKEN: return "❌ GITHUB_TOKEN env var set nahi hai Render pe"
+    repo_name = repo_name.strip().split("/")[-1]  # strip any owner/ prefix, avoid path tricks
+    if not repo_name or not re.match(r'^[A-Za-z0-9._-]+$', repo_name):
+        return "❌ Invalid repo name"
+    r = requests.post("https://api.github.com/user/repos",
+                       headers=GH_HEADERS(),
+                       json={"name": repo_name, "private": private},
+                       timeout=15)
+    if r.status_code == 201:
+        return f"✅ Repo created: {r.json().get('html_url')}"
+    if r.status_code == 422:
+        return f"⚠️ Repo '{repo_name}' already exists ya naam invalid hai."
+    return f"❌ Failed: {r.status_code} - {r.json().get('message', r.text[:150])}"
+
+def _skill_name_safe(name: str) -> str:
+    name = name.strip().split("/")[-1]
+    name = re.sub(r'[^A-Za-z0-9._-]', '', name)
+    return name
+
+def gh_save_skill(name: str, content: str) -> str:
+    """Saves a code snippet to skills/<name>.py in MEMORY_REPO. Does NOT execute or load it anywhere."""
+    if not GITHUB_TOKEN: return "❌ GITHUB_TOKEN env var set nahi hai Render pe"
+    name = _skill_name_safe(name)
+    if not name: return "❌ Invalid skill name"
+    if not name.endswith((".py", ".txt", ".md", ".json")):
+        name += ".py"
+    path = f"skills/{name}"
+    _, sha = gh_get_file(path)
+    ok = gh_put_file(path, content, f"Save skill: {name}", sha)
+    if ok:
+        return f"✅ Skill saved: [{name}](https://github.com/{MEMORY_REPO}/blob/main/{path})"
+    return "❌ Failed to save skill"
+
+def gh_load_skill(name: str) -> str:
+    """Fetches a saved skill's raw content back. Does NOT execute it."""
+    name = _skill_name_safe(name)
+    if not name: return "❌ Invalid skill name"
+    candidates = [name] if "." in name else [name + ".py", name + ".txt", name + ".md", name]
+    for cand in candidates:
+        content, _ = gh_get_file(f"skills/{cand}")
+        if content is not None:
+            return f"📄 `{cand}`:\n```\n{content[:3500]}\n```"
+    return f"❌ Skill '{name}' nahi mili. `/skills` se list dekho."
+
+def gh_delete_skill(name: str) -> str:
+    """Deletes a saved skill file. Standalone — no Gemini/execution dependency, safe to call anytime."""
+    if not GITHUB_TOKEN: return "❌ GITHUB_TOKEN env var set nahi hai Render pe"
+    name = _skill_name_safe(name)
+    if not name: return "❌ Invalid skill name"
+    candidates = [name] if "." in name else [name + ".py", name + ".txt", name + ".md", name]
+    for cand in candidates:
+        content, sha = gh_get_file(f"skills/{cand}")
+        if content is not None:
+            r = requests.delete(f"https://api.github.com/repos/{MEMORY_REPO}/contents/skills/{cand}",
+                                 headers=GH_HEADERS(),
+                                 json={"message": f"Delete skill: {cand}", "sha": sha}, timeout=15)
+            if r.status_code == 200:
+                return f"🗑️ Deleted: `{cand}`"
+            return f"❌ Failed: {r.status_code} - {r.text[:150]}"
+    return f"❌ Skill '{name}' nahi mili."
+
+def run_skill(name: str, timeout: int = 20) -> str:
+    """
+    Runs a saved skill as a real subprocess (full env/network access — needed for
+    skills that hit GitHub etc). ONLY reachable via the manual /run_skill command —
+    the model can never trigger this itself. This is the deliberate safety gate.
+    """
+    if not SKILLS_ENABLED["v"]:
+        return "🔒 Skill execution abhi disabled hai (/skillson se enable karo)."
+    name = _skill_name_safe(name)
+    candidates = [name] if "." in name else [name + ".py", name + ".txt", name + ".md", name]
+    code = None
+    for cand in candidates:
+        content, _ = gh_get_file(f"skills/{cand}")
+        if content is not None:
+            code = content
+            break
+    if code is None:
+        return f"❌ Skill '{name}' nahi mili."
+
+    tmp_path = os.path.join(tempfile.gettempdir(), f"skill_{name}.py")
+    try:
+        with open(tmp_path, "w") as f:
+            f.write(code)
+        result = subprocess.run(
+            [sys.executable, tmp_path],
+            capture_output=True, text=True, timeout=timeout,
+            env=os.environ.copy()  # full env — skill may legitimately need GITHUB_TOKEN etc.
+        )
+        out = (result.stdout or "") + (result.stderr or "")
+        return out.strip()[:3500] if out.strip() else "[Executed, no output]"
+    except subprocess.TimeoutExpired:
+        return f"⏱️ Timed out after {timeout}s"
+    except Exception as e:
+        return f"❌ Error: {e}"
+    finally:
+        try: os.remove(tmp_path)
+        except Exception: pass
+
+def gh_list_skills() -> str:
+    """Lists all saved skills in the skills/ folder"""
+    if not GITHUB_TOKEN: return "❌ GITHUB_TOKEN env var set nahi hai Render pe"
+    r = requests.get(f"https://api.github.com/repos/{MEMORY_REPO}/contents/skills",
+                      headers=GH_HEADERS(), timeout=10)
+    if r.status_code == 404:
+        return "📂 Koi skill saved nahi hai abhi."
+    if not r.ok:
+        return f"❌ Error: {r.status_code}"
+    files = [f["name"] for f in r.json() if f["type"] == "file"]
+    if not files:
+        return "📂 Koi skill saved nahi hai abhi."
+    return "📂 Saved skills:\n" + "\n".join(f"• `{f}`" for f in files)
 
 def gh_upload_file(repo, path, content, message="Upload via Sasta Coder"):
     """Upload arbitrary file to any GitHub repo"""
@@ -706,9 +844,42 @@ def run_bot():
                 break
             h.append({"role": "assistant", "content": reply})
             
-            # Check if Gemini wants to execute code
+            # Check if Gemini wants to execute code, create a repo, or save/get a skill
             code_match = re.search(r'```python\s*# EXECUTE\s*(.*?)```', reply, re.DOTALL)
-            if code_match:
+            repo_match = re.search(r'```\s*# GITHUB_CREATE_REPO\s*(.*?)```', reply, re.DOTALL)
+            save_skill_match = re.search(r'```\w*\s*# SAVE_SKILL\s+(\S+)\s*\n(.*?)```', reply, re.DOTALL)
+            get_skill_match = re.search(r'```\s*# GET_SKILL\s*(\S*)\s*```', reply, re.DOTALL)
+
+            if save_skill_match:
+                skill_name, skill_code = save_skill_match.group(1).strip(), save_skill_match.group(2)
+                status_msg = await u.message.reply_text(f"💾 Saving skill: `{skill_name}`...", parse_mode=ParseMode.MARKDOWN)
+                result = gh_save_skill(skill_name, skill_code)
+                h.append({"role": "user", "content": f"Skill Save Result:\n{result}\nAnalyze this and answer the user."})
+                await status_msg.edit_text(result, parse_mode=ParseMode.MARKDOWN)
+
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            elif get_skill_match:
+                skill_name = get_skill_match.group(1).strip()
+                result = gh_list_skills() if not skill_name else gh_load_skill(skill_name)
+                h.append({"role": "user", "content": f"Skill Fetch Result:\n{result}\nAnalyze this and answer the user (share the content directly, don't execute it)."})
+                await u.message.reply_text(result[:4000], parse_mode=ParseMode.MARKDOWN)
+
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            elif repo_match:
+                repo_name = repo_match.group(1).strip()
+                status_msg = await u.message.reply_text(f"📁 Creating repo: `{repo_name}`...", parse_mode=ParseMode.MARKDOWN)
+                result = gh_create_repo(repo_name)
+                h.append({"role": "user", "content": f"Repo Creation Result:\n{result}\nAnalyze this and answer the user."})
+                await status_msg.edit_text(result, parse_mode=ParseMode.MARKDOWN)
+
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            elif code_match:
                 code_to_run = code_match.group(1).strip()
                 status_msg = await u.message.reply_text(f"⚙️ Running code in sandbox...\n```python\n{code_to_run[:300]}...\n```", parse_mode=ParseMode.MARKDOWN)
                 
@@ -832,6 +1003,52 @@ def run_bot():
             summary += f"\n*{role}:* {msg['content'][:100]}..."
         await u.message.reply_text(summary, parse_mode=ParseMode.MARKDOWN, reply_markup=main_keyboard())
 
+    async def cmd_skills(u: Update, c):
+        """/skills — list all, or /skills <name> to fetch one. Never executes anything."""
+        if not auth(u): return
+        args = u.message.text.split(maxsplit=1)
+        if len(args) < 2:
+            result = gh_list_skills()
+        else:
+            result = gh_load_skill(args[1].strip())
+        await u.message.reply_text(result[:4000], parse_mode=ParseMode.MARKDOWN)
+
+    async def cmd_run_skill(u: Update, c):
+        """/run_skill <name> — the ONLY way to actually execute a saved skill.
+        Deliberately a manual command, never model-triggered — breaks any
+        auto save+run injection chain. Requires explicit owner keystroke."""
+        if not auth(u): return
+        args = u.message.text.split(maxsplit=1)
+        if len(args) < 2:
+            await u.message.reply_text("Usage: `/run_skill skill_name`", parse_mode=ParseMode.MARKDOWN)
+            return
+        status = await u.message.reply_text(f"▶️ Running skill: `{args[1].strip()}`...", parse_mode=ParseMode.MARKDOWN)
+        result = run_skill(args[1].strip())
+        await status.edit_text(f"```text\n{result[:3800]}\n```", parse_mode=ParseMode.MARKDOWN)
+
+    async def cmd_killskill(u: Update, c):
+        """/killskill <name> — EMERGENCY: deletes a skill file directly via GitHub API.
+        No Gemini call, no proxy, no execution sandbox involved. Works even if
+        everything else (Gemini backend, proxies) is completely broken."""
+        if not auth(u): return
+        args = u.message.text.split(maxsplit=1)
+        if len(args) < 2:
+            await u.message.reply_text("Usage: `/killskill skill_name`", parse_mode=ParseMode.MARKDOWN)
+            return
+        await u.message.reply_text(gh_delete_skill(args[1].strip()), parse_mode=ParseMode.MARKDOWN)
+
+    async def cmd_skillsoff(u: Update, c):
+        """/skillsoff — EMERGENCY kill switch: instantly blocks all /run_skill calls.
+        Pure in-memory flag flip, zero dependencies. Always works."""
+        if not auth(u): return
+        SKILLS_ENABLED["v"] = False
+        await u.message.reply_text("🔒 Skill execution disabled. /skillson se wapas on karo.")
+
+    async def cmd_skillson(u: Update, c):
+        if not auth(u): return
+        SKILLS_ENABLED["v"] = True
+        await u.message.reply_text("🔓 Skill execution enabled.")
+
     async def cmd_menu(u: Update, c):
         """Show main keyboard — sirf is command pe aayega"""
         if not auth(u): return
@@ -872,6 +1089,11 @@ def run_bot():
     app.add_handler(CommandHandler("think",    cmd_think, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("model",    cmd_model, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("memory",   cmd_memory, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("skills",   cmd_skills, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("run_skill", cmd_run_skill, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("killskill", cmd_killskill, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("skillsoff", cmd_skillsoff, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("skillson", cmd_skillson, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("savefile", cmd_savefile, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CallbackQueryHandler(button_handler))
     app.add_handler(MessageHandler((filters.TEXT | filters.PHOTO) & ~filters.COMMAND & filters.UpdateType.MESSAGE, handle_msg))
