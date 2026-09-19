@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "assistant",
-      "content": "❌ Gemini error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
-    },
-    {
       "role": "user",
       "content": "Well Maine save nhi Kara tha render.com ke env me lol 🙃 abhi try karo"
     },
@@ -111,6 +107,10 @@
     {
       "role": "user",
       "content": "advik08k/sasta-coder/test.txt"
+    },
+    {
+      "role": "user",
+      "content": "Heyyaaaaaa"
     },
     {
       "role": "user",
