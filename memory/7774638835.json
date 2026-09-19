@@ -2,10 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Are you alive?"
-    },
-    {
-      "role": "user",
       "content": "Are you alive??"
     },
     {
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "A man laughing at cloud on an element on a shoe on a bus"
+    },
+    {
+      "role": "user",
+      "content": "Hello"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
