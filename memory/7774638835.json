@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "assistant",
-      "content": "⚠️ Error: {'error': {'message': 'upstream error: HTTP Error 429: Too Many Requests'}}"
-    },
-    {
       "role": "user",
       "content": "Heyy"
     },
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "advik08k/sasta-coder/test.txt"
+    },
+    {
+      "role": "user",
+      "content": "Heyyaaaaaa"
     }
   ],
   "model": "gemini-3.7-flash",
