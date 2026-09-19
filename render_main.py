@@ -171,21 +171,41 @@ def call_gemini(messages, model="gemini-3.6-flash"):
     except Exception as e:
         return f"❌ Gemini error: {e}"
 
-def execute_python_code(code):
-    """Executes python code via Piston API (Free external sandbox)"""
-    try:
-        r = requests.post("https://emkc.org/api/v2/piston/execute", json={
-            "language": "python",
-            "version": "3.10.0",
-            "files": [{"content": code}]
-        }, timeout=15)
-        d = r.json()
-        if "run" in d and "output" in d["run"]:
-            out = d["run"]["output"].strip()
-            return out if out else "[Executed successfully with no output]"
-        return f"Execution Error: {d.get('message', str(d))}"
-    except Exception as e:
-        return f"Failed to execute code: {e}"
+def execute_python_code(code, retries=2):
+    """Executes python code via Judge0 CE (free public sandbox)"""
+    url = "https://ce.judge0.com/submissions?base64_encoded=false&wait=true"
+    payload = {"source_code": code, "language_id": 71}  # 71 = Python 3
+    headers = {"Content-Type": "application/json"}
+
+    for attempt in range(retries + 1):
+        try:
+            r = requests.post(url, json=payload, headers=headers, timeout=15)
+            if r.status_code == 201:
+                d = r.json()
+                stdout = d.get("stdout")
+                stderr = d.get("stderr")
+                compile_output = d.get("compile_output")
+                if stdout:
+                    return stdout.strip()
+                elif stderr:
+                    return f"Stderr:\n{stderr.strip()}"
+                elif compile_output:
+                    return f"Compile Error:\n{compile_output.strip()}"
+                else:
+                    return "[Executed successfully with no output]"
+            elif r.status_code == 429:
+                time.sleep(2)
+                continue
+            else:
+                return f"Execution Error: Status {r.status_code} - {r.text[:200]}"
+        except requests.exceptions.Timeout:
+            if attempt < retries:
+                continue
+            return "Execution timed out after retries."
+        except Exception as e:
+            return f"Failed to execute code: {e}"
+
+    return "Execution failed after retries (rate limited)."
 
 def fetch_url_content(url):
     """Fetch content using Jina Reader API (renders JS, outputs clean markdown)"""
