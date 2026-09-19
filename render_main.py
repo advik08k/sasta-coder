@@ -20,6 +20,7 @@ from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
+logging.getLogger("httpx").setLevel(logging.WARNING)  # har 10s getUpdates spam band
 
 # ═══════════════════════════════════════════════
 # CONFIG
@@ -76,6 +77,17 @@ PROXY_SOURCES = [
     "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/http.txt",
 ]
 GEMINI_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+
+# Proxy mode mein gemini_web2api ka per-attempt timeout (default 180s). Dead/slow proxy
+# 180s x 3 tak atka rehta tha (bot ka timeout pehle hit + rotation kabhi trigger nahi).
+# 25s x 3 + delays ~ 79s, to fail hone par Retry lines aati hain aur proxy rotate hoti hai.
+PROXY_TIMEOUT = 25
+
+def _proxy_cfg():
+    p = os.path.join(tempfile.gettempdir(), "gemini_proxy_cfg.json")
+    with open(p, "w") as f:
+        json.dump({"request_timeout_sec": PROXY_TIMEOUT}, f)
+    return p
 
 def get_working_proxy(exclude=()):
     """
@@ -142,7 +154,7 @@ def start_gemini():
     while True:
         cmd = [sys.executable, "gemini_web2api.py"]
         if proxy:
-            cmd += ["--proxy", proxy]
+            cmd += ["--proxy", proxy, "--config", _proxy_cfg()]
         log.info(f"🚀 Starting Gemini ({'proxy ' + proxy if proxy else 'direct'})...")
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
@@ -195,6 +207,23 @@ def wait_gemini():
         time.sleep(1)
     return False
 
+# Gemini fail hone par error text chat mein NAHI jaata (sirf Render logs mein). True karo to wapas dikhega.
+SHOW_GEMINI_ERRORS = False
+
+def is_gemini_error(text):
+    return isinstance(text, str) and text.startswith(("❌ Gemini error", "⚠️ Error"))
+
+def hide_error(text):
+    """True => ye Gemini error hai aur chat mein nahi bhejna. Log mein rakhta hai."""
+    if is_gemini_error(text) and not SHOW_GEMINI_ERRORS:
+        log.warning(f"Gemini failed (chat mein nahi bheja): {text[:200]}")
+        return True
+    return False
+
+# Bot-side wait limit. 90s se badha ke 300s (sirf backstop — asli control proxy mode ke 25s timeout se hai).
+# None kar sakte ho, par sync call hai: Gemini atka to poora bot freeze ho jayega.
+GEMINI_CALL_TIMEOUT = 300
+
 def call_gemini(messages, model="gemini-3.6-flash", retries=2):
     """429/502 ya Gemini server restart ke waqt: 4s, 8s backoff ke saath retry."""
     last = ""
@@ -202,13 +231,19 @@ def call_gemini(messages, model="gemini-3.6-flash", retries=2):
         try:
             r = requests.post(GEMINI_API,
                 headers={"Content-Type": "application/json", "Authorization": "Bearer sk-gemini"},
-                json={"model": model, "messages": messages}, timeout=90)
+                json={"model": model, "messages": messages}, timeout=GEMINI_CALL_TIMEOUT)
             d = r.json()
             if "choices" in d:
                 return d["choices"][0]["message"]["content"]
             last = f"⚠️ Error: {d}"
         except requests.exceptions.Timeout:
-            return "❌ Gemini error: timeout (90s)"
+            return f"❌ Gemini error: timeout ({GEMINI_CALL_TIMEOUT}s)"
+        except requests.exceptions.ConnectionError as e:
+            last = f"❌ Gemini error: server restart ho raha hai ({e.__class__.__name__})"
+            if attempt < retries:
+                log.warning("Gemini server down/restarting — ready hone ka wait (40s tak)...")
+                wait_gemini()
+                continue
         except Exception as e:
             last = f"❌ Gemini error: {e}"
         if attempt < retries:
@@ -552,12 +587,16 @@ def run_bot():
             c.user_data.pop("mode", None)
             msg = await u.message.reply_text(f"🔍 Searching: *{text}*...", parse_mode=ParseMode.MARKDOWN)
             results = web_search(text)
+            if hide_error(results):
+                await msg.delete(); return
             mem = get_mem(uid)
             model = mem.get("model", "gemini-3.6-flash")
             summary = call_gemini([
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": f"Web search results for '{text}':\n{results}\n\nSummarize key points."}
             ], model=model)
+            if hide_error(summary):
+                await msg.delete(); return
             try:
                 await msg.edit_text(
                     f"🔍 *{text}*\n━━━━━━━━━━━━━━━\n{summary[:3500]}",
@@ -614,7 +653,7 @@ def run_bot():
         else:
             h.append({"role": "user", "content": final_text})
             
-        if len(h) > 30: mem["history"] = h[-30:]
+        if len(h) > 30: del h[:-30]   # in-place trim (pehle naya list ban raha tha, h purani list pe rehta tha)
 
         # Agentic Loop for Python Execution
         max_turns = 3
@@ -624,6 +663,13 @@ def run_bot():
         while current_turn < max_turns:
             msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + mem["history"]
             reply = call_gemini(msgs, model=model)
+            if is_gemini_error(reply):
+                hide_error(reply)
+                # error history mein save nahi hoga; fail hua user msg bhi hata do (dobara bhejne pe duplicate na ho)
+                if current_turn == 0 and h and h[-1].get("role") == "user":
+                    h.pop()
+                final_reply = reply if SHOW_GEMINI_ERRORS else ""
+                break
             h.append({"role": "assistant", "content": reply})
             
             # Check if Gemini wants to execute code
@@ -648,7 +694,8 @@ def run_bot():
         threading.Thread(target=save_mem, args=(uid,), daemon=True).start()
 
         # Store last reply for /savefile command
-        c.user_data["last_reply"] = final_reply
+        if final_reply:
+            c.user_data["last_reply"] = final_reply
         reply = final_reply
 
         # Split + send (NO keyboard — use /menu for that)
@@ -670,11 +717,15 @@ def run_bot():
             msg = await u.message.reply_text(f"🔍 Searching...", parse_mode=ParseMode.MARKDOWN)
             q = " ".join(c.args)
             results = web_search(q)
+            if hide_error(results):
+                await msg.delete(); return
             mem = get_mem(MY_USER_ID)
             summary = call_gemini([
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": f"Results for '{q}':\n{results}\n\nSummarize."}
             ], mem.get("model", "gemini-3.6-flash"))
+            if hide_error(summary):
+                await msg.delete(); return
             try:
                 await msg.edit_text(f"🔍 *{q}*\n━━━━━━━━━━\n{summary[:3500]}", parse_mode=ParseMode.MARKDOWN, reply_markup=main_keyboard())
             except Exception:
@@ -726,6 +777,8 @@ def run_bot():
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": q}
         ], model="gemini-3.5-flash-thinking")
+        if hide_error(reply):
+            await msg.delete(); return
         await msg.edit_text(reply[:4000], parse_mode=ParseMode.MARKDOWN, reply_markup=main_keyboard())
 
     async def cmd_model(u: Update, c):
