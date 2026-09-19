@@ -1,14 +1,19 @@
 services:
   - type: web
-    name: gemini-telegram-bot
+    name: sasta-coder-bot
     runtime: python
-    buildCommand: |
-      pip install -r requirements.txt
-      curl -sL https://raw.githubusercontent.com/Sophomoresty/gemini-web2api/main/gemini_web2api.py -o gemini_web2api.py
+    buildCommand: pip install -r requirements.txt
     startCommand: python render_main.py
     envVars:
       - key: BOT_TOKEN
-        sync: false          # Render dashboard pe manually set karo
+        sync: false
+      - key: MY_USER_ID
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: MEMORY_REPO
+        value: advik08k/sasta-coder
       - key: GEMINI_MODEL
         value: gemini-3.6-flash
     plan: free
+    healthCheckPath: /
