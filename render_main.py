@@ -72,55 +72,83 @@ def run_health():
 import concurrent.futures
 
 def get_working_proxy():
-    log.info("🔍 Searching for a working free proxy...")
+    """Background mein proxy dhundho — bot chal raha hoga tab bhi"""
+    log.info("🔍 Searching for proxy in background...")
     try:
         r = requests.get("https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt", timeout=10)
         proxies = [p for p in r.text.splitlines() if ":" in p][:100]
     except Exception as e:
-        log.warning(f"Failed to fetch proxy list: {e}")
+        log.warning(f"Proxy list fetch failed: {e}")
         return None
 
     def test_p(p):
         try:
-            r = requests.get("https://gemini.google.com", 
-                             proxies={"http": f"http://{p}", "https": f"http://{p}"}, 
-                             timeout=5)
+            r = requests.get("https://gemini.google.com",
+                             proxies={"http": f"http://{p}", "https": f"http://{p}"},
+                             timeout=4)
             if r.status_code == 200: return p
         except: return None
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=30) as exe:
         for res in exe.map(test_p, proxies):
             if res:
-                log.info(f"✅ Found working proxy: {res}")
+                log.info(f"✅ Found proxy: {res}")
                 return f"http://{res}"
-    log.warning("❌ No working proxies found, running direct.")
     return None
 
 def start_gemini():
+    """
+    Phase 1: Bina proxy ke turant start karo (bot immediately online)
+    Phase 2: Agar 429 aaya → background mein proxy dhundo → restart with proxy
+    """
     while True:
-        proxy = get_working_proxy()
-        cmd = [sys.executable, "gemini_web2api.py"]
-        if proxy:
-            cmd.extend(["--proxy", proxy])
-            
-        log.info(f"🚀 Starting Gemini with proxy: {proxy}")
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        
+        # --- Phase 1: No proxy, instant start ---
+        log.info("🚀 Starting Gemini (no proxy, instant start)...")
+        proc = subprocess.Popen(
+            [sys.executable, "gemini_web2api.py"],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
+
         error_429_count = 0
         for line in proc.stdout:
             line_str = line.decode().strip()
             log.info(f"[gemini] {line_str}")
-            
             if "HTTP Error 429" in line_str:
                 error_429_count += 1
-                if error_429_count >= 2:
-                    log.error("💥 429 Rate Limit hit repeatedly. Restarting with new proxy...")
+                if error_429_count >= 3:
+                    log.warning("⚠️ 429s hit. Finding proxy in background...")
                     proc.kill()
                     break
-        
+
         proc.wait()
-        log.warning("🔄 Gemini server died. Restarting in 5 seconds...")
+
+        # --- Phase 2: 429 hit → get proxy → restart ---
+        proxy = get_working_proxy()
+        if not proxy:
+            log.warning("No proxy found, retrying direct in 10s...")
+            time.sleep(10)
+            continue
+
+        log.info(f"🔄 Restarting with proxy: {proxy}")
+        proc2 = subprocess.Popen(
+            [sys.executable, "gemini_web2api.py", "--proxy", proxy],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT
+        )
+        error_429_count = 0
+        for line in proc2.stdout:
+            line_str = line.decode().strip()
+            log.info(f"[gemini+proxy] {line_str}")
+            if "HTTP Error 429" in line_str:
+                error_429_count += 1
+                if error_429_count >= 3:
+                    log.warning("Proxy also 429'd. Getting new proxy...")
+                    proc2.kill()
+                    break
+
+        proc2.wait()
+        log.warning("🔄 Gemini server stopped. Restarting in 5s...")
         time.sleep(5)
+
 
 def wait_gemini():
     for _ in range(40):
