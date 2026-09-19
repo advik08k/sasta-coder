@@ -1,0 +1,14 @@
+{
+  "history": [
+    {
+      "role": "user",
+      "content": "Hey"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! Sasta Coder here, ready to help you out. \n\nBataiye, aaj kya code karna hai, debug karna hai, ya koi naya project shuru karna hai? What's on your mind?"
+    }
+  ],
+  "model": "gemini-3.6-flash",
+  "created": "2026-09-19 15:43:59.346120"
+}
