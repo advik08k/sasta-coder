@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "user",
-      "content": "Hello"
-    },
-    {
       "role": "assistant",
       "content": "❌ Gemini error: HTTPConnectionPool(host='localhost', port=8081): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8081): Failed to establish a new connection: [Errno 111] Connection refused\"))"
     },
@@ -115,6 +111,10 @@
     {
       "role": "user",
       "content": "Well"
+    },
+    {
+      "role": "user",
+      "content": "Heyy"
     },
     {
       "role": "user",
