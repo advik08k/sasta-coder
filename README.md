@@ -1,57 +1,71 @@
-# 🤖 Unlimited Free Gemini Telegram Bot
+# 🤖 Sasta Coder — Free Unlimited AI Telegram Bot
 
-Free Telegram bot powered by Gemini 3.7 Flash with NO limits, NO API key needed.
+> Antigravity CLI jaisa powerful AI bot, bilkul FREE!
 
-## Features
-- Unlimited Gemini 3.6/3.7 Flash (free, no API key)
-- Multi-turn conversation memory
-- Deep thinking mode (`/think`)
-- Runs 24/7 on Render.com free tier
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy)
 
-## Deploy on Render (5 minutes)
+## ✨ Features
 
-### Step 1: Get Telegram Bot Token
-1. Open Telegram → `@BotFather`
-2. `/newbot` → name → username
-3. Copy the token
+| Feature | Status |
+|---------|--------|
+| 🤖 Gemini 3.7 Flash Chat | ✅ Free, Unlimited |
+| 🔍 Web Search | ✅ Free (DuckDuckGo) |
+| 🎨 Image Generation | ✅ Free (Pollinations FLUX) |
+| 🧠 Deep Thinking Mode | ✅ Gemini Thinking |
+| 💾 GitHub Memory | ✅ Persistent chat history |
+| 📁 File Send/Download | ✅ |
+| ⬆️ GitHub Upload | ✅ |
+| 🎛️ Inline Keyboard UI | ✅ Beautiful interface |
 
-### Step 2: Push to GitHub
-```bash
-git init
-git add .
-git commit -m "init"
-git remote add origin https://github.com/TUMHARA_USERNAME/gemini-telegram-bot.git
-git push -u origin main
-```
+## 🚀 Deploy on Render (5 minutes)
 
-### Step 3: Deploy on Render
-1. [render.com](https://render.com) → Sign up (free)
-2. New → Web Service → Connect GitHub repo
+### Step 1: Fork this repo
+
+### Step 2: Render pe deploy karo
+1. [render.com](https://render.com) → **New Web Service**
+2. GitHub repo connect karo
 3. Settings:
-   - **Build Command:** `pip install -r requirements.txt && curl -sL https://raw.githubusercontent.com/Sophomoresty/gemini-web2api/main/gemini_web2api.py -o gemini_web2api.py`
-   - **Start Command:** `python render_main.py`
+   - **Build:** `pip install -r requirements.txt && curl -sL https://raw.githubusercontent.com/Sophomoresty/gemini-web2api/main/gemini_web2api.py -o gemini_web2api.py`
+   - **Start:** `python render_main.py`
    - **Plan:** Free
-4. Environment Variables → Add:
-   - `BOT_TOKEN` = `123456:ABCdef...` (tumhara token)
-5. Deploy!
 
-### Step 4: Use!
-Telegram pe apna bot open karo → `/start` → chat karo!
+### Step 3: Environment Variables add karo
+| Variable | Value |
+|----------|-------|
+| `BOT_TOKEN` | Telegram bot token (@BotFather se) |
+| `MY_USER_ID` | Tumhara Telegram user ID |
+| `GITHUB_TOKEN` | GitHub PAT (repo permission) |
+| `MEMORY_REPO` | `username/sasta-coder` |
 
-## Commands
+### Step 4: Deploy!
+
+## 📱 Bot Commands
+
 | Command | Description |
 |---------|-------------|
-| `/start` | Welcome message |
-| `/clear` | Clear chat history |
+| `/start` | Home screen with buttons |
+| `/search <query>` | Web search |
+| `/image <prompt>` | Image generate |
 | `/think <question>` | Deep thinking mode |
-| `/status` | Server status |
+| `/model` | Switch AI model |
+| `/github <repo> <path>` | Upload to GitHub |
+| `/memory` | View chat history |
+| `/clear` | Clear history |
 
-## Models Available (Free)
-- `gemini-3.7-flash` - Latest (fastest)
-- `gemini-3.6-flash` - Stable  
-- `gemini-3.5-flash-thinking` - Deep reasoning
+## 🧠 GitHub Memory
+Chat history automatically saves to `memory/{user_id}.json` in this repo.
+Persist karta hai even after Render restarts!
 
-## ⚠️ Note on Render Free Tier
-Render free web services sleep after 15 min of inactivity.
-Since Telegram bot is always polling, it should stay awake.
-If it sleeps, first message will wake it up (~30s delay).
+## 🤖 Models Available
+- `gemini-3.7-flash` — Latest, fastest
+- `gemini-3.6-flash` — Stable
+- `gemini-3.5-flash-thinking` — Deep reasoning
+- `gemini-flash-lite` — Lightest
+
+## ⚠️ Limitations
+- Code execute nahi kar sakta (cloud security)
+- Local files access nahi (cloud pe hai)
+- Render free tier 15min mein so sakta hai (bot polling se mostly awake)
+
+---
+*Powered by [gemini-web2api](https://github.com/Sophomoresty/gemini-web2api) + Pollinations.ai*
