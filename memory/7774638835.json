@@ -33,6 +33,6 @@
       "content": "Aapka matlab \"Sasta Coder\" ke creator ya iske peeche ke system prompt ke baare mein hai kya? \n\nYadi aap is roleplay ya prompt ke source ki baat kar rahe hain, toh yeh ek custom system instruction thi jo mujhe di gayi thi taaki main ek coding assistant ke roop mein baat kar sakoon. \n\nAgar aap kisi specific developer, project, ya context ke baare mein puch rahe hain, toh thoda aur detail dijiye—main poori koshish karunga ki aapko sahi jankari doon!"
     }
   ],
-  "model": "gemini-3.6-flash",
+  "model": "gemini-3.5-flash-thinking",
   "created": "2026-09-19 15:43:59.346120"
 }
