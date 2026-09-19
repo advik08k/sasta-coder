@@ -71,6 +71,30 @@
     {
       "role": "assistant",
       "content": "❌ Gemini error: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+    },
+    {
+      "role": "user",
+      "content": "Hello"
+    },
+    {
+      "role": "assistant",
+      "content": "❌ Gemini error: HTTPConnectionPool(host='localhost', port=8081): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8081): Failed to establish a new connection: [Errno 111] Connection refused\"))"
+    },
+    {
+      "role": "user",
+      "content": "Heyy"
+    },
+    {
+      "role": "assistant",
+      "content": "❌ Gemini error: HTTPConnectionPool(host='localhost', port=8081): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8081): Failed to establish a new connection: [Errno 111] Connection refused\"))"
+    },
+    {
+      "role": "user",
+      "content": "Hello"
+    },
+    {
+      "role": "assistant",
+      "content": "❌ Gemini error: HTTPConnectionPool(host='localhost', port=8081): Max retries exceeded with url: /v1/chat/completions (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8081): Failed to establish a new connection: [Errno 111] Connection refused\"))"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
