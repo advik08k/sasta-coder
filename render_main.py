@@ -429,10 +429,13 @@ def run_bot():
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": f"Web search results for '{text}':\n{results}\n\nSummarize key points."}
             ], model=model)
-            await msg.edit_text(
-                f"🔍 *{text}*\n━━━━━━━━━━━━━━━\n{summary[:3500]}",
-                parse_mode=ParseMode.MARKDOWN
-            )
+            try:
+                await msg.edit_text(
+                    f"🔍 *{text}*\n━━━━━━━━━━━━━━━\n{summary[:3500]}",
+                    parse_mode=ParseMode.MARKDOWN
+                )
+            except Exception:
+                await msg.edit_text(f"🔍 {text}\n━━━━━━━━━━━━━━━\n{summary[:3500]}")
             return
 
         # ── Image mode ──────────────────────────────────
@@ -485,7 +488,11 @@ def run_bot():
         # Split + send (NO keyboard — use /menu for that)
         chunks = [reply[i:i+4000] for i in range(0, len(reply), 4000)]
         for chunk in chunks:
-            await u.message.reply_text(chunk, parse_mode=ParseMode.MARKDOWN)
+            try:
+                await u.message.reply_text(chunk, parse_mode=ParseMode.MARKDOWN)
+            except Exception as e:
+                log.warning(f"Markdown parsing failed, sending as plain text. Error: {e}")
+                await u.message.reply_text(chunk) # Fallback to plain text
 
     # ── COMMANDS ────────────────────────────────────────
     async def cmd_search(u: Update, c):
@@ -502,7 +509,10 @@ def run_bot():
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": f"Results for '{q}':\n{results}\n\nSummarize."}
             ], mem.get("model", "gemini-3.6-flash"))
-            await msg.edit_text(f"🔍 *{q}*\n━━━━━━━━━━\n{summary[:3500]}", parse_mode=ParseMode.MARKDOWN, reply_markup=main_keyboard())
+            try:
+                await msg.edit_text(f"🔍 *{q}*\n━━━━━━━━━━\n{summary[:3500]}", parse_mode=ParseMode.MARKDOWN, reply_markup=main_keyboard())
+            except Exception:
+                await msg.edit_text(f"🔍 {q}\n━━━━━━━━━━\n{summary[:3500]}", reply_markup=main_keyboard())
         else:
             c.user_data["mode"] = "search"
             await u.message.reply_text("🔍 Kya search karoon?")
