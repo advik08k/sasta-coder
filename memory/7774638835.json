@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "assistant",
-      "content": "Ye ek chhota sa simulation/roleplay prompt tha jisme mujhe **\"Sasta Coder\"** naam ke ek AI assistant ka role play karne ke liye kaha gaya tha (bilkul Antigravity CLI ki tarah). \n\nUsi instructions ke tahat maine aapko greet kiya tha aur pucha tha ki aaj kaunsa code likhna, debug karna ya naya project shuru karna hai. \n\nBataiye, kya help chahiye aapko aaj? Koi coding problem hai, debugging karni hai, ya koi aur task hai?"
-    },
-    {
       "role": "user",
       "content": "Mere paas details nhi hai"
     },
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "Are you alive??"
+    },
+    {
+      "role": "user",
+      "content": "Well are you alive?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
