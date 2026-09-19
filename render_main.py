@@ -440,10 +440,13 @@ def gh_save_skill(name: str, content: str) -> str:
         name += ".py"
     path = f"skills/{name}"
     _, sha = gh_get_file(path)
-    ok = gh_put_file(path, content, f"Save skill: {name}", sha)
-    if ok:
+    data = {"message": f"Save skill: {name}", "content": base64.b64encode(content.encode()).decode()}
+    if sha: data["sha"] = sha
+    r = requests.put(f"https://api.github.com/repos/{MEMORY_REPO}/contents/{path}",
+                      headers=GH_HEADERS(), json=data, timeout=15)
+    if r.status_code in (200, 201):
         return f"✅ Skill saved: [{name}](https://github.com/{MEMORY_REPO}/blob/main/{path})"
-    return "❌ Failed to save skill"
+    return f"❌ Failed ({r.status_code}): {r.json().get('message', r.text[:150])}"
 
 def gh_load_skill(name: str) -> str:
     """Fetches a saved skill's raw content back. Does NOT execute it."""
