@@ -6,10 +6,6 @@
     },
     {
       "role": "user",
-      "content": "advik08k/sasta-coder/test.txt"
-    },
-    {
-      "role": "user",
       "content": "I am inevitable.."
     },
     {
@@ -119,6 +115,10 @@
     {
       "role": "user",
       "content": "Heyyaaaaaa"
+    },
+    {
+      "role": "user",
+      "content": "Hai yaa yaa heyyy"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
