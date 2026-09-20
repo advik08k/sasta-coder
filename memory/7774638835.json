@@ -6,14 +6,6 @@
     },
     {
       "role": "user",
-      "content": "Heyy"
-    },
-    {
-      "role": "user",
-      "content": "Heyy"
-    },
-    {
-      "role": "user",
       "content": "Heyyaaaaaa"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hello! 👋 Sasta Coder hazir hai. \n\nBataiye, aaj kya karna hai? Koi nayi skill save karni hai, code likhwana hai, ya kuch aur help chahiye?"
+    },
+    {
+      "role": "user",
+      "content": "Kya Tum pic dekh sakte ho??"
+    },
+    {
+      "role": "assistant",
+      "content": "Haan, main images aur screenshots dekh sakta hoon agar aap unhe upload ya share karein! \n\nBataiye, aapko kis tarah ki image dikhani hai ya usse related kya help chahiye?"
     }
   ],
   "model": "gemini-3.6-flash",
