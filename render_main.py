@@ -77,6 +77,14 @@ Leave the name blank to list all saved skills. To RUN a saved skill directly (re
 ```
 Use this whenever the user's request calls for it — you decide when running a skill is appropriate. Saved skills are stored as plain files on GitHub.
 
+6. FULL GITHUB API ACCESS:
+For anything not covered by the specific tools above — branches, issues, PRs, deleting repos, listing collaborators, or any other GitHub REST API operation — you can call the API directly:
+```json
+# GITHUB_API
+{"method": "PUT", "path": "/repos/owner/repo/contents/file.txt", "body": {"message": "...", "content": "base64..."}}
+```
+`method` is GET/POST/PUT/PATCH/DELETE, `path` is the API path starting with /, `body` is the JSON payload (omit for GET/DELETE with no body). This is real, unrestricted GitHub access bounded only by what the configured token is scoped to allow — use it carefully, and prefer the specific tools above when they already cover what's needed.
+
 5. GENERAL INSTRUCTIONS:
 - For long responses: structure with headers and bullet points.
 - Be concise but complete. Respond in user's language (Hindi/English mix is fine)."""
@@ -492,6 +500,29 @@ def GITHUB_OWNER() -> str:
     """Resolves the token owner's username via GitHub API (cached at module load isn't safe across token changes, so fetched live but cheap)."""
     r = requests.get("https://api.github.com/user", headers=GH_HEADERS(), timeout=10)
     return r.json().get("login", "") if r.ok else ""
+
+def gh_api_call(method: str, path: str, body: dict = None) -> str:
+    """
+    Generic GitHub REST API executor — any endpoint, any method the token allows.
+    This IS 'full GitHub control': repos, files, branches, issues, PRs, webhooks,
+    collaborators, everything the REST API exposes. Its real boundary is whatever
+    the GITHUB_TOKEN's own scope permits (fine-grained PAT restricts this to
+    whichever repos/permissions were granted when it was created).
+    """
+    if not GITHUB_TOKEN: return "❌ GITHUB_TOKEN env var set nahi hai Render pe"
+    method = method.strip().upper()
+    if method not in ("GET", "POST", "PUT", "PATCH", "DELETE"):
+        return f"❌ Invalid method: {method}"
+    if not path.startswith("/"):
+        path = "/" + path
+    url = f"https://api.github.com{path}"
+    try:
+        r = requests.request(method, url, headers=GH_HEADERS(), json=body, timeout=20)
+        log.info(f"[gh_api_call] {method} {url} -> {r.status_code}")
+        out = r.text[:2000]
+        return f"Status {r.status_code}:\n{out}"
+    except Exception as e:
+        return f"❌ Error: {e}"
 
 def _skill_name_safe(name: str) -> str:
     name = name.strip().split("/")[-1]
@@ -917,14 +948,31 @@ def run_bot():
                 break
             h.append({"role": "assistant", "content": reply})
             
-            # Check if Gemini wants to execute code, create a repo, save/get/run a skill
+            # Check if Gemini wants to execute code, create a repo, save/get/run a skill, or call GitHub API directly
             code_match = re.search(r'```python\s*# EXECUTE\s*(.*?)```', reply, re.DOTALL)
             repo_match = re.search(r'```\s*# GITHUB_CREATE_REPO\s*(.*?)```', reply, re.DOTALL)
             save_skill_match = re.search(r'```\w*\s*# SAVE_SKILL\s+(\S+)\s*\n(.*?)```', reply, re.DOTALL)
             get_skill_match = re.search(r'```\s*# GET_SKILL\s*(\S*)\s*```', reply, re.DOTALL)
             run_skill_match = re.search(r'```\s*# RUN_SKILL\s+(\S+)\s*```', reply, re.DOTALL)
+            api_match = re.search(r'```(?:json)?\s*# GITHUB_API\s*(.*?)```', reply, re.DOTALL)
 
-            if run_skill_match:
+            if api_match:
+                try:
+                    call = json.loads(api_match.group(1).strip())
+                    method, path, body = call.get("method", "GET"), call.get("path", ""), call.get("body")
+                except Exception as e:
+                    result = f"❌ Invalid GITHUB_API block: {e}"
+                    method = path = None
+                if path:
+                    status_msg = await u.message.reply_text(f"🔧 GitHub API: `{method} {path}`...", parse_mode=ParseMode.MARKDOWN)
+                    result = gh_api_call(method, path, body)
+                    await status_msg.edit_text(f"```text\n{result[:3500]}\n```", parse_mode=ParseMode.MARKDOWN)
+                h.append({"role": "user", "content": f"GitHub API Result:\n{result}\nAnalyze this and answer the user."})
+
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            elif run_skill_match:
                 skill_name = run_skill_match.group(1).strip()
                 status_msg = await u.message.reply_text(f"▶️ Running skill: `{skill_name}`...", parse_mode=ParseMode.MARKDOWN)
                 result = run_skill(skill_name)
