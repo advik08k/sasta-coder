@@ -10,14 +10,6 @@
     },
     {
       "role": "user",
-      "content": "advik08k/sasta-coder/hello.txt"
-    },
-    {
-      "role": "user",
-      "content": "advik08k/sasta-coder/hello.txt"
-    },
-    {
-      "role": "user",
       "content": "Kuch bhi"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hello! 👋 Sasta Coder ek baar phir hazir hai. \n\nBataiye, aaj kis cheez mein help karu? Koi nayi skill banani hai, purani skill run karni hai, ya koi naya code likhwana hai?"
+    },
+    {
+      "role": "user",
+      "content": "Hlo bhai zinda ho na??"
+    },
+    {
+      "role": "assistant",
+      "content": "Haan bhai, bilkul zinda hoon aur poori tarah ready hoon! 🚀 \n\nBataiye, kya chal raha hai? Aaj kaunsi nayi skill save karni hai ya koi code run karwana hai?"
     }
   ],
   "model": "gemini-3.6-flash",
