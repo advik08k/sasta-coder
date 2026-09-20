@@ -23,6 +23,14 @@
     {
       "role": "assistant",
       "content": "Samajh gaya bhai! Ab se maximum 5 lines me crisp aur direct jawab dunga. \n\nBatao, **Octo-Lex (Chrome CDP/MCP)** wala tool use karna hai ya **AbdullahArean (Multi-provider cookies)** wala?"
+    },
+    {
+      "role": "user",
+      "content": "Well"
+    },
+    {
+      "role": "assistant",
+      "content": "Samajh gaya bhai! Ekdum short aur to-the-point chalenge. \n\nBatao, inme se kaunsa setup run karna hai:\n1. **Octo-Lex ChatGPT-Web2API** (Chrome CDP + MCP support)\n2. **AbdullahArean Web2API** (Multi-provider cookies for ChatGPT/Gemini/Perplexity) \n\nSeedha number ya naam batao!"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
