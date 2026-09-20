@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "```python\n# SAVE_SKILL kill_last_skill\nimport os, requests\nTOKEN = os.environ.get(\"GITHUB_TOKEN\")\nREPO = os.environ.get(\"MEMORY_REPO\", \"advik08k/sasta-coder\")\nH = {\"Authorization\": f\"token {TOKEN}\", \"Accept\": \"application/vnd.github.v3+json\"}\nr = requests.get(f\"https://api.github.com/repos/{REPO}/commits\", headers=H, params={\"per_page\": 20}, timeout=15)\ntarget = None\nfor c in r.json():\n    msg = c.get(\"commit\", {}).get(\"message\", \"\")\n    if msg.startswith(\"Save skill: \"):\n        target = msg.replace(\"Save skill: \", \"\").strip()\n        break\nif not target:\n    print(\"Koi recent skill-save commit nahi mila.\")\nelse:\n    r2 = requests.get(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\", headers=H, timeout=15)\n    if r2.status_code == 200:\n        sha = r2.json()[\"sha\"]\n        r3 = requests.delete(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\",\n                              headers=H, json={\"message\": f\"kill_last: remove {target}\", \"sha\": sha}, timeout=15)\n        print(f\"Deleted: {target}\" if r3.status_code == 200 else f\"Failed: {r3.status_code}\")\n    else:\n        print(f\"Nahi mili: skills/{target}\")\n```\n\nAapka code as a skill **\"kill_last_skill\"** save karne ke liye bhej diya gaya hai! 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Skill Save Result:\n✅ Skill saved: [kill_last_skill.py](https://github.com/advik08k/sasta-coder/blob/main/skills/kill_last_skill.py)\nAnalyze this and answer the user."
-    },
-    {
-      "role": "assistant",
       "content": "Aapka skill successfully save ho chuka hai! 🚀\n\nYe raha uska link:\n🔗 [kill_last_skill.py](https://github.com/advik08k/sasta-coder/blob/main/skills/kill_last_skill.py)\n\nAap is skill ka use karke repository se apna last saved skill delete ya remove kar sakte hain jab bhi zaroorat ho. \n\nAgar ise run karna ho ya koi aur help chahiye, toh batayein!"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hello! 👋 Kaise hain aap? \n\nSasta Coder ek baar phir hazir hai! Bataiye, aaj kaunsa task perform karna hai? Koi nayi skill banani hai, run karni hai, ya GitHub API/repo ka koi kaam hai? 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Hey"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 Sasta Coder is listening. \n\nBataiye, kya help chahiye aaj? Koi nayi skill save karni hai, koi code run karna hai, ya GitHub ka koi task hai? 🚀"
     }
   ],
   "model": "gemini-3.7-flash",
