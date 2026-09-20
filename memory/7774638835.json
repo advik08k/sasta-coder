@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Aapka skill successfully save ho chuka hai! 🚀\n\nYe raha uska link:\n🔗 [hello_test3.py](https://github.com/advik08k/sasta-coder/blob/main/skills/hello_test3.py)\n\nAgar aapko is skill ko run karna ho, toh aap ye manual command use kar sakte hain:\n`/run_skill hello_test3`\n\nAur bataiye, koi aur skill save karni hai ya kuch aur help chahiye?"
-    },
-    {
-      "role": "user",
-      "content": "Hlo"
-    },
-    {
-      "role": "assistant",
       "content": "Hello! 👋 Sasta Coder hazir hai. \n\nBataiye, aaj kya karna hai? Koi nayi skill save karni hai, code likhwana hai, ya kuch aur help chahiye?"
     },
     {
@@ -123,6 +115,22 @@
     {
       "role": "assistant",
       "content": "Hello! 👋 Sasta Coder is ready and listening! 🚀\n\nBataiye, aaj kya task perform karna hai? Koi nayi skill save karni hai, GitHub API se kuch check karna hai, ya koi aur help chahiye?"
+    },
+    {
+      "role": "user",
+      "content": "All commands list\n.."
+    },
+    {
+      "role": "assistant",
+      "content": "### Sasta Coder - Available Commands & Capabilities\n\n---\n\nHere is the complete list of commands and capabilities you can use with **Sasta Coder**:\n\n#### 1. Skill Management (`SAVE_SKILL`, `GET_SKILL`, `RUN_SKILL`)\n* **Save a Skill:** Saves a code snippet as a reusable skill stored in your GitHub memory repository.\n  ```python\n  # SAVE_SKILL skill_name\n  print(\"Hello World\")\n  ```\n* **List All Skills:** Fetches and lists all saved skills.\n  ```\n  # GET_SKILL \n  ```\n* **Get a Specific Skill:** Retrieves the content of a specific skill.\n  ```\n  # GET_SKILL skill_name\n  ```\n* **Run a Skill:** Executes a saved skill directly with full network and token access.\n  ```\n  # RUN_SKILL skill_name\n  ```\n\n#### 2. Python Execution Sandbox (`EXECUTE`)\n* Runs pure Python code (math, string formatting, algorithms) inside an isolated sandbox. \n  ```python\n  # EXECUTE\n  print(2 ** 10)\n  ```\n  *Note: This sandbox has **no internet/network access** and no third-party libraries.*\n\n#### 3. GitHub Integration (`GITHUB_CREATE_REPO`, `GITHUB_API`)\n* **Create a Repository:** Creates a new repository through the system bot.\n  ```\n  # GITHUB_CREATE_REPO\n  repo_name_here\n  ```\n* **Full GitHub REST API Access:** Perform any GitHub operation (branches, issues, PRs, contents, collaborators, etc.) using direct JSON API requests.\n  ```json\n  # GITHUB_API\n  {\"method\": \"GET\", \"path\": \"/repos/owner/repo\"}\n  ```\n\n---\n\nBataiye, inme se kaun sa command ya task abhi execute karna hai? 🚀"
+    },
+    {
+      "role": "user",
+      "content": "GitHub API Result:\nStatus 404:\n{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/repos/repos#get-a-repository\",\"status\":\"404\"}\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "Arre, lagta hai GitHub API request mein **404 Not Found** error aa gaya! 🛑\n\nIska matlab yeh ho sakta hai ki:\n* Aapne jo repository, file, ya endpoint path specify kiya hai, woh exist nahi karta (ya spelling mistake ho sakti hai).\n* Ya phir jo resource aap access karna chahte hain, woh private hai aur configured token ke paas uski permissions nahi hain.\n\nEk baar path ya endpoint ko double-check kar lijiye. Agar koi doosri API request karni hai ya kuch aur troubleshoot karna hai, toh batayein! 🚀"
     }
   ],
   "model": "gemini-3.7-flash",
