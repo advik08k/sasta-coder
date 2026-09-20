@@ -115,6 +115,22 @@
     {
       "role": "assistant",
       "content": "Haan, main images aur screenshots dekh sakta hoon agar aap unhe upload ya share karein! \n\nBataiye, aapko kis tarah ki image dikhani hai ya usse related kya help chahiye?"
+    },
+    {
+      "role": "user",
+      "content": "Isko skill ke roop mein save karo, naam \"kill_last_skill\":\nimport os, requests\nTOKEN = os.environ.get(\"GITHUB_TOKEN\")\nREPO = os.environ.get(\"MEMORY_REPO\", \"advik08k/sasta-coder\")\nH = {\"Authorization\": f\"token {TOKEN}\", \"Accept\": \"application/vnd.github.v3+json\"}\nr = requests.get(f\"https://api.github.com/repos/{REPO}/commits\", headers=H, params={\"per_page\": 20}, timeout=15)\ntarget = None\nfor c in r.json():\n    msg = c.get(\"commit\", {}).get(\"message\", \"\")\n    if msg.startswith(\"Save skill: \"):\n        target = msg.replace(\"Save skill: \", \"\").strip()\n        break\nif not target:\n    print(\"Koi recent skill-save commit nahi mila.\")\nelse:\n    r2 = requests.get(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\", headers=H, timeout=15)\n    if r2.status_code == 200:\n        sha = r2.json()[\"sha\"]\n        r3 = requests.delete(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\",\n                              headers=H, json={\"message\": f\"kill_last: remove {target}\", \"sha\": sha}, timeout=15)\n        print(f\"Deleted: {target}\" if r3.status_code == 200 else f\"Failed: {r3.status_code}\")\n    else:\n        print(f\"Nahi mili: skills/{target}\")\n\n--- Content from https://api.github.com/repos/{REPO}/contents/skills/{target}\", ---\nTitle: \n\nURL Source: https://api.github.com/repos/%7BREPO%7D/contents/skills/%7Btarget%7D%22,\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n{\r\n  \"message\": \"Not Found\",\r\n  \"documentation_url\": \"https://docs.github.com/rest\",\r\n  \"status\": \"404\"\r\n}\n\n-------------------\n\n--- Content from https://api.github.com/repos/{REPO}/commits\", ---\nTitle: \n\nURL Source: https://api.github.com/repos/%7BREPO%7D/commits%22,\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n{\n  \"message\": \"Not Found\",\n  \"documentation_url\": \"https://docs.github.com/rest/repos/repos#get-a-repository\",\n  \"status\": \"404\"\n}\n\n-------------------\n\n(Note for AI: The user provided these links. Use the extracted content above to answer their prompt.)"
+    },
+    {
+      "role": "assistant",
+      "content": "```python\n# SAVE_SKILL kill_last_skill\nimport os, requests\nTOKEN = os.environ.get(\"GITHUB_TOKEN\")\nREPO = os.environ.get(\"MEMORY_REPO\", \"advik08k/sasta-coder\")\nH = {\"Authorization\": f\"token {TOKEN}\", \"Accept\": \"application/vnd.github.v3+json\"}\nr = requests.get(f\"https://api.github.com/repos/{REPO}/commits\", headers=H, params={\"per_page\": 20}, timeout=15)\ntarget = None\nfor c in r.json():\n    msg = c.get(\"commit\", {}).get(\"message\", \"\")\n    if msg.startswith(\"Save skill: \"):\n        target = msg.replace(\"Save skill: \", \"\").strip()\n        break\nif not target:\n    print(\"Koi recent skill-save commit nahi mila.\")\nelse:\n    r2 = requests.get(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\", headers=H, timeout=15)\n    if r2.status_code == 200:\n        sha = r2.json()[\"sha\"]\n        r3 = requests.delete(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\",\n                              headers=H, json={\"message\": f\"kill_last: remove {target}\", \"sha\": sha}, timeout=15)\n        print(f\"Deleted: {target}\" if r3.status_code == 200 else f\"Failed: {r3.status_code}\")\n    else:\n        print(f\"Nahi mili: skills/{target}\")\n```\n\nAapka code as a skill **\"kill_last_skill\"** save karne ke liye bhej diya gaya hai! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Skill Save Result:\n✅ Skill saved: [kill_last_skill.py](https://github.com/advik08k/sasta-coder/blob/main/skills/kill_last_skill.py)\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "Aapka skill successfully save ho chuka hai! 🚀\n\nYe raha uska link:\n🔗 [kill_last_skill.py](https://github.com/advik08k/sasta-coder/blob/main/skills/kill_last_skill.py)\n\nAap is skill ka use karke repository se apna last saved skill delete ya remove kar sakte hain jab bhi zaroorat ho. \n\nAgar ise run karna ho ya koi aur help chahiye, toh batayein!"
     }
   ],
   "model": "gemini-3.6-flash",
