@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Arre bhai, bilkul zinda hoon! ⚡️ Bas aapke next command ka hi intezaar kar raha tha. \n\nBataiye, aaj kya karna hai? Koi code likhna hai, koi nayi skill save karni hai, ya purani skill test karni hai? Main taiyar hoon! 😎"
+    },
+    {
+      "role": "user",
+      "content": "Hloo??"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋 Haan bhai, zinda hoon aur yahin hoon! \n\nBataiye, kya help chahiye aaj? Koi code run karna hai ya koi nayi skill save karni hai?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
