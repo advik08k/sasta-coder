@@ -420,7 +420,7 @@ def save_memory(uid, data):
     path = f"memory/{uid}.json"
     _, sha = gh_get_file(path)
     content = json.dumps(data, ensure_ascii=False, indent=2)
-    gh_put_file(path, content, f"Memory update {datetime.now().strftime('%Y-%m-%d %H:%M')}", sha)
+    gh_put_file(path, content, f"[skip render] Memory update {datetime.now().strftime('%Y-%m-%d %H:%M')}", sha)
 
 def gh_create_repo(repo_name: str, private: bool = True) -> str:
     """Creates a new GitHub repo under the token owner's account (runs in bot process, not sandbox)"""
@@ -541,7 +541,7 @@ def gh_save_skill(name: str, content: str) -> str:
     url = f"https://api.github.com/repos/{MEMORY_REPO}/contents/{path}"
     log.info(f"[gh_save_skill] raw_name={raw_name!r} sanitized_name={name!r} path={path!r} url={url!r} repo={MEMORY_REPO!r}")
     _, sha = gh_get_file(path)
-    data = {"message": f"Save skill: {name}", "content": base64.b64encode(content.encode()).decode()}
+    data = {"message": f"[skip render] Save skill: {name}", "content": base64.b64encode(content.encode()).decode()}
     if sha: data["sha"] = sha
     r = requests.put(url, headers=GH_HEADERS(), json=data, timeout=15)
     log.info(f"[gh_save_skill] status={r.status_code} response={r.text[:300]!r}")
@@ -571,7 +571,7 @@ def gh_delete_skill(name: str) -> str:
         if content is not None:
             r = requests.delete(f"https://api.github.com/repos/{MEMORY_REPO}/contents/skills/{cand}",
                                  headers=GH_HEADERS(),
-                                 json={"message": f"Delete skill: {cand}", "sha": sha}, timeout=15)
+                                 json={"message": f"[skip render] Delete skill: {cand}", "sha": sha}, timeout=15)
             if r.status_code == 200:
                 return f"🗑️ Deleted: `{cand}`"
             return f"❌ Failed: {r.status_code} - {r.text[:150]}"
