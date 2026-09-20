@@ -434,19 +434,22 @@ def _skill_name_safe(name: str) -> str:
 def gh_save_skill(name: str, content: str) -> str:
     """Saves a code snippet to skills/<name>.py in MEMORY_REPO. Does NOT execute or load it anywhere."""
     if not GITHUB_TOKEN: return "❌ GITHUB_TOKEN env var set nahi hai Render pe"
+    raw_name = name
     name = _skill_name_safe(name)
     if not name: return "❌ Invalid skill name"
     if not name.endswith((".py", ".txt", ".md", ".json")):
         name += ".py"
     path = f"skills/{name}"
+    url = f"https://api.github.com/repos/{MEMORY_REPO}/contents/{path}"
+    log.info(f"[gh_save_skill] raw_name={raw_name!r} sanitized_name={name!r} path={path!r} url={url!r} repo={MEMORY_REPO!r}")
     _, sha = gh_get_file(path)
     data = {"message": f"Save skill: {name}", "content": base64.b64encode(content.encode()).decode()}
     if sha: data["sha"] = sha
-    r = requests.put(f"https://api.github.com/repos/{MEMORY_REPO}/contents/{path}",
-                      headers=GH_HEADERS(), json=data, timeout=15)
+    r = requests.put(url, headers=GH_HEADERS(), json=data, timeout=15)
+    log.info(f"[gh_save_skill] status={r.status_code} response={r.text[:300]!r}")
     if r.status_code in (200, 201):
         return f"✅ Skill saved: [{name}](https://github.com/{MEMORY_REPO}/blob/main/{path})"
-    return f"❌ Failed ({r.status_code}): {r.json().get('message', r.text[:150])}"
+    return f"❌ Failed ({r.status_code}) path=`{path}`: {r.json().get('message', r.text[:150])}"
 
 def gh_load_skill(name: str) -> str:
     """Fetches a saved skill's raw content back. Does NOT execute it."""
@@ -1082,7 +1085,14 @@ def run_bot():
         os.unlink(tmp.name)
 
     # Build app
-    app = Application.builder().token(BOT_TOKEN).build()
+    async def _clear_webhook(app_):
+        try:
+            await app_.bot.delete_webhook(drop_pending_updates=False)
+            log.info("✅ Webhook cleared (if any was set) — polling can proceed safely")
+        except Exception as e:
+            log.warning(f"delete_webhook failed (non-fatal): {e}")
+
+    app = Application.builder().token(BOT_TOKEN).post_init(_clear_webhook).build()
     app.add_handler(CommandHandler("start",    start, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("menu",     cmd_menu, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("search",   cmd_search, filters=filters.UpdateType.MESSAGE))
