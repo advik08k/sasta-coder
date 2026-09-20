@@ -1,22 +1,6 @@
 {
   "history": [
     {
-      "role": "user",
-      "content": "Hai yaa yaa heyyy"
-    },
-    {
-      "role": "user",
-      "content": "Hello"
-    },
-    {
-      "role": "user",
-      "content": "Sach me"
-    },
-    {
-      "role": "user",
-      "content": "Hey"
-    },
-    {
       "role": "assistant",
       "content": "Hey there! 👋 It looks like you're just testing things out or throwing a mix of fun phrases and random text my way. \n\nHow can I help you today? Whether you want to write some code, solve a problem, or just chat, I'm ready when you are!"
     },
