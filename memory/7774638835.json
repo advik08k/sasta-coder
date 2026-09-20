@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Aapka repository **`advik08k/sasta-coder`** **public** hai (`\"private\": false`)! 🚀\n\nAur bataiye, GitHub API ya skills ke related koi aur information nikalni hai kya?"
+    },
+    {
+      "role": "user",
+      "content": "Hello"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋 Kaise hain aap? \n\nBataiye, aaj Sasta Coder ke liye kya kaam hai? Koi nayi skill save karni hai, GitHub API check karni hai, ya koi code likhwana hai? Main bilkul taiyar hoon! 🚀"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
