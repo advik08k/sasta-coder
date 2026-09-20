@@ -6,14 +6,6 @@
     },
     {
       "role": "user",
-      "content": "Heyyaaaaaa"
-    },
-    {
-      "role": "user",
-      "content": "Heyyaaaaaa"
-    },
-    {
-      "role": "user",
       "content": "Hello"
     },
     {
@@ -123,6 +115,22 @@
     {
       "role": "assistant",
       "content": "Hey there! 👋 It looks like you're just testing things out or throwing a mix of fun phrases and random text my way. \n\nHow can I help you today? Whether you want to write some code, solve a problem, or just chat, I'm ready when you are!"
+    },
+    {
+      "role": "user",
+      "content": "Isko skill ke roop mein save karo, naam \"hello_test3\":\nprint(\"test\")"
+    },
+    {
+      "role": "assistant",
+      "content": "```python\n# SAVE_SKILL hello_test3\nprint(\"test\")\n```\n\nAapka snippet as a skill **\"hello_test3\"** save karne ke liye bhej diya gaya hai! \n\nAgar aapko is saved skill ko run karna ho, toh aap manually ye command use kar sakte hain:\n`/run_skill hello_test3`\n\nAur kuch help chahiye kya?"
+    },
+    {
+      "role": "user",
+      "content": "Skill Save Result:\n✅ Skill saved: [hello_test3.py](https://github.com/advik08k/sasta-coder/blob/main/skills/hello_test3.py)\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "Aapka skill successfully save ho chuka hai! 🚀\n\nYe raha uska link:\n🔗 [hello_test3.py](https://github.com/advik08k/sasta-coder/blob/main/skills/hello_test3.py)\n\nAgar aapko is skill ko run karna ho, toh aap ye manual command use kar sakte hain:\n`/run_skill hello_test3`\n\nAur bataiye, koi aur skill save karni hai ya kuch aur help chahiye?"
     }
   ],
   "model": "gemini-3.6-flash",
