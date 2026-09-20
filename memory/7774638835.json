@@ -2,30 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Aapka repository **`advik08k/sasta-coder`** **public** hai (`\"private\": false`)! 🚀\n\nAur bataiye, GitHub API ya skills ke related koi aur information nikalni hai kya?"
-    },
-    {
-      "role": "user",
-      "content": "Hello"
-    },
-    {
-      "role": "assistant",
-      "content": "Hello! 👋 Kaise hain aap? \n\nBataiye, aaj Sasta Coder ke liye kya kaam hai? Koi nayi skill save karni hai, GitHub API check karni hai, ya koi code likhwana hai? Main bilkul taiyar hoon! 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Heyy"
-    },
-    {
-      "role": "assistant",
-      "content": "Hey! 👋 Sasta Coder ek baar phir hazir hai. \n\nBataiye, kya chal raha hai aur aaj kis cheez mein help karu? Koi nayi skill banani hai, GitHub par kuch check karna hai, ya koi naya task hai? 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Hloo"
-    },
-    {
-      "role": "assistant",
       "content": "Hello! 👋 Sasta Coder is ready and listening! 🚀\n\nBataiye, aaj kya task perform karna hai? Koi nayi skill save karni hai, GitHub API se kuch check karna hai, ya koi aur help chahiye?"
     },
     {
@@ -139,6 +115,34 @@
     {
       "role": "assistant",
       "content": "### 📂 Source Repository Analysis (`advik08k/sasta-coder`)\n\nSource repository ki root directory successfully fetch ho gayi hai! Isme yeh main files aur folders mile hain:\n\n* **`README.md`**: Repository ki documentation aur instructions.\n* **`gemini_web2api.py`**: Main Python script/API logic.\n* **`memory`**: Skills aur stored data ka directory folder.\n\n---\n\n### 🚀 Next Steps (`sasta-coder-take2`)\n\nKyunki **`sasta-coder-take2`** repository pehle se hi exist karti hai, ab humein source repo se in files ka content fetch karke target repo (`sasta-coder-take2`) mein upload karna hoga.\n\nKya main in files ko `sasta-coder-take2` mein copy karne ki process shuru karu? (Aapke confirmation ke baad hum files transfer kar denge!) 🛠️"
+    },
+    {
+      "role": "user",
+      "content": "Haan kardo and sab kuch karna , sasta-coder ka render_main.py sab kuch copy paste"
+    },
+    {
+      "role": "assistant",
+      "content": "```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/repos/advik08k/sasta-coder/contents\"}\n```"
+    },
+    {
+      "role": "user",
+      "content": "GitHub API Result:\nStatus 200:\n[{\"name\":\"README.md\",\"path\":\"README.md\",\"sha\":\"07ec55a2ec898913d461642c56170adf0f70b11e\",\"size\":2366,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/README.md?ref=main\",\"html_url\":\"https://github.com/advik08k/sasta-coder/blob/main/README.md\",\"git_url\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/07ec55a2ec898913d461642c56170adf0f70b11e\",\"download_url\":\"https://raw.githubusercontent.com/advik08k/sasta-coder/main/README.md\",\"type\":\"file\",\"_links\":{\"self\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/README.md?ref=main\",\"git\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/07ec55a2ec898913d461642c56170adf0f70b11e\",\"html\":\"https://github.com/advik08k/sasta-coder/blob/main/README.md\"}},{\"name\":\"gemini_web2api.py\",\"path\":\"gemini_web2api.py\",\"sha\":\"1f73f6e9b849c16f990d521681ddce39423063fd\",\"size\":46967,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/gemini_web2api.py?ref=main\",\"html_url\":\"https://github.com/advik08k/sasta-coder/blob/main/gemini_web2api.py\",\"git_url\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/1f73f6e9b849c16f990d521681ddce39423063fd\",\"download_url\":\"https://raw.githubusercontent.com/advik08k/sasta-coder/main/gemini_web2api.py\",\"type\":\"file\",\"_links\":{\"self\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/gemini_web2api.py?ref=main\",\"git\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/1f73f6e9b849c16f990d521681ddce39423063fd\",\"html\":\"https://github.com/advik08k/sasta-coder/blob/main/gemini_web2api.py\"}},{\"name\":\"memory\",\"path\":\"memory\",\"sha\":\"7f12d3cd246f6edf66e1f08f353e01b8733f6ca3\",\"size\":0,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/memory?ref=main\",\"html_url\":\"https://github.com/advik08k/sasta-coder/tree/main/memory\",\"git_url\":\"https://api.github.com/repos/advik08k/sasta-coder/git/trees/7f12d3cd246f6edf66e1f08f353e01b8733f6ca3\",\"download_url\":null,\"type\":\"dir\",\"_links\":{\"self\":\"https://api.github.com/repos/advik\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/repos/advik08k/sasta-coder/contents\"}\n```"
+    },
+    {
+      "role": "user",
+      "content": "GitHub API Result:\nStatus 200:\n[{\"name\":\"README.md\",\"path\":\"README.md\",\"sha\":\"07ec55a2ec898913d461642c56170adf0f70b11e\",\"size\":2366,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/README.md?ref=main\",\"html_url\":\"https://github.com/advik08k/sasta-coder/blob/main/README.md\",\"git_url\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/07ec55a2ec898913d461642c56170adf0f70b11e\",\"download_url\":\"https://raw.githubusercontent.com/advik08k/sasta-coder/main/README.md\",\"type\":\"file\",\"_links\":{\"self\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/README.md?ref=main\",\"git\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/07ec55a2ec898913d461642c56170adf0f70b11e\",\"html\":\"https://github.com/advik08k/sasta-coder/blob/main/README.md\"}},{\"name\":\"gemini_web2api.py\",\"path\":\"gemini_web2api.py\",\"sha\":\"1f73f6e9b849c16f990d521681ddce39423063fd\",\"size\":46967,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/gemini_web2api.py?ref=main\",\"html_url\":\"https://github.com/advik08k/sasta-coder/blob/main/gemini_web2api.py\",\"git_url\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/1f73f6e9b849c16f990d521681ddce39423063fd\",\"download_url\":\"https://raw.githubusercontent.com/advik08k/sasta-coder/main/gemini_web2api.py\",\"type\":\"file\",\"_links\":{\"self\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/gemini_web2api.py?ref=main\",\"git\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/1f73f6e9b849c16f990d521681ddce39423063fd\",\"html\":\"https://github.com/advik08k/sasta-coder/blob/main/gemini_web2api.py\"}},{\"name\":\"memory\",\"path\":\"memory\",\"sha\":\"7f12d3cd246f6edf66e1f08f353e01b8733f6ca3\",\"size\":0,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/memory?ref=main\",\"html_url\":\"https://github.com/advik08k/sasta-coder/tree/main/memory\",\"git_url\":\"https://api.github.com/repos/advik08k/sasta-coder/git/trees/7f12d3cd246f6edf66e1f08f353e01b8733f6ca3\",\"download_url\":null,\"type\":\"dir\",\"_links\":{\"self\":\"https://api.github.com/repos/advik\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/repos/advik08k/sasta-coder/contents/README.md\"}\n```\n\nMain `advik08k/sasta-coder` se sabse pehle **`README.md`** file ka content fetch kar raha hoon taaki use `sasta-coder-take2` mein copy kiya ja sake. Bas thoda sa intezaار kijiye! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "GitHub API Result:\nStatus 200:\n{\"name\":\"README.md\",\"path\":\"README.md\",\"sha\":\"07ec55a2ec898913d461642c56170adf0f70b11e\",\"size\":2366,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder/contents/README.md?ref=main\",\"html_url\":\"https://github.com/advik08k/sasta-coder/blob/main/README.md\",\"git_url\":\"https://api.github.com/repos/advik08k/sasta-coder/git/blobs/07ec55a2ec898913d461642c56170adf0f70b11e\",\"download_url\":\"https://raw.githubusercontent.com/advik08k/sasta-coder/main/README.md\",\"type\":\"file\",\"content\":\"IyDwn6SWIFNhc3RhIENvZGVyIOKAlCBGcmVlIFVubGltaXRlZCBBSSBUZWxl\\nZ3JhbSBCb3QKCj4gQW50aWdyYXZpdHkgQ0xJIGphaXNhIHBvd2VyZnVsIEFJ\\nIGJvdCwgYmlsa3VsIEZSRUUhCgpbIVtEZXBsb3kgdG8gUmVuZGVyXShodHRw\\nczovL3JlbmRlci5jb20vaW1hZ2VzL2RlcGxveS10by1yZW5kZXItYnV0dG9u\\nLnN2ZyldKGh0dHBzOi8vcmVuZGVyLmNvbS9kZXBsb3kpCgojIyDinKggRmVh\\ndHVyZXMKCnwgRmVhdHVyZSB8IFN0YXR1cyB8CnwtLS0tLS0tLS18LS0tLS0t\\nLS18Cnwg8J+kliBHZW1pbmkgMy43IEZsYXNoIENoYXQgfCDinIUgRnJlZSwg\\nVW5saW1pdGVkIHwKfCDwn5SNIFdlYiBTZWFyY2ggfCDinIUgRnJlZSAoRHVj\\na0R1Y2tHbykgfAp8IPCfjqggSW1hZ2UgR2VuZXJhdGlvbiB8IOKchSBGcmVl\\nIChQb2xsaW5hdGlvbnMgRkxVWCkgfAp8IPCfp6AgRGVlcCBUaGlua2luZyBN\\nb2RlIHwg4pyFIEdlbWluaSBUaGlua2luZyB8Cnwg8J+SviBHaXRIdWIgTWVt\\nb3J5IHwg4pyFIFBlcnNpc3RlbnQgY2hhdCBoaXN0b3J5IHwKfCDwn5OBIEZp\\nbGUgU2VuZC9Eb3dubG9hZCB8IOKchSB8Cnwg4qyG77iPIEdpdEh1YiBVcGxv\\nYWQgfCDinIUgfAp8IPCfjpvvuI8gSW5saW5lIEtleWJvYXJkIFVJIHwg4pyF\\nIEJlYXV0aWZ1bCBpbnRlcmZhY2UgfAoKIyMg8J+agCBEZXBsb3kgb24gUmVu\\nZGVyICg1IG1pbnV0ZXMpCgojIyMgU3RlcCAxOiBGb3JrIHRoaXMgcmVwbwoK\\nIyMjIFN0ZXAgMjogUmVuZGVyIHBlIGRlcGxveSBrYXJvCjEuIFtyZW5kZXIu\\nY29tXShodHRwczovL3JlbmRlci5jb20pIOKGkiAqKk5ldyBXZWIgU2Vydmlj\\nZSoqCjIuIEdpdEh1YiByZXBvIGNvbm5lY3Qga2FybwozLiBTZXR0aW5nczoK\\nICAgLSAqKkJ1aWxkOioqIGBwaXAgaW5zdGFsbCAtciByZXF1aXJlbWVudHMu\\ndHh0ICYmIGN1cmwgLXNMIGh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50\\nLmNvbS9Tb3Bob21vcmVzdHkvZ2VtaW5pLXdlYjJhcGkvbWFpbi9nZW1pbmlf\\nd2ViMmFwaS5weSAtbyBnZW1pbmlfd2ViMmFwaS5weWAKICAgLSAqKlN0YXJ0\\nOioqIGBweXRob24gcmVuZGVyX21haW4ucHlgCiAgIC0gKipQbGFuOioqIEZy\\nZWUKCiMjIyBTdGVwIDM6IEVudmly\nAnalyze this and answer the user."
     }
   ],
   "model": "gemini-3.7-flash",
