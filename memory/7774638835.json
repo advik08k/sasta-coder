@@ -119,6 +119,10 @@
     {
       "role": "user",
       "content": "Are nhi ye nhi w8 Mai skill save karta hoon"
+    },
+    {
+      "role": "assistant",
+      "content": "Arre haan, bilkul! Main samajh gaya bhai. Aap khud apni tarah se sahi code ya instruction skill ke taur par save karo, main wait kar raha hoon! 🚀 \n\nAap apna `SAVE_SKILL` b bhejo, main turant usko run kar deta hoon."
     }
   ],
   "model": "gemini-3.5-flash-thinking",
