@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Aapka skill successfully save ho chuka hai! 🚀\n\nYe raha uska link:\n🔗 [kill_last_skill.py](https://github.com/advik08k/sasta-coder/blob/main/skills/kill_last_skill.py)\n\nAap is skill ka use karke repository se apna last saved skill delete ya remove kar sakte hain jab bhi zaroorat ho. \n\nAgar ise run karna ho ya koi aur help chahiye, toh batayein!"
-    },
-    {
-      "role": "user",
-      "content": "Hlo"
-    },
-    {
-      "role": "assistant",
       "content": "Hello! 👋 Sasta Coder ek baar phir hazir hai. \n\nBataiye, aaj kis cheez mein help karu? Koi nayi skill banani hai, purani skill run karni hai, ya koi naya code likhwana hai?"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 Sasta Coder is listening. \n\nBataiye, kya help chahiye aaj? Koi nayi skill save karni hai, koi code run karna hai, ya GitHub ka koi task hai? 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋 Sasta Coder hazir hai! \n\nBataiye, aaj kis cheez mein help karu? Koi nayi skill save karni hai, GitHub API check karni hai, ya koi naya code run karwana hai? 🚀"
     }
   ],
   "model": "gemini-3.7-flash",
