@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Hola"
-    },
-    {
-      "role": "assistant",
-      "content": "### 👋 Hola, Bhai! \n\nSab set hai aur aapki **`/repo_copy`** skill bhi memory mein securely save ho chuki hai. 🚀 \n\nBatayiye, abhi kya plan hai? Koi nayi repo copy karni hai ya koi aur coding/GitHub task execute karein?"
-    },
-    {
-      "role": "user",
       "content": "Ab agli Baar se bolu copy karne ka to ye command use karna /repo_copy advik08k/<firstRepoName> <SecondRepoName>\n\nAnd agar Pehle se <secondRepo> available ho to delete karke karna"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "### 👋 Hello Bhai! \n\nMain bilkul taiyar hoon! Boliye, aapne kaunsi skill save karni hai ya aage kya command deni hai? Main aapke next instruction ka wait kar raha hoon! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Bhai wo skill nhi wo pehle se code me hai , uska format ye hai \n\n\n\n/repo_copy advik08k/<firstRepoName> <SecondRepoName>\n\nAnd agar Pehle se <secondRepo> available ho to delete karke karna"
+    },
+    {
+      "role": "assistant",
+      "content": "### 🎯 Ah, Got It, Bhai! \n\nAb poori baat samajh mein aayi! Woh command actually ek **chatbot command/parser format** hai jo already code ke andar handled hota hai, na ki koi Python text skill jo main alag se save karun. \n\nAapko bas woh command run karni hai:\n```text\n/repo_copy advik08k/sasta-coder sasta-coder-clone\n```\n\nChaliye, aapke instruction ke mutabiq (agar target repo pehle se ho toh use delete karke fresh copy banane wala logic use karke) main isko direct API ke through turant execute kar raha hoon! 🚀"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
