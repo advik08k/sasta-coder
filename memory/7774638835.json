@@ -2,22 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Hello! 👋 Sasta Coder hazir hai. \n\nBataiye, aaj kya karna hai? Koi nayi skill save karni hai, code likhwana hai, ya kuch aur help chahiye?"
-    },
-    {
-      "role": "user",
-      "content": "Kya Tum pic dekh sakte ho??"
-    },
-    {
-      "role": "assistant",
-      "content": "Haan, main images aur screenshots dekh sakta hoon agar aap unhe upload ya share karein! \n\nBataiye, aapko kis tarah ki image dikhani hai ya usse related kya help chahiye?"
-    },
-    {
-      "role": "user",
-      "content": "Isko skill ke roop mein save karo, naam \"kill_last_skill\":\nimport os, requests\nTOKEN = os.environ.get(\"GITHUB_TOKEN\")\nREPO = os.environ.get(\"MEMORY_REPO\", \"advik08k/sasta-coder\")\nH = {\"Authorization\": f\"token {TOKEN}\", \"Accept\": \"application/vnd.github.v3+json\"}\nr = requests.get(f\"https://api.github.com/repos/{REPO}/commits\", headers=H, params={\"per_page\": 20}, timeout=15)\ntarget = None\nfor c in r.json():\n    msg = c.get(\"commit\", {}).get(\"message\", \"\")\n    if msg.startswith(\"Save skill: \"):\n        target = msg.replace(\"Save skill: \", \"\").strip()\n        break\nif not target:\n    print(\"Koi recent skill-save commit nahi mila.\")\nelse:\n    r2 = requests.get(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\", headers=H, timeout=15)\n    if r2.status_code == 200:\n        sha = r2.json()[\"sha\"]\n        r3 = requests.delete(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\",\n                              headers=H, json={\"message\": f\"kill_last: remove {target}\", \"sha\": sha}, timeout=15)\n        print(f\"Deleted: {target}\" if r3.status_code == 200 else f\"Failed: {r3.status_code}\")\n    else:\n        print(f\"Nahi mili: skills/{target}\")\n\n--- Content from https://api.github.com/repos/{REPO}/contents/skills/{target}\", ---\nTitle: \n\nURL Source: https://api.github.com/repos/%7BREPO%7D/contents/skills/%7Btarget%7D%22,\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n{\r\n  \"message\": \"Not Found\",\r\n  \"documentation_url\": \"https://docs.github.com/rest\",\r\n  \"status\": \"404\"\r\n}\n\n-------------------\n\n--- Content from https://api.github.com/repos/{REPO}/commits\", ---\nTitle: \n\nURL Source: https://api.github.com/repos/%7BREPO%7D/commits%22,\n\nWarning: Target URL returned error 404: Not Found\n\nMarkdown Content:\n{\n  \"message\": \"Not Found\",\n  \"documentation_url\": \"https://docs.github.com/rest/repos/repos#get-a-repository\",\n  \"status\": \"404\"\n}\n\n-------------------\n\n(Note for AI: The user provided these links. Use the extracted content above to answer their prompt.)"
-    },
-    {
-      "role": "assistant",
       "content": "```python\n# SAVE_SKILL kill_last_skill\nimport os, requests\nTOKEN = os.environ.get(\"GITHUB_TOKEN\")\nREPO = os.environ.get(\"MEMORY_REPO\", \"advik08k/sasta-coder\")\nH = {\"Authorization\": f\"token {TOKEN}\", \"Accept\": \"application/vnd.github.v3+json\"}\nr = requests.get(f\"https://api.github.com/repos/{REPO}/commits\", headers=H, params={\"per_page\": 20}, timeout=15)\ntarget = None\nfor c in r.json():\n    msg = c.get(\"commit\", {}).get(\"message\", \"\")\n    if msg.startswith(\"Save skill: \"):\n        target = msg.replace(\"Save skill: \", \"\").strip()\n        break\nif not target:\n    print(\"Koi recent skill-save commit nahi mila.\")\nelse:\n    r2 = requests.get(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\", headers=H, timeout=15)\n    if r2.status_code == 200:\n        sha = r2.json()[\"sha\"]\n        r3 = requests.delete(f\"https://api.github.com/repos/{REPO}/contents/skills/{target}\",\n                              headers=H, json={\"message\": f\"kill_last: remove {target}\", \"sha\": sha}, timeout=15)\n        print(f\"Deleted: {target}\" if r3.status_code == 200 else f\"Failed: {r3.status_code}\")\n    else:\n        print(f\"Nahi mili: skills/{target}\")\n```\n\nAapka code as a skill **\"kill_last_skill\"** save karne ke liye bhej diya gaya hai! 🚀"
     },
     {
@@ -131,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Arre, lagta hai GitHub API request mein **404 Not Found** error aa gaya! 🛑\n\nIska matlab yeh ho sakta hai ki:\n* Aapne jo repository, file, ya endpoint path specify kiya hai, woh exist nahi karta (ya spelling mistake ho sakti hai).\n* Ya phir jo resource aap access karna chahte hain, woh private hai aur configured token ke paas uski permissions nahi hain.\n\nEk baar path ya endpoint ko double-check kar lijiye. Agar koi doosri API request karni hai ya kuch aur troubleshoot karna hai, toh batayein! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋 Kaise hain aap? \n\nSasta Coder ek baar phir hazir hai! Bataiye, aaj kaunsa task perform karna hai? Koi nayi skill banani hai, run karni hai, ya GitHub API/repo ka koi kaam hai? 🚀"
     }
   ],
   "model": "gemini-3.7-flash",
