@@ -71,7 +71,11 @@ To fetch a saved skill back as text, wrap it like this:
 ```
 # GET_SKILL skill_name
 ```
-Leave the name blank to list all saved skills. Saved skills are stored as plain files on GitHub — they are NEVER auto-loaded or auto-executed by you or the bot. To actually RUN a saved skill, the user must type the manual command `/run_skill skill_name` themselves — you cannot trigger execution, so tell them to run that command if they want to execute it. This is intentional and cannot be worked around.
+Leave the name blank to list all saved skills. To RUN a saved skill directly (real execution, full network/token access), wrap it like this:
+```
+# RUN_SKILL skill_name
+```
+Use this whenever the user's request calls for it — you decide when running a skill is appropriate. Saved skills are stored as plain files on GitHub.
 
 5. GENERAL INSTRUCTIONS:
 - For long responses: structure with headers and bullet points.
@@ -425,6 +429,69 @@ def gh_create_repo(repo_name: str, private: bool = True) -> str:
     if r.status_code == 422:
         return f"⚠️ Repo '{repo_name}' already exists ya naam invalid hai."
     return f"❌ Failed: {r.status_code} - {r.json().get('message', r.text[:150])}"
+
+def gh_copy_repo(source_repo: str, new_name: str, private: bool = True) -> str:
+    """
+    Duplicates source_repo into a brand-new repo under the token owner's account.
+    Standalone, single-purpose, manual-command-only (see cmd_repo_copy) — never
+    reachable via a model-generated marker, since a bulk multi-file operation
+    is exactly the kind of thing that shouldn't run without an explicit owner action.
+    """
+    if not GITHUB_TOKEN: return "❌ GITHUB_TOKEN env var set nahi hai Render pe"
+    source_repo = source_repo.strip()
+    new_name = new_name.strip().split("/")[-1]
+    if not new_name or not re.match(r'^[A-Za-z0-9._-]+$', new_name):
+        return "❌ Invalid new repo name"
+
+    # 1. Get source repo's default branch
+    r = requests.get(f"https://api.github.com/repos/{source_repo}", headers=GH_HEADERS(), timeout=15)
+    if not r.ok:
+        return f"❌ Source repo access failed: {r.status_code} - {r.json().get('message', '')}"
+    default_branch = r.json().get("default_branch", "main")
+
+    # 2. Get full file tree (recursive)
+    r = requests.get(f"https://api.github.com/repos/{source_repo}/git/trees/{default_branch}?recursive=1",
+                      headers=GH_HEADERS(), timeout=20)
+    if not r.ok:
+        return f"❌ Tree fetch failed: {r.status_code} - {r.json().get('message', '')}"
+    tree = [t for t in r.json().get("tree", []) if t["type"] == "blob"]
+    if not tree:
+        return "❌ Source repo mein koi file nahi mili"
+
+    # 3. Create the new repo
+    create_result = gh_create_repo(new_name, private)
+    if not create_result.startswith("✅"):
+        return create_result  # already-exists / failure — surface as-is
+
+    # 4. Copy each file (base64 content carries over directly, no decode/re-encode needed)
+    copied, failed = 0, []
+    for item in tree:
+        path = item["path"]
+        blob = requests.get(item["url"], headers=GH_HEADERS(), timeout=15)
+        if not blob.ok:
+            failed.append(path)
+            continue
+        content_b64 = blob.json().get("content", "")
+        put = requests.put(
+            f"https://api.github.com/repos/{GITHUB_OWNER()}/{new_name}/contents/{path}",
+            headers=GH_HEADERS(),
+            json={"message": f"Copy from {source_repo}", "content": content_b64},
+            timeout=15
+        )
+        if put.status_code in (200, 201):
+            copied += 1
+        else:
+            failed.append(path)
+
+    msg = f"✅ Copied {copied}/{len(tree)} files to {new_name}"
+    if failed:
+        msg += f"\n⚠️ Failed: {', '.join(failed[:10])}" + (" ..." if len(failed) > 10 else "")
+    return msg
+
+def GITHUB_OWNER() -> str:
+    """Resolves the token owner's username via GitHub API (cached at module load isn't safe across token changes, so fetched live but cheap)."""
+    r = requests.get("https://api.github.com/user", headers=GH_HEADERS(), timeout=10)
+    return r.json().get("login", "") if r.ok else ""
 
 def _skill_name_safe(name: str) -> str:
     name = name.strip().split("/")[-1]
@@ -850,13 +917,24 @@ def run_bot():
                 break
             h.append({"role": "assistant", "content": reply})
             
-            # Check if Gemini wants to execute code, create a repo, or save/get a skill
+            # Check if Gemini wants to execute code, create a repo, save/get/run a skill
             code_match = re.search(r'```python\s*# EXECUTE\s*(.*?)```', reply, re.DOTALL)
             repo_match = re.search(r'```\s*# GITHUB_CREATE_REPO\s*(.*?)```', reply, re.DOTALL)
             save_skill_match = re.search(r'```\w*\s*# SAVE_SKILL\s+(\S+)\s*\n(.*?)```', reply, re.DOTALL)
             get_skill_match = re.search(r'```\s*# GET_SKILL\s*(\S*)\s*```', reply, re.DOTALL)
+            run_skill_match = re.search(r'```\s*# RUN_SKILL\s+(\S+)\s*```', reply, re.DOTALL)
 
-            if save_skill_match:
+            if run_skill_match:
+                skill_name = run_skill_match.group(1).strip()
+                status_msg = await u.message.reply_text(f"▶️ Running skill: `{skill_name}`...", parse_mode=ParseMode.MARKDOWN)
+                result = run_skill(skill_name)
+                h.append({"role": "user", "content": f"Skill Run Result:\n{result}\nAnalyze this and answer the user."})
+                await status_msg.edit_text(f"```text\n{result[:3500]}\n```", parse_mode=ParseMode.MARKDOWN)
+
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            elif save_skill_match:
                 skill_name, skill_code = save_skill_match.group(1).strip(), save_skill_match.group(2)
                 status_msg = await u.message.reply_text(f"💾 Saving skill: `{skill_name}`...", parse_mode=ParseMode.MARKDOWN)
                 result = gh_save_skill(skill_name, skill_code)
@@ -1043,6 +1121,19 @@ def run_bot():
             return
         await u.message.reply_text(gh_delete_skill(args[1].strip()), parse_mode=ParseMode.MARKDOWN)
 
+    async def cmd_repo_copy(u: Update, c):
+        """/repo_copy source_owner/source_repo new_name — duplicates an entire repo.
+        Deliberately manual-only: a bulk multi-file operation never runs from a
+        model-generated marker, only from an explicit typed command."""
+        if not auth(u): return
+        args = u.message.text.split(maxsplit=2)
+        if len(args) < 3:
+            await u.message.reply_text("Usage: `/repo_copy owner/source-repo new-repo-name`", parse_mode=ParseMode.MARKDOWN)
+            return
+        status = await u.message.reply_text(f"📦 Copying `{args[1]}` → `{args[2]}`... (bade repo mein time lagega)", parse_mode=ParseMode.MARKDOWN)
+        result = gh_copy_repo(args[1].strip(), args[2].strip())
+        await status.edit_text(result, parse_mode=ParseMode.MARKDOWN)
+
     async def cmd_skillsoff(u: Update, c):
         """/skillsoff — EMERGENCY kill switch: instantly blocks all /run_skill calls.
         Pure in-memory flag flip, zero dependencies. Always works."""
@@ -1105,6 +1196,7 @@ def run_bot():
     app.add_handler(CommandHandler("skills",   cmd_skills, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("run_skill", cmd_run_skill, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("killskill", cmd_killskill, filters=filters.UpdateType.MESSAGE))
+    app.add_handler(CommandHandler("repo_copy", cmd_repo_copy, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("skillsoff", cmd_skillsoff, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("skillson", cmd_skillson, filters=filters.UpdateType.MESSAGE))
     app.add_handler(CommandHandler("savefile", cmd_savefile, filters=filters.UpdateType.MESSAGE))
