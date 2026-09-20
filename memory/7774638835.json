@@ -6,14 +6,6 @@
     },
     {
       "role": "user",
-      "content": "Heyy"
-    },
-    {
-      "role": "user",
-      "content": "Hello"
-    },
-    {
-      "role": "user",
       "content": "Ok"
     },
     {
@@ -123,6 +115,22 @@
     {
       "role": "assistant",
       "content": "Hello! 👋 Haan bhai, zinda hoon aur yahin hoon! \n\nBataiye, kya help chahiye aaj? Koi code run karna hai ya koi nayi skill save karni hai?"
+    },
+    {
+      "role": "user",
+      "content": "Ek skill save karo naam \"greet\", jo print(\"hello auto\") kare, aur turant run bhi kar do"
+    },
+    {
+      "role": "assistant",
+      "content": "```python\n# SAVE_SKILL greet\nprint(\"hello auto\")\n```\n\nAapki **\"greet\"** skill save karne ke liye bhej di gayi hai! 🚀 \n\nAur jaisa aapne kaha, is skill ko turant run karne ke liye aap ye command use kar sakte hain:\n`/run_skill greet`\n\nSkill save hone ke baad ye direct execute ho jayegi! Aur koi help chahiye toh batayein."
+    },
+    {
+      "role": "user",
+      "content": "Skill Save Result:\n✅ Skill saved: [greet.py](https://github.com/advik08k/sasta-coder/blob/main/skills/greet.py)\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "Aapki skill **\"greet\"** successfully save ho chuke hai! 🚀\n\nAb main ise turant run kar raha hoon:\n\n# RUN_SKILL greet\n\nYe raha skill ka link: \n🔗 [greet.py](https://github.com/advik08k/sasta-coder/blob/main/skills/greet.py)\n\nAur koi skill run ya save karni hai kya?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
