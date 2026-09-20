@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hello! 👋 Kaise hain aap? \n\nBataiye, aaj Sasta Coder ke liye kya kaam hai? Koi nayi skill save karni hai, GitHub API check karni hai, ya koi code likhwana hai? Main bilkul taiyar hoon! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Heyy"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 Sasta Coder ek baar phir hazir hai. \n\nBataiye, kya chal raha hai aur aaj kis cheez mein help karu? Koi nayi skill banani hai, GitHub par kuch check karna hai, ya koi naya task hai? 🚀"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
