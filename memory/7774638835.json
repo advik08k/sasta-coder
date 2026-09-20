@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Aapka skill successfully save ho chuka hai! 🚀\n\nYe raha uska link:\n🔗 [hello_test3.py](https://github.com/advik08k/sasta-coder/blob/main/skills/hello_test3.py)\n\nAgar aapko is skill ko run karna ho, toh aap ye manual command use kar sakte hain:\n`/run_skill hello_test3`\n\nAur bataiye, koi aur skill save karni hai ya kuch aur help chahiye?"
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋 Sasta Coder hazir hai. \n\nBataiye, aaj kya karna hai? Koi nayi skill save karni hai, code likhwana hai, ya kuch aur help chahiye?"
     }
   ],
   "model": "gemini-3.6-flash",
