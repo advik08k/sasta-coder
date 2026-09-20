@@ -2,22 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Haan bhai, bilkul zinda hoon aur poori tarah ready hoon! 🚀 \n\nBataiye, kya chal raha hai? Aaj kaunsi nayi skill save karni hai ya koi code run karwana hai?"
-    },
-    {
-      "role": "user",
-      "content": "Hlo bhai zinda ho??"
-    },
-    {
-      "role": "assistant",
-      "content": "Arre bhai, bilkul zinda hoon! ⚡️ Bas aapke next command ka hi intezaar kar raha tha. \n\nBataiye, aaj kya karna hai? Koi code likhna hai, koi nayi skill save karni hai, ya purani skill test karni hai? Main taiyar hoon! 😎"
-    },
-    {
-      "role": "user",
-      "content": "Hloo??"
-    },
-    {
-      "role": "assistant",
       "content": "Hello! 👋 Haan bhai, zinda hoon aur yahin hoon! \n\nBataiye, kya help chahiye aaj? Koi code run karna hai ya koi nayi skill save karni hai?"
     },
     {
@@ -131,6 +115,14 @@
     {
       "role": "assistant",
       "content": "### ❌ File Not Found (`main.py`)\n\nAapke repository `advik08k/sasta-coder` mein **`main.py`** file nahi mili (`404 Not Found`). Iska matlab yeh ho sakta hai ki:\n* File ka naam kuch aur hai (jaise `app.py`, `index.js`, etc.).\n* File kisi doosre subfolder ke andar stored hai.\n\n---\n\n#### 💡 Next Steps:\n* **Check Directory Contents:** Hum repository ki root directory ki saari files list kar sakte hain taaki sahi file mil sake.\n* **Provide Correct Path:** Agar aapko pata hai ki file kahan hai, toh uska exact path share kar dijiye.\n\nBataiye, kya main repository ki root files ki list fetch karu taaki aapko sahi file mil sake? 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋 Sasta Coder is ready and listening! 🚀\n\nBataiye, aaj kya task perform karna hai? \n* **Skill Management:** Koi nayi skill save ya run karni hai?\n* **GitHub Check:** Repository ki files list karni hain ya koi API request bhejni hai?\n* **Python Execution:** Koi code run karke dekhna hai?\n\nBatayein, kisme help karu?"
     }
   ],
   "model": "gemini-3.7-flash",
