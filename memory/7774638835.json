@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Aapki skill **\"greet\"** successfully save ho chuke hai! 🚀\n\nAb main ise turant run kar raha hoon:\n\n# RUN_SKILL greet\n\nYe raha skill ka link: \n🔗 [greet.py](https://github.com/advik08k/sasta-coder/blob/main/skills/greet.py)\n\nAur koi skill run ya save karni hai kya?"
-    },
-    {
-      "role": "user",
-      "content": "GitHub API se pata karo mera repo advik08k/sasta-coder public hai ya private"
-    },
-    {
-      "role": "assistant",
       "content": "```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/repos/advik08k/sasta-coder\"}\n```"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "### 🤖 Sasta Coder - Telegram Commands & Bot Handlers\n\nAgar aapka bot Telegram par chal raha hai aur usme Sasta Coder / Antigravity CLI jaisa system integrated hai, toh aam taur par yahi core handlers aur commands implement kiye jaate hain:\n\n#### 1. Core Bot Commands\n* **`/start`**: Bot ko start karta hai aur ek welcoming message ke sath basic intro deta hai.\n* **`/help`**: Available commands aur instructions ki list display karta hai.\n* **`/skills`**: Saved skills ki list fetch karke dikhata hai (equivalent to `# GET_SKILL`).\n\n#### 2. Agentic & Inline Trigger Commands (Bot Logic)\nAapka bot direct text patterns ya prefix ke zariye in capabilities ko handle karta hai:\n* **`# EXECUTE`**: Pure Python code run karne ke liye sandbox environment trigger karta hai.\n* **`# SAVE_SKILL <name>`**: Code snippet ko GitHub memory repository par save karta hai.\n* **`# GET_SKILL <name>`**: Saved skill ka content retrieve karta hai.\n* **`# RUN_SKILL <name>`**: Saved skill ko fetch karke execute karta hai.\n* **`# GITHUB_CREATE_REPO`**: Naya GitHub repository create karta hai.\n* **`# GITHUB_API`**: Direct GitHub REST API requests (JSON format mein) execute karta hai.\n\n---\n\nBataiye, inme se kisi specific command ka code ya handler dekhna hai kya? 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Ye sab Tumhare paas access hai run kar sakte ho agar zarurat pde to ( par with confirmation)"
+    },
+    {
+      "role": "assistant",
+      "content": "Samajh gaya! 🤝 Agar aisi koi zarurat padegi, toh main aapki **confirmation** ke baad hi in commands ya tools (jaise GitHub API, python execution, ya skills run karna) ko execute karunga. \n\nBataiye, abhi filhal koi task perform karna hai ya kisi specific cheez par kaam karna hai? 🚀"
     }
   ],
   "model": "gemini-3.7-flash",
