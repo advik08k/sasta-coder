@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "advik08k/sasta-coder/hello.txt"
-    },
-    {
-      "role": "user",
-      "content": "advik08k/sasta-coder/hello.txt"
-    },
-    {
-      "role": "user",
       "content": "Kuch bhi"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Haan bhai, bilkul zinda hoon aur poori tarah ready hoon! 🚀 \n\nBataiye, kya chal raha hai? Aaj kaunsi nayi skill save karni hai ya koi code run karwana hai?"
+    },
+    {
+      "role": "user",
+      "content": "Hlo bhai zinda ho??"
+    },
+    {
+      "role": "assistant",
+      "content": "Arre bhai, bilkul zinda hoon! ⚡️ Bas aapke next command ka hi intezaar kar raha tha. \n\nBataiye, aaj kya karna hai? Koi code likhna hai, koi nayi skill save karni hai, ya purani skill test karni hai? Main taiyar hoon! 😎"
     }
   ],
   "model": "gemini-3.6-flash",
