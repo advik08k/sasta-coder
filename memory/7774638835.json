@@ -2,22 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Hello"
-    },
-    {
-      "role": "user",
-      "content": "Ok"
-    },
-    {
-      "role": "user",
-      "content": "Okay"
-    },
-    {
-      "role": "user",
-      "content": "Heyyaaaaaa"
-    },
-    {
-      "role": "user",
       "content": "Hai yaa yaa heyyy"
     },
     {
@@ -131,6 +115,22 @@
     {
       "role": "assistant",
       "content": "Aapki skill **\"greet\"** successfully save ho chuke hai! 🚀\n\nAb main ise turant run kar raha hoon:\n\n# RUN_SKILL greet\n\nYe raha skill ka link: \n🔗 [greet.py](https://github.com/advik08k/sasta-coder/blob/main/skills/greet.py)\n\nAur koi skill run ya save karni hai kya?"
+    },
+    {
+      "role": "user",
+      "content": "GitHub API se pata karo mera repo advik08k/sasta-coder public hai ya private"
+    },
+    {
+      "role": "assistant",
+      "content": "```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/repos/advik08k/sasta-coder\"}\n```"
+    },
+    {
+      "role": "user",
+      "content": "GitHub API Result:\nStatus 200:\n{\"id\":1377002429,\"node_id\":\"R_kgDOUhNjvQ\",\"name\":\"sasta-coder\",\"full_name\":\"advik08k/sasta-coder\",\"private\":false,\"owner\":{\"login\":\"advik08k\",\"id\":252292662,\"node_id\":\"U_kgDODwmuNg\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/252292662?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/advik08k\",\"html_url\":\"https://github.com/advik08k\",\"followers_url\":\"https://api.github.com/users/advik08k/followers\",\"following_url\":\"https://api.github.com/users/advik08k/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/advik08k/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/advik08k/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/advik08k/subscriptions\",\"organizations_url\":\"https://api.github.com/users/advik08k/orgs\",\"repos_url\":\"https://api.github.com/users/advik08k/repos\",\"events_url\":\"https://api.github.com/users/advik08k/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/advik08k/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"html_url\":\"https://github.com/advik08k/sasta-coder\",\"description\":\"yooo\",\"fork\":false,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder\",\"forks_url\":\"https://api.github.com/repos/advik08k/sasta-coder/forks\",\"keys_url\":\"https://api.github.com/repos/advik08k/sasta-coder/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/advik08k/sasta-coder/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/advik08k/sasta-coder/teams\",\"hooks_url\":\"https://api.github.com/repos/advik08k/sasta-coder/hooks\",\"issue_events_url\":\"https://api.github.com/repos/advik08k/sasta-coder/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/advik08k/sasta-coder/events\",\"assignees_url\":\"https://api.github.com/repos/advik08k/sasta-coder/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/advik08k/sasta-coder/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/advik08k/sasta-coder/tags\",\"blobs_url\":\"\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "Aapka repository **`advik08k/sasta-coder`** **public** hai (`\"private\": false`)! 🚀\n\nAur bataiye, GitHub API ya skills ke related koi aur information nikalni hai kya?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
