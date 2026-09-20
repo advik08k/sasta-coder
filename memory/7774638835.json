@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Skill Save Result:\n✅ Skill saved: [repo_copy.py](https://github.com/advik08k/sasta-coder/blob/main/skills/repo_copy.py)\nAnalyze this and answer the user."
-    },
-    {
-      "role": "assistant",
-      "content": "### ✅ Skill Successfully Saved!\n\nBhai, aapki **`/repo_copy`** skill ko successfully save kar diya gaya hai! \n\n* **Saved Location:** `skills/repo_copy.py` (aapke memory repository mein)\n* **Status:** Fully registered and ready to use 🚀\n\nAb se jab bhi aapko koi repository copy karni hogi, bas `/repo_copy` command use karni hai — yeh automatically purani repo check karke delete karegi, nayi banayegi aur saara content copy kar degi! \n\nAur bataiye, abhi koi aur task execute karna hai?"
-    },
-    {
-      "role": "user",
       "content": "Hola"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Arre haan, bilkul! Main samajh gaya bhai. Aap khud apni tarah se sahi code ya instruction skill ke taur par save karo, main wait kar raha hoon! 🚀 \n\nAap apna `SAVE_SKILL` b bhejo, main turant usko run kar deta hoon."
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "### 👋 Hello Bhai! \n\nMain bilkul taiyar hoon! Boliye, aapne kaunsi skill save karni hai ya aage kya command deni hai? Main aapke next instruction ka wait kar raha hoon! 🚀"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
