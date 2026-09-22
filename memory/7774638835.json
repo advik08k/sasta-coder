@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Bhai, lagta hai tum bas confirm kar rahe ho ki main active hoon ya nahi! \n\nAgar koi coding task, web design, ya script likhwaney ka irada hai, toh seedha apna requirement batao. Main ekdum ready hoon! ⚡"
+    },
+    {
+      "role": "user",
+      "content": "Hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Arre bhai, kitni baar \"Hi\" bologe? 😂 Lagta hai connection test karne ka mood hai!\n\nMain ekdum taiyar hoon. Batao, aaj kya code ya feature likhna hai? Koi naya project shuru karein ya kisi purane script mein help chahiye? ⚡"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
