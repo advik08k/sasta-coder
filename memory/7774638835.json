@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "I encountered an error doing what you asked. Could you try again?"
-    },
-    {
-      "role": "user",
-      "content": "Oo"
-    },
-    {
-      "role": "assistant",
       "content": "Samajh gaya bhai! HopWeb ke liye yeh raha **complete, unbroken single-file HTML code** jise tu seedha run kar sakta hai:\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Sasta Coder AI Hub - HopWeb</title>\n    <script src=\"https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4\"></script>\n</head>\n<body class=\"bg-slate-950 text-slate-100 flex flex-col h-screen p-4 max-w-2xl mx-auto\">\n    <header class=\"flex justify-between items-center border-b border-slate-800 pb-4 mb-4\">\n        <h1 class=\"text-xl font-bold text-cyan-400\">⚡ HopWeb AI Chat</h1>\n        <select id=\"apiProvider\" class=\"bg-slate-900 border border-slate-700 text-sm rounded px-2 py-1 text-slate-300\">\n            <option value=\"auto\">ChatGPT (Local Server)</option>\n            <option value=\"gemini\">Gemini Proxy</option>\n            <option value=\"perplexity\">Perplexity Proxy</option>\n        </select>\n    </header>\n    <div id=\"chatBox\" class=\"flex-1 overflow-y-auto space-y-3 pr-2 mb-4 text-sm\">\n        <div class=\"bg-slate-900 p-3 rounded-lg max-w-[80%] text-slate-300\">Bhai, HopWeb me ready hai! Model select karke message bhejo.</div>\n    </div>\n    <form id=\"chatForm\" class=\"flex gap-2\">\n        <input type=\"text\" id=\"userInput\" placeholder=\"Type a message...\" class=\"flex-1 bg-slate-900 border border-slate-800 rounded px-3 py-2 text-sm focus:outline-none focus:border-cyan-500\" required>\n        <button type=\"submit\" class=\"bg-cyan-600 hover:bg-cyan-500 text-white px-4 py-2 rounded text-sm font-medium\">Send</button>\n    </form>\n    <script>\n        const chatBox = document.getElementById('chatBox'), chatForm = document.getElementById('chatForm'), userInput = document.getElementById('userInput');\n        chatForm.onsubmit = async (e) => {\n            e.preventDefault();\n            const text = userInput.value, provider = document.getElementById('apiProvider').value;\n            chatBox.innerHTML += `<div class=\"bg-cyan-950/50 p-3 rounded-lg max-w-[80%] ml-auto text-cyan-200\">${text}</div>`;\n            userInput.value = '';\n            chatBox.scrollTop = chatBox.scrollHeight;\n            try {\n                const res = await fetch('http://localhost:8080/v1/chat/completions', {\n                    method: 'POST',\n                    headers: {'Content-Type': 'application/json'},\n                    body: JSON.stringify({model: provider, messages: [{role: 'user', content: text}]})\n                });\n                const data = await res.json();\n                const reply = data.choices?.[0]?.message?.content || \"No response\";\n                chatBox.innerHTML += `<div class=\"bg-slate-900 p-3 rounded-lg max-w-[80%] text-slate-300\">${reply}</div>`;\n            } catch (err) {\n                chatBox.innerHTML += `<div class=\"bg-red-950/50 p-3 rounded-lg max-w-[80%] text-red-300\">Connection failed! Check local server endpoint.</div>`;\n            }\n            chatBox.scrollTop = chatBox.scrollHeight;\n        };\n    </script>\n</body>\n</html>\n```"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "I'm having a hard time fulfilling your request. Can I help you with something else instead?"
+    },
+    {
+      "role": "user",
+      "content": "Hi hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Bhai, ekdum active aur online hoon! Baar-baar greeting loop mein kyu phans rahe ho? \n\nBatao, aaj kya code ya feature banana hai? \n* **HopWeb** UI upgrade karni hai?\n* Koi naya **single-file HTML/Tailwind** tool chahiye?\n* Ya koi **Python/JS script** likhni hai?\n\nSeedha task bol, shuru karte hain! ⚡"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
