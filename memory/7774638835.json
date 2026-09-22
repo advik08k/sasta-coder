@@ -91,6 +91,10 @@
     {
       "role": "user",
       "content": ".."
+    },
+    {
+      "role": "assistant",
+      "content": "I encountered an error doing what you asked. Could you try again?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
