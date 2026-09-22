@@ -2,22 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Arey Confusedbhaiya! Aapne jo **`Octo-Lex/ChatGPT-Web2API`** aur **`AbdullahArean/Web2API`** ke details share kiye hain, unka ek clear comparison aur implementation guide niche diya hai taaki aap decide kar sako ki kaunsa setup aapke use case ke liye best rahega.\n\n---\n\n## ⚖️ Comparison: ChatGPT-Web2API vs. Web2API (Multi-Provider)\n\n| Feature | `Octo-Lex/ChatGPT-Web2API` | `AbdullahArean/Web2API` |\n| :--- | :--- | :--- |\n| **Approach** | Drives a **real Chrome browser via CDP** (handles Turnstile/PoW automatically). | Uses **browser session cookies** directly via HTTP requests. |\n| **Supported Providers** | ChatGPT only (Plus subscription). | **Perplexity, ChatGPT, & Gemini** unified. |\n| **Authentication** | No tokens needed; logs into Chrome on first run. | Requires manual cookie extraction (`*.local.json` or `.env`). |\n| **Agentic / MCP Support** | **Built-in MCP Server** (16 tools for Cursor/Claude Desktop). | FastAPI REST server with SSE streaming and `/docs`. |\n| **Best For** | Seamless automated local agent workflows without cookie expiry headaches. | Multi-model REST API setup using session cookies. |\n\n---\n\n## 🚀 Quick Setup Guide\n\n### Option 1: Using `ChatGPT-Web2API` (Chrome CDP Method)\nAgar aapko bina kisi cookie-extraction ke seedha ChatGPT ko OpenAI-compatible endpoint ya MCP server ki tarah use karna hai:\n\n```bash\n# 1. Install package\npip install chatgpt-web2api\n\n# 2. Start server (opens Chrome on first run for manual login if needed)\nchatgpt-web2api\n```\n\nPython SDK / OpenAI Client integration:\n```python\nfrom openai import OpenAI\n\nclient = OpenAI(base_url=\"http://localhost:8080/v1\", api_key=\"not-needed\")\nresponse = client.chat.completions.create(\n    model=\"auto\",\n    messages=[{\"role\": \"user\", \"content\": \"What is 8+7?\"}]\n)\nprint(response.choices[0].message.content)\n```\n\n---\n\n### Option 2: Using `AbdullahArean/Web2API` (Cookie-Based Multi-Provider)\nAgar aapko Perplexity, ChatGPT aur Gemini teeno ko ek hi unified Python library ya REST API ke through chalana hai:\n\n```bash\n# 1. Clone & Install\ngit clone https://github.com/AbdullahArean/web2api.git\ncd web2api\npython3 -m venv .venv\nsource .venv/bin/activate\npip install .\n\n# 2. Auth Setup (Copy examples and fill your browser cookies)\ncp auth/cookies.local.json.example auth/cookies.local.json\n```\n\nPython usage snippet:\n```python\nfrom web2api import chatgpt, gemini, perplexity\nfrom web2api.auth import load_chatgpt_auth\n\n# ChatGPT Client\ngpt = chatgpt.Client(load_chatgpt_auth())\nprint(gpt.chat(\"Hello!\", stream=False))\n```\n\n---\n\nBatao bhai, inme se kaunsa approach try karna hai — **Chrome CDP automation (`ChatGPT-Web2API`)** ya **Multi-provider cookie wrapper (`Web2API`)**?"
-    },
-    {
-      "role": "user",
-      "content": "Maximum 5 lines me bolo ab se"
-    },
-    {
-      "role": "assistant",
-      "content": "Samajh gaya bhai! Ab se maximum 5 lines me crisp aur direct jawab dunga. \n\nBatao, **Octo-Lex (Chrome CDP/MCP)** wala tool use karna hai ya **AbdullahArean (Multi-provider cookies)** wala?"
-    },
-    {
-      "role": "user",
-      "content": "Well"
-    },
-    {
-      "role": "assistant",
       "content": "Samajh gaya bhai! Ekdum short aur to-the-point chalenge. \n\nBatao, inme se kaunsa setup run karna hai:\n1. **Octo-Lex ChatGPT-Web2API** (Chrome CDP + MCP support)\n2. **AbdullahArean Web2API** (Multi-provider cookies for ChatGPT/Gemini/Perplexity) \n\nSeedha number ya naam batao!"
     },
     {
@@ -123,6 +107,18 @@
     {
       "role": "assistant",
       "content": "I seem to be encountering an error. Can I try something else for you?"
+    },
+    {
+      "role": "user",
+      "content": "Reset"
+    },
+    {
+      "role": "assistant",
+      "content": "Sorry, something went wrong. Please try your request again."
+    },
+    {
+      "role": "user",
+      "content": "Hell o"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
