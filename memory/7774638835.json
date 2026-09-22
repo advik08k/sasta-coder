@@ -118,7 +118,7 @@
     },
     {
       "role": "user",
-      "content": "Hello"
+      "content": "Hey"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
