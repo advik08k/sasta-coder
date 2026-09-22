@@ -90,7 +90,7 @@
     },
     {
       "role": "user",
-      "content": "Lol"
+      "content": ".."
     }
   ],
   "model": "gemini-3.5-flash-thinking",
