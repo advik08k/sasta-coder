@@ -115,6 +115,10 @@
     {
       "role": "assistant",
       "content": "Bhai, ekdum active aur online hoon! Baar-baar greeting loop mein kyu phans rahe ho? \n\nBatao, aaj kya code ya feature banana hai? \n* **HopWeb** UI upgrade karni hai?\n* Koi naya **single-file HTML/Tailwind** tool chahiye?\n* Ya koi **Python/JS script** likhni hai?\n\nSeedha task bol, shuru karte hain! ⚡"
+    },
+    {
+      "role": "user",
+      "content": "Hello"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
