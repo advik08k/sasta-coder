@@ -119,6 +119,10 @@
     {
       "role": "user",
       "content": "Lol"
+    },
+    {
+      "role": "assistant",
+      "content": "I seem to be encountering an error. Can I try something else for you?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
