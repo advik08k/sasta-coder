@@ -119,6 +119,10 @@
     {
       "role": "user",
       "content": "Hell o"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm having a hard time fulfilling your request. Can I help you with something else instead?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
