@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Samajh gaya bhai! Ekdum short aur to-the-point chalenge. \n\nBatao, inme se kaunsa setup run karna hai:\n1. **Octo-Lex ChatGPT-Web2API** (Chrome CDP + MCP support)\n2. **AbdullahArean Web2API** (Multi-provider cookies for ChatGPT/Gemini/Perplexity) \n\nSeedha number ya naam batao!"
-    },
-    {
-      "role": "user",
-      "content": "Ek website code kar jitni acchi kar sakta hai tu kar , Jo add karna hai ka this is your test"
-    },
-    {
-      "role": "assistant",
       "content": "Samajh gaya bhai! Ek modern, fully-responsive AI Hub landing page code kar raha hoon jo inhi free endpoints aur web2apis ko showcase karega.\n\n```html\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Sasta Coder AI Hub</title>\n    <script src=\"https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4\"></script>\n</head>\n<body class=\"bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col items-center justify-between p-6\">\n    <header class=\"text-center max-w-2xl mt-10\">\n        <h1 class=\"text-4xl font-extrabold bg-gradient-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent\">Sasta Coder AI Hub</h1>\n        <p class=\"text-slate-400 mt-2 text-sm\">Your gateway to free endpoints, Web2APIs, and local agent tools.</p>\n    </header>\n    <main class=\"grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl my-10\">\n        <div class=\"bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl\">\n            <h2 class=\"text-xl font-bold text-cyan-400 mb-2\">🚀 ChatGPT-Web2API</h2>\n            <p class=\"text-slate-300 text-sm mb-4\">Chrome CDP driver turning ChatGPT Plus into a local OpenAI-compatible endpoint and MCP server.</p>\n            <code class=\"bg-slate-950 px-3 py-1.5 rounded text-xs text-indigo-300 block\">pip install chatgpt-web2api</code>\n        </div>\n        <div class=\"bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl\">\n            <h2 class=\"text-xl font-bold text-indigo-400 mb-2\">🌐 Unified Web2API</h2>\n            <p class=\"text-slate-300 text-sm mb-4\">Cookie-based Python wrappers for Perplexity, ChatGPT, and Gemini with FastAPI integration.</p>\n            <code class=\"bg-slate-950 px-3 py-1.5 rounded text-xs text-cyan-300 block\">git clone https://github.com/AbdullahArean/web2api.git</code>\n        </div>\n    </main>\n    <footer class=\"text-slate-500 text-xs\">Built with speed by Sasta Coder © 2026</footer>\n</body>\n</html>\n```\n\nBatao, isme kuch aur features ya styling add karoon?"
     },
     {
@@ -119,6 +111,14 @@
     {
       "role": "user",
       "content": "Hell o"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm having a hard time fulfilling your request. Can I help you with something else instead?"
+    },
+    {
+      "role": "user",
+      "content": "networkloop.py"
     },
     {
       "role": "assistant",
