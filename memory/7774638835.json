@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "I encountered an error doing what you asked. Could you try again?"
-    },
-    {
-      "role": "user",
-      "content": "Lol"
-    },
-    {
-      "role": "assistant",
       "content": "I seem to be encountering an error. Can I try something else for you?"
     },
     {
