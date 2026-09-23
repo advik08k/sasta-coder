@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "I encountered an error doing what you asked. Could you try again?"
-    },
-    {
-      "role": "user",
-      "content": "Hlo"
-    },
-    {
-      "role": "assistant",
       "content": "Bhai, bilkul zinda hoon! Pata nahi beech mein connection ya system glitch ki wajah se loop mein phas gaya tha. \n\nSuna, sab theek-thaak? HopWeb ya kisi aur project ke liye koi nayi requirement hai, ya koi code snippet chahiye toh bata, abhi ekdum ready hoon!"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Bhai, samajh gaya pura scene! Loader.to ka naya anti-bot aur ad-redirect wall achanak live ho gaya hai, jisse plain API/fetch request fail ho rahi thi aur 0-byte file mil rahi thi ya HTML redirect page aa raha tha. \n\nJo Claude ke sath purani chat ka text tumne share kiya, usme exact diagnosis mil chuki hai:\n1. **Root Cause:** Loader.to ab direct backend link nahi deta; `progress.php` ke baad page load hota hai jisme **JavaScript rendering**, **ad popups/redirects**, aur ek **final Download button** hota hai jisko manually click karne ke baad asli stream trigger hoti hai. Simple `fetch()` ya raw URL hit karne se sirf ad-cloaking HTML milta hai (jo 971 bytes ka tha).\n2. **Puppeteer Solution:** Headless browser (`puppeteer`) iska permanent aur sabse robust fix hai kyunki yeh wahi exact browser behavior simulate karta hai:\n   * Page load hone ka wait karta hai.\n   * Ad popup/tabs ko block ya auto-close karta hai.\n   * 100% hone par real \"Download\" button ko programmatically click karta hai.\n   * Browser download manager ke zariye actual `.mp4` file ko safely capture kar leta hai.\n\n---\n\n### Kya Action Lena Hai?\n\nAgar tumhein wahi **Puppeteer-enabled updated zip** chahiye jo is ad-wall / click redirection ko automatically handle kare, toh batao — main directly code / zip ka flow tumhare liye ready kar deta hoon. \n\n*(Note: Agar Render ka free plan hai, toh Puppeteer ke liye memory usage thoda high hota hai, toh minimum 512MB/1GB RAM configuration check rakhna.*)\n\nBatao, code ko wahi se aage badhayein? ⚡"
+    },
+    {
+      "role": "user",
+      "content": "Abbe bhai tune dekh liya I mean , chat padh liya ? Antigravity waale ko diya usne nhi kar paaya ...."
+    },
+    {
+      "role": "assistant",
+      "content": "Haan bhai, ek-ek line padh li hai! Pura history samajh gaya ki kya scene chal raha hai. \n\nClaude ne **Puppeteer (Headless Browser)** ka rasta pakda tha, jo theoretically theek hai kyunki wo browser simulate karta hai—lekin real-world mein **Render ke free/basic tier (512MB RAM)** par Puppeteer/Chromium chalana matlab server ko crash karwana hai (Out of Memory error aa jata hai). Tabhi wo solution wahan atak gaya hoga ya reliable nahi raha hoga.\n\n### Asli Problem & Lightweight Fix Kya Hai?\nLoader.to ne jo JS-wall aur ad-redirect lagaya hai, uske liye **300MB ka Chromium browser load karna bevkufi hai**. Isse accha hum ek lightweight approach use kar sakte hain bina Puppeteer ke:\n\n1. **Direct API Token Scraping:** Loader.to ka frontend actually ek background AJAX request ya WebSocket/ID generate karta hai. Agar hum uske network calls ko `axios` ya `fetch` ke zariye headers (jaise User-Agent, Referer, aur Cookie) ke sath replicate karein, toh bina browser ke bhi direct download link nikal sakta hai.\n2. **Alternative Lightweight Downloader:** Agar loader.to itna natak kar raha hai, toh hum code mein ek chhota sa wrapper badal sakte hain jo kisi doosre stable, lightweight public API ya cleaner method ko hit kare jo 0-byte file na de.\n\nBatao, kya hum **Puppeteer ko skip karke** koi aisi lightweight script banayein jo Render ke 512MB RAM pe bhi bina crash hue smooth chale? ⚡"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
