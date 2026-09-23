@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai, bilkul zinda hoon! Pata nahi beech mein connection ya system glitch ki wajah se loop mein phas gaya tha. \n\nSuna, sab theek-thaak? HopWeb ya kisi aur project ke liye koi nayi requirement hai, ya koi code snippet chahiye toh bata, abhi ekdum ready hoon!"
-    },
-    {
-      "role": "user",
-      "content": "Hi"
-    },
-    {
-      "role": "assistant",
       "content": "I seem to be encountering an error. Can I try something else for you?"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Haan bhai, ek-ek line padh li hai! Pura history samajh gaya ki kya scene chal raha hai. \n\nClaude ne **Puppeteer (Headless Browser)** ka rasta pakda tha, jo theoretically theek hai kyunki wo browser simulate karta hai—lekin real-world mein **Render ke free/basic tier (512MB RAM)** par Puppeteer/Chromium chalana matlab server ko crash karwana hai (Out of Memory error aa jata hai). Tabhi wo solution wahan atak gaya hoga ya reliable nahi raha hoga.\n\n### Asli Problem & Lightweight Fix Kya Hai?\nLoader.to ne jo JS-wall aur ad-redirect lagaya hai, uske liye **300MB ka Chromium browser load karna bevkufi hai**. Isse accha hum ek lightweight approach use kar sakte hain bina Puppeteer ke:\n\n1. **Direct API Token Scraping:** Loader.to ka frontend actually ek background AJAX request ya WebSocket/ID generate karta hai. Agar hum uske network calls ko `axios` ya `fetch` ke zariye headers (jaise User-Agent, Referer, aur Cookie) ke sath replicate karein, toh bina browser ke bhi direct download link nikal sakta hai.\n2. **Alternative Lightweight Downloader:** Agar loader.to itna natak kar raha hai, toh hum code mein ek chhota sa wrapper badal sakte hain jo kisi doosre stable, lightweight public API ya cleaner method ko hit kare jo 0-byte file na de.\n\nBatao, kya hum **Puppeteer ko skip karke** koi aisi lightweight script banayein jo Render ke 512MB RAM pe bhi bina crash hue smooth chale? ⚡"
+    },
+    {
+      "role": "user",
+      "content": "Hello"
+    },
+    {
+      "role": "assistant",
+      "content": "Haan bhai, ekdam sun raha hoon aur samajh gaya hoon! \n\nClaude ne Puppeteer ka rasta pakda tha, jo local PC ya high-end server pe toh chal jata hai, par Render/Railway ke free/cheap tiers pe Chromium ki aisi taisi ho jaati hai (OOM crash). Isliye wahan baat fas gayi thi.\n\nHum **Puppeteer ka jhanjhat hi khatam karte hain** aur ekdum clean, lightweight solution banate hain jo bina browser ke seedha kaam kare.\n\nBatao, abhi code mein kya update karna hai? Koi doosra clean downloader API lagana hai ya loader.to ke request headers ko aur deep tweak karna hai? Seedha batao, code likhte hain! ⚡"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
