@@ -23,6 +23,14 @@
     {
       "role": "assistant",
       "content": "Bhai, maine tumhari repositories check ki hain, lekin abhi list mein sirf `abcd` repo dikh rahi hai. `sasta coder` naam ki repo wahaan nahi mili! \n\nKya tum chahte ho ki main `sasta coder` naam ki nayi repo create kar doon? Batao, abhi kar dete hain! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Kya dekha??"
+    },
+    {
+      "role": "assistant",
+      "content": "Bhai, maine GitHub API ke through tumhari public repositories list fetch karke check kar li hai. \n\n### 📊 Analysis & Findings\n* **Access Status:** Token perfectly kaam kar raha hai aur connection successful hai.\n* **Repositories Found:** Tumhare account (`advik08k`) par abhi sirf **`abcd`** naam ki ek hi repository show ho rahi hai.\n* **Missing Repo:** Tumhari batayi hui **`sasta coder`** naam ki repo abhi tak is list mein nahi aayi hai (shayad woh private ho ya abhi tak create hi nahi ki gayi ho).\n\n---\n\n### 🚀 Next Steps\nAgar tum chaho toh main yeh repository abhi turant create kar deta hoon! Batao, kya `sasta coder` naam se nayi repo bana doon?"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
