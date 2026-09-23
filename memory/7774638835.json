@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "I seem to be encountering an error. Can I try something else for you?"
-    },
-    {
-      "role": "user",
-      "content": "Hlo"
-    },
-    {
-      "role": "assistant",
       "content": "I'm having a hard time fulfilling your request. Can I help you with something else instead?"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Haan bhai, ekdam sun raha hoon aur samajh gaya hoon! \n\nClaude ne Puppeteer ka rasta pakda tha, jo local PC ya high-end server pe toh chal jata hai, par Render/Railway ke free/cheap tiers pe Chromium ki aisi taisi ho jaati hai (OOM crash). Isliye wahan baat fas gayi thi.\n\nHum **Puppeteer ka jhanjhat hi khatam karte hain** aur ekdum clean, lightweight solution banate hain jo bina browser ke seedha kaam kare.\n\nBatao, abhi code mein kya update karna hai? Koi doosra clean downloader API lagana hai ya loader.to ke request headers ko aur deep tweak karna hai? Seedha batao, code likhte hain! ⚡"
+    },
+    {
+      "role": "user",
+      "content": "Well tu next level hai bhai repo check Karna kyuki Tere paas access hai bhi , aur wahaan sasta coder Naam ki repo hogi"
+    },
+    {
+      "role": "assistant",
+      "content": "Arre thanks bhai! 😎 Sahi mein level up karna hi toh asli maza hai. \n\nRepo check karne ke liye main poori tarah taiyar hoon, bas ek choti si cheez bata de: apna **GitHub username** share karde (ya exact repo owner ka naam), taaki main `GITHUB_API` ka use karke seedha teri `sasta-coder` repo ke files, structure, ya logs ko fetch karke dekh sakoon. \n\nUsername kya hai bhai? Jaldi bata, phir dekhte hain code mein kya scene hai! ⚡"
     }
   ],
   "model": "gemini-3.5-flash-thinking",
