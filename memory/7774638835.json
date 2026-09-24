@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "```bash\n# RUN_TERMINAL\nbash -lc '\n# 1️⃣ pyjokes install\npip install pyjokes --quiet\n\n# 2️⃣ Create a tiny script that prints a joke\ncat << \"EOF\" > joke.py\nimport pyjokes\nprint(pyjokes.get_joke())\nEOF\n\n# 3️⃣ Execute the script\npython joke.py\n'\n```\n\n**Output (example):**\n\n```\nWhy did the scarecrow win an award? Because he was outstanding in his field!\n```\n\n> *(The actual joke may differ each run, as `pyjokes.get_joke()` selects a random joke.)*"
-    },
-    {
-      "role": "user",
-      "content": "Hi"
-    },
-    {
-      "role": "assistant",
       "content": "Hey! How can I help you today?"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 Batao, aaj kya plan hai? Koi coding karni hai ya bas aise hi chat karni hai?"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-09-25 01:34 AM (IST)]\nzinda ho gya tu?"
+    },
+    {
+      "role": "assistant",
+      "content": "Haan bhai, bilkul zinda aur active hoon! 😎 \n\nBatao, aaj kya scene hai? Koi naya project, coding task, ya bash script test karni hai, ya bas aise hi kuch maze mein discuss karna hai?"
     }
   ],
   "model": "gemini-3.6-flash",
