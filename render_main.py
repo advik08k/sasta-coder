@@ -981,7 +981,8 @@ def run_bot():
         while current_turn < max_turns:
             
             # Prevent Claude from answering all history at once
-            hist_copy = list(mem["history"])
+            # SLIDING WINDOW: Only keep the last 20 messages for context
+            hist_copy = list(mem["history"])[-20:]
             if hist_copy and hist_copy[-1]["role"] == "user":
                 hist_copy[-1] = {"role": "user", "content": hist_copy[-1]["content"] + "\n\n[SYSTEM NOTE: This is the latest message. DO NOT reply to previous history, only reply to this specific prompt.]"}
             msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + hist_copy
@@ -1180,6 +1181,15 @@ Analyze this and answer the user."})
                 parse_mode=ParseMode.MARKDOWN)
         else:
             await u.message.reply_text("Usage: `/github owner/repo path/file.py`", parse_mode=ParseMode.MARKDOWN)
+
+    async def cmd_newtopic(u: Update, c):
+        if not auth(u): return
+        mem = get_mem(MY_USER_ID)
+        if "archive" not in mem: mem["archive"] = []
+        mem["archive"].extend(mem.get("history", []))
+        mem["history"] = []
+        save_mem(MY_USER_ID)
+        await u.message.reply_text("?? Naya topic shuru! Purani baatein archive mein safe hain aur context reset ho gaya hai.", reply_markup=main_keyboard())
 
     async def cmd_clear(u: Update, c):
         if not auth(u): return
