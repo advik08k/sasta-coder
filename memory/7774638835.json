@@ -31,6 +31,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?"
+    },
+    {
+      "role": "user",
+      "content": "Hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 How can I help you today?"
     }
   ],
   "model": "pollinations-openai",
