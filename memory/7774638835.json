@@ -97,6 +97,6 @@
       "content": "Heyyyyy! 😄 How’s it going? Anything you’d like to dive into today?"
     }
   ],
-  "model": "pollinations-openai",
+  "model": "gemini-3.6-flash",
   "created": "2026-09-19 15:43:59.346120"
 }
