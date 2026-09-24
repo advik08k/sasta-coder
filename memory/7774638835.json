@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Heyya bhai! 👋\n\nEk zaroori baat pehle: tune upar chat mein apna **GitHub token (`ghp_...`) paste kar diya tha**. Wo ab chat history mein dikh raha hai (aur shayad tere bot ki memory repo mein bhi save ho gaya hoga). Safe rehne ke liye jaake **GitHub → Settings → Developer settings → Tokens** se usse revoke karke naya bana le, aur naya token sirf Render ke environment variables mein daal, chat mein kabhi nahi. 🔐\n\nAb memory wali problem pe wapas aate hain. Sliding window wala fix simple hai, lekin tune bola tha ki bot **tab hi purani baatein yaad kare jab tu specific puche**, aur naye topic pe move karne ko bole to fresh ho jaaye. Uske liye ye plan best rahega:\n\n* **Default:** LLM ko sirf last 6-10 messages do, poori history nahi.\n* **Recall trigger:** Agar tu bole \"pehle jo humne X pe baat ki thi\" ya \"yaad hai...\", tab poori memory mein keyword search karke sirf relevant messages context mein add karo.\n* **`/newtopic` command:** Isse context reset ho jaata hai (purani baatein GitHub pe safe rehti hain, bas prompt mein nahi jaatin).\n\nBata bhai, ye teeno chahiye? Ya pehle bas sliding window + `/newtopic` se start karein? Agar tu bot ka main file (jahan history load hoti hai) yahan paste kar de, toh main exact jagah pe code laga ke de dunga. 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Hey"
-    },
-    {
-      "role": "assistant",
       "content": "Hey bhai! 👋\n\nPichhli baat pe wapas: memory fix ke liye ye plan ready hai.\n\n* **Sliding window:** LLM ko sirf last 6-10 messages jaayein\n* **Recall trigger:** \"yaad hai...\", \"pehle jo baat hui thi...\" bolne par hi poori memory mein keyword search ho\n* **`/newtopic`:** context reset, purani baatein GitHub pe safe rahein\n\nKaunsa chahiye, teeno ya pehle sirf sliding window + `/newtopic`? Aur bot ka main file (jahan history load hoti hai) paste kar de, toh main exact jagah pe code laga ke de dunga. 🚀\n\nAur bhai, wo GitHub token jo chat mein paste hua tha, usse revoke karke naya bana lena. Wo ab chat history mein hai, safe nahi hai. 🔐"
     },
     {
@@ -123,8 +115,16 @@
     {
       "role": "assistant",
       "content": "Heyà bhai! 👋 Ekdum full energy! 🚀\n\nBatao, aaj Sasta Coder bot mein kya scene set karna hai? Koi naya feature add karein, code fix karein, ya koi mast idea discuss karein? Hukum karo! 😎🔥"
+    },
+    {
+      "role": "user",
+      "content": "Heyy"
+    },
+    {
+      "role": "assistant",
+      "content": "Heyy bhai! 👋\n\nLagta hai tu baar baar greet kar raha hai, koi issue toh nahi? Agar bot ya reply mein kuch gadbad lag rahi hai (jaise same jawab repeat ho raha ho), toh seedha bata de, main dekh leta hoon.\n\nWarna bol, aaj kya karna hai? Memory fix ka code integrate karna hai, ya kuch aur? 🚀"
     }
   ],
-  "model": "claude-3-5-sonnet-20241022",
+  "model": "gemini-3.6-flash",
   "created": "2026-09-19 15:43:59.346120"
 }
