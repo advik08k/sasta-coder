@@ -1014,6 +1014,7 @@ def run_bot():
             get_skill_match = re.search(r'```\s*# GET_SKILL\s*(\S*)\s*```', reply, re.DOTALL)
             run_skill_match = re.search(r'```\s*# RUN_SKILL\s+(\S+)\s*```', reply, re.DOTALL)
             api_match = re.search(r'```(?:json)?\s*# GITHUB_API\s*(.*?)```', reply, re.DOTALL)
+            term_match = re.search(r'```(?:bash|sh|text)?\s*# RUN_TERMINAL\s*(.*?)```', reply, re.DOTALL)
 
             if term_match:
                 cmd = term_match.group(1).strip()
