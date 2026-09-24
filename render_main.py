@@ -89,8 +89,8 @@ For anything not covered by the specific tools above — branches, issues, PRs, 
 ```
 `method` is GET/POST/PUT/PATCH/DELETE, `path` is the API path starting with /, `body` is the JSON payload (omit for GET/DELETE with no body). This is real, unrestricted GitHub access bounded only by what the configured token is scoped to allow — use it carefully, and prefer the specific tools above when they already cover what's needed.
 
-7. TERMINAL ACCESS (Render Sandbox):
-To run bash/shell commands on the host server (Linux), use:
+7. TERMINAL ACCESS (FULL SERVER ACCESS WITH INTERNET):
+To run bash/shell commands on the host server (Ubuntu Linux), use:
 `ash
 # RUN_TERMINAL
 ls -la
