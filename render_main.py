@@ -30,9 +30,12 @@ MY_USER_ID   = int(os.environ.get("MY_USER_ID", "7774638835"))
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 MEMORY_REPO  = os.environ.get("MEMORY_REPO",  "advik08k/sasta-coder")  # memory saved here
 GEMINI_PORT  = 8081
+CLAUDE_PORT  = 8082
 HEALTH_PORT  = int(os.environ.get("PORT", 10000))
 GEMINI_API   = f"http://localhost:{GEMINI_PORT}/v1/chat/completions"
+CLAUDE_API   = f"http://localhost:{CLAUDE_PORT}/v1/chat/completions"
 MODELS = {
+    "?? Claude 3.5 Sonnet": "claude-3-5-sonnet-20241022",
     "⚡ Flash 3.7 (Latest)":   "gemini-3.7-flash",
     "🔥 Flash 3.6 (Stable)":  "gemini-3.6-flash",
     "🧠 Thinking (Deep)":      "gemini-3.5-flash-thinking",
@@ -289,11 +292,13 @@ GEMINI_CALL_TIMEOUT = 300
 
 def call_gemini(messages, model="gemini-3.6-flash", retries=2):
     """429/502 ya Gemini server restart ke waqt: 4s, 8s backoff ke saath retry."""
+    api_url = CLAUDE_API if "claude" in model.lower() else GEMINI_API
+    auth_token = "Bearer sk-claude" if "claude" in model.lower() else "Bearer sk-gemini"
     last = ""
     for attempt in range(retries + 1):
         try:
-            r = requests.post(GEMINI_API,
-                headers={"Content-Type": "application/json", "Authorization": "Bearer sk-gemini"},
+            r = requests.post(api_url,
+                headers={"Content-Type": "application/json", "Authorization": auth_token},
                 json={"model": model, "messages": messages}, timeout=GEMINI_CALL_TIMEOUT)
             d = r.json()
             if "choices" in d:
@@ -1260,8 +1265,10 @@ def run_bot():
 if __name__ == "__main__":
     threading.Thread(target=run_health, daemon=True).start()
     threading.Thread(target=start_gemini, daemon=True).start()
+    subprocess.Popen([sys.executable, "claude_web2api.py"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     log.info("⏳ Waiting for Gemini server...")
     time.sleep(5)
     if not wait_gemini():
         log.error("❌ Gemini server failed to start!"); sys.exit(1)
     run_bot()
+

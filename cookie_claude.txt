@@ -1,0 +1,21 @@
+# Netscape HTTP Cookie File
+# http://curl.haxx.se/rfc/cookie_spec.html
+# This is a generated file!  Do not edit.
+
+claude.ai	FALSE	/	TRUE	1816189649	anthropic-device-id	35e093e2-bc15-471c-8fb3-bac05ae69a58
+claude.ai	FALSE	/	TRUE	1790312849	activitySessionId	82338f76-807e-467c-b0da-425d783114df
+claude.ai	FALSE	/	TRUE	0	ion-vk	be86b282-23d2-408f-b1a5-a0bf8771b6d3
+.claude.ai	TRUE	/	TRUE	0	_cfuvid	1NpOkXodExPTDJg6y0.9xjjvodUHoqKKztxuQqUycK8-1790269606.2124639-1.0.1.1-52NyN.C7H_vtm7cNDwoIOIvRSsJP8NJ.qIRwo8hC7tM
+.claude.ai	TRUE	/	TRUE	1821805650	CH-prefers-color-scheme	dark
+.claude.ai	TRUE	/	TRUE	1790271412	__cf_bm	UDfHrV5Nx.HzH.xZ_SLRbJqd7VkFSq_FSlbAAvMg68k-1790269609.740973-1.0.1.1-Vc3tPlX2.pkheDKl3Y9JNzcpxnIstFnETGtUSkah86GDnNlwz1SmHidAG_cJOPGIBbywLCu7HFUqMPbmquPGecq2Gl0PDApgDM0MDRtPYWkYOaRrWIxN.XrUZb5wX4O8
+.claude.ai	TRUE	/	FALSE	1824829612	__ssid	1cea9050-b431-48cd-95f4-2126cee4cba0
+.claude.ai	TRUE	/	TRUE	1821805613	anthropic-consent-preferences	%7B%22analytics%22%3Atrue%2C%22marketing%22%3Atrue%7D
+.claude.ai	TRUE	/	TRUE	1824829613	_fbp	fb.1.1790269613861.58622933763912130
+.claude.ai	TRUE	/	TRUE	1821805650	ajs_anonymous_id	claudeai.v1.8450a427-4ddd-4ab4-a31f-a34c2d59ee7b
+.claude.ai	TRUE	/	TRUE	1792688848	sessionKey	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
+.claude.ai	TRUE	/	TRUE	1792688848	sessionKeyLC	1790269646362
+.claude.ai	TRUE	/	TRUE	1792861648	routingHint	sk-ant-rh-eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJFUzI1NiIsICJraWQiOiAiN0MxcWFPRnhqdWxaUjRFQnNuNk1UeUZGNWdDV2JHbFpNVDR2RklrRFFpbyJ9.eyJzdWIiOiAiNWU0MDRlM2EtNDM3YS00MTJjLWJhMjgtMzA0NTBmNDY3NjM0IiwgInYiOiAyLCAiaXNfdmVyaWZpZWQiOiB0cnVlLCAiaGFzX21lbWJlcnNoaXAiOiB0cnVlLCAib25ib2FyZGluZ19jb21wbGV0ZSI6IHRydWUsICJhZ2VfdmVyaWZpZWQiOiB0cnVlLCAicGVuZGluZ19pbnZpdGUiOiBmYWxzZSwgInBob25lX3ZlcmlmaWVkIjogZmFsc2UsICJuYW1lIjogIkFzc2UiLCAiZmxhZ3MiOiBbImVkZ2VfZGVmYXVsdF9yb3V0ZSJdLCAiaWF0IjogMTc5MDI2OTY0NiwgImlzcyI6ICJjbGF1ZGUtYWktcm91dGluZyJ9.yAdxkLpRtb040TQ2r3e2D3lA9uD7vUq4bFYfT4qI6Po9vkLaabdjfS9h6AoEsJO6Etb-MVK8Xpf8-D0gGWvxiw
+.claude.ai	TRUE	/	TRUE	1821805650	user-sidebar-visible-on-load	true
+.claude.ai	TRUE	/	TRUE	1821805651	lastActiveOrg	dba863cc-4656-412b-aa9b-bff4fdc2e03a
+claude.ai	FALSE	/	TRUE	1792861652	artifact-app-viewer	1
+claude.ai	FALSE	/	TRUE	1821805656	_dd_s_v2	aid=3612943a-836a-44e1-8620-2902cfcddcf1&id=139208ed-34d3-41d2-9df4-2e7b36d5f23b&created=1790269613949&expire=1790270556297&c=0
