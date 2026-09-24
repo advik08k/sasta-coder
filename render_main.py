@@ -329,14 +329,24 @@ GEMINI_CALL_TIMEOUT = 300
 
 def call_gemini(messages, model="gemini-3.6-flash", retries=2):
     """429/502 ya Gemini server restart ke waqt: 4s, 8s backoff ke saath retry."""
-    api_url = CLAUDE_API if "claude" in model.lower() else GEMINI_API
-    auth_token = "Bearer sk-claude" if "claude" in model.lower() else "Bearer sk-gemini"
+    if "pollinations" in model.lower():
+        api_url = "https://text.pollinations.ai/openai"
+        auth_token = "Bearer dummy"
+        actual_model = "openai"
+    elif "claude" in model.lower():
+        api_url = CLAUDE_API
+        auth_token = "Bearer sk-claude"
+        actual_model = model
+    else:
+        api_url = GEMINI_API
+        auth_token = "Bearer sk-gemini"
+        actual_model = model
     last = ""
     for attempt in range(retries + 1):
         try:
             r = requests.post(api_url,
                 headers={"Content-Type": "application/json", "Authorization": auth_token},
-                json={"model": model, "messages": messages}, timeout=GEMINI_CALL_TIMEOUT)
+                json={"model": actual_model, "messages": messages}, timeout=GEMINI_CALL_TIMEOUT)
             d = r.json()
             if "choices" in d:
                 content = d["choices"][0]["message"].get("content")
