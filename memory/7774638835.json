@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hlo bhai! 👋 Kaise ho? Sab theek-thaak? Batao, abhi kya chal raha hai aur kya help chahiye? 😎🚀"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-09-25 02:01 AM (IST)]\n."
+    },
+    {
+      "role": "assistant",
+      "content": "Bhai, sab theek hai? Aise akele akele dot (\".\") mat bhejo, batao kya chal raha hai? Koi naya project, coding ka sawal ya koi maze ki baat karni hai? 😎🚀"
     }
   ],
   "model": "gemini-3.6-flash",
