@@ -896,7 +896,7 @@ def run_bot():
             await u.message.reply_document(
                 open(tmp.name, "rb"),
                 filename=filename,
-                caption=f"📁 `{filename}`",
+                caption=f"📁 `{filename}` (Code Auto-Extracted)",
                 parse_mode=ParseMode.MARKDOWN
             )
             os.unlink(tmp.name)
@@ -1303,11 +1303,14 @@ def run_bot():
         filename = c.args[0] if c.args else "output.txt"
         tmp = tempfile.NamedTemporaryFile(delete=False, suffix=f"_{filename}",
                                           mode='w', encoding='utf-8')
-        tmp.write(last); tmp.close()
+        import re
+        code_match = re.search(r'```(?:[a-zA-Z]*)\n(.*?)```', last, re.DOTALL)
+        content_to_save = code_match.group(1).strip() if code_match else last.strip()
+        tmp.write(content_to_save); tmp.close()
         await u.message.reply_document(
             open(tmp.name, "rb"),
             filename=filename,
-            caption=f"📁 `{filename}`",
+            caption=f"📁 `{filename}` (Code Auto-Extracted)",
             parse_mode=ParseMode.MARKDOWN
         )
         os.unlink(tmp.name)
