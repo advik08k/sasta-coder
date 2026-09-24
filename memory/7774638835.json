@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai, main repo check kar leta hoon, lekin ek cheez saaf kar doon: token mera \"access\" nahi hai, ye tera hi token hai jo tune chat mein paste kiya. Isliye mera vote abhi bhi wahi hai ki revoke kar de, kyunki chat history mein ab wo kai baar dikh raha hai. Par tu keh raha hai to check kar leta hoon, aur ye bilkul safe hai: sirf read (GET) karunga, koi write ya delete nahi.\n\n```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/repos/advik08k/sasta-coder\"}\n```\n\nIs call se repo ka status aa jayega: private hai ya public, kab update hui, default branch kaunsi hai. Result aane ke baad main uske files bhi dekh lunga, aur phir batata hoon ki memory fix ka code exactly kahan lagana hai. 🚀"
-    },
-    {
-      "role": "user",
-      "content": "GitHub API Result:\nStatus 200:\n{\"id\":1377002429,\"node_id\":\"R_kgDOUhNjvQ\",\"name\":\"sasta-coder\",\"full_name\":\"advik08k/sasta-coder\",\"private\":false,\"owner\":{\"login\":\"advik08k\",\"id\":252292662,\"node_id\":\"U_kgDODwmuNg\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/252292662?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/advik08k\",\"html_url\":\"https://github.com/advik08k\",\"followers_url\":\"https://api.github.com/users/advik08k/followers\",\"following_url\":\"https://api.github.com/users/advik08k/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/advik08k/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/advik08k/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/advik08k/subscriptions\",\"organizations_url\":\"https://api.github.com/users/advik08k/orgs\",\"repos_url\":\"https://api.github.com/users/advik08k/repos\",\"events_url\":\"https://api.github.com/users/advik08k/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/advik08k/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"html_url\":\"https://github.com/advik08k/sasta-coder\",\"description\":\"yooo\",\"fork\":false,\"url\":\"https://api.github.com/repos/advik08k/sasta-coder\",\"forks_url\":\"https://api.github.com/repos/advik08k/sasta-coder/forks\",\"keys_url\":\"https://api.github.com/repos/advik08k/sasta-coder/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/advik08k/sasta-coder/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/advik08k/sasta-coder/teams\",\"hooks_url\":\"https://api.github.com/repos/advik08k/sasta-coder/hooks\",\"issue_events_url\":\"https://api.github.com/repos/advik08k/sasta-coder/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/advik08k/sasta-coder/events\",\"assignees_url\":\"https://api.github.com/repos/advik08k/sasta-coder/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/advik08k/sasta-coder/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/advik08k/sasta-coder/tags\",\"blobs_url\":\"\nAnalyze this and answer the user."
-    },
-    {
-      "role": "assistant",
       "content": "Bhai, repo check ho gaya! ✅\n\n**`advik08k/sasta-coder`** ka status:\n* **Exists:** Haan, 100% hai (ID `1377002429`)\n* **Visibility:** **Public** (`private: false`), matlab koi bhi ise dekh sakta hai\n* **Description:** \"yooo\"\n* **Owner:** `advik08k` (tu hi hai)\n\nPehle `abcd` isliye dikha tha kyunki API ka pehla response cut ho gaya tha, repo ko koi dikkat nahi thi.\n\n⚠️ **Ek zaroori cheez:** repo **public** hai, aur README ke hisaab se bot chat history isi repo mein `memory/{user_id}.json` mein save karta hai. Matlab tere saare chats **internet pe sabko dikh sakte hain**. Aur agar kabhi token wagairah chat mein paste hua hai, toh wo bhi wahan save ho chuka hoga. Isse fix karne ke liye:\n\n1. **Token revoke kar de** (jo chat mein paste hua tha), naya bana\n2. **Repo ko private kar de:** Settings → Danger Zone → Change visibility\n3. `memory/` folder mein check kar le ki koi token/sensitive cheez toh save nahi hui\n\nAb agar tu chahe toh main files list (`GET /repos/advik08k/sasta-coder/contents`) fetch karke dekh sakta hoon ki main bot file kaunsi hai, taaki memory fix (sliding window + `/newtopic`) ka code exact jagah laga sakein. Bol, dekhun? 🚀"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?"
+    },
+    {
+      "role": "user",
+      "content": "Hinglish me baat kar"
+    },
+    {
+      "role": "assistant",
+      "content": "Sure bhai! Aaj aapko kis cheez mein help chahiye? Koi code fix, feature add karna hai, ya kuch aur discuss karna hai? 🎉"
     }
   ],
   "model": "pollinations-openai",
