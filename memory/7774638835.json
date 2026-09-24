@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai, trust ke liye thanks, seriously. 🙏 Par ek cheez saaf kar dun: is chat mein mere paas koi alag \"key\" nahi hai. Wo token sirf tere pasted message mein dikha tha, aur wo ab kai baar chat history mein aa chuka hai. Aur tera bot khud memory GitHub repo mein save karta hai, aur repo **public** hai. Matlab wo token ab sirf chat mein nahi, shayad internet pe bhi sabko dikh sakta hai. Isliye main ise dobara use nahi karunga, kyunki jab tak wo leaked hai, use karna risky hai, aur tere liye bhi.\n\nTu ye kar (2 minute ka kaam):\n\n1. **Token revoke kar:** GitHub → Settings → Developer settings → Personal access tokens → us token ko Delete\n2. **Repo private kar:** `sasta-coder` → Settings → Danger Zone → Change visibility → Private\n3. **Naya token bana** (sirf `repo` permission ke saath) aur usse sirf Render ke environment variable `GITHUB_TOKEN` mein daal, chat mein kabhi nahi\n\nEk zaroori baat: bot ka jo GITHUB_API tool hai (jo mujhe diya gaya hai), wo bot ke apne configured token se chalta hai, tere pasted token se nahi. Toh naya token Render mein set hone ke baad main bina kuch paste kiye repo check kar sakta hoon aur files bhi dekh sakta hoon.\n\nUske baad memory fix ke liye:\n\n* **Sliding window:** LLM ko sirf last 6-10 messages jaayein\n* **Recall trigger:** \"yaad hai...\", \"pehle jo baat hui thi...\" bolne par hi poori memory mein keyword search ho\n* **`/newtopic`:** context reset, purani baatein GitHub pe safe rahein\n\nChahe toh abhi bot ka main file (jahan history load hoti hai) yahan paste kar de, bina token ke, aur main turant sliding window + `/newtopic` ka code likh deta hoon. Kaam chalu rahega, bas token safe rakhte hue. 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Hi"
-    },
-    {
-      "role": "assistant",
       "content": "Bhai! Hello! 👋 \n\nBatao, aage kya plan hai? Memory fix (sliding window aur `/newtopic` command) wala code set karna hai kya? Ya kuch aur update karna hai? Hukum karo! 🚀"
     },
     {
@@ -123,6 +115,22 @@
     {
       "role": "assistant",
       "content": "Hlo! 👋 Kya chal raha hai? Any coding help ya feature discussion? Batao!"
+    },
+    {
+      "role": "user",
+      "content": "Terminal use karke Render server ka OS aur RAM check karo"
+    },
+    {
+      "role": "assistant",
+      "content": "Sure! नीचे दी गई कमांड्स से आप अपने Render सर्वर पर OS व RAM की जाँच कर सकते हैं:\n\n```bash\n# RUN_TERMINAL\nuname -a      # OS और कर्नेल की जानकारी\nfree -h       # मेमोरी (RAM) का विवरण\n```\n\nइन कमांड्स को चलाने के बाद आपको OS details (जैसे: Linux, कर्नेल संस्करण आदि) और RAM usage (उपलब्ध, उपयोग में, swap आदि) का output मिलेगा।"
+    },
+    {
+      "role": "user",
+      "content": "Terminal Result:\nLinux srv-dan6333tqb8s73ao5sb0-hibernate-55645dd6-bn9bc 6.8.0-1052-aws #55-Ubuntu SMP Mon Mar 30 20:03:51 UTC 2026 x86_64 GNU/Linux\n               total        used        free      shared  buff/cache   available\nMem:            30Gi        21Gi       506Mi        25Mi       9.5Gi       9.1Gi\nSwap:             0B          0B          0B\n\nAnalyze this and answer the user."
+    },
+    {
+      "role": "assistant",
+      "content": "**🖥️ Your Render machine (Ubuntu‑based) Snapshot:**\n\n| Item | Value | Notes |\n|------|-------|-------|\n| **OS** | Ubuntu 20/22/24 (kernel `6.8.0-1052-aws`) | “Ubuntu SMP… 6.8.0” means it’s a recent LTS (likely 22.04 or 24.04). |\n| **CPU arch** | `x86_64` | 64‑bit. |\n| **Total RAM** | **30 GiB** | Whole system memory. |\n| **Used RAM** | **21 GiB** | ~70 % – you’re using a lot of RAM, probably from app processes. |\n| **Free RAM** | **506 MiB** | Strictly available memory for new processes. |\n| **Buffered/Cache** | **9.5 GiB** | OS cache (file system cache/ buffers). This can be reclaimed quickly when needed. |\n| **Available RAM** | **9.1 GiB** | RAM that can be allocated right now (free + reclaimable). |\n| **Swap** | **0 B** | No swap space configured. |\n\n---\n\n### 🔍 What this tells you\n\n1. **Memory Health**  \n   - 30 GiB total, ~9 GiB usable (`available`).  \n   - 21 GiB used → your services are memory‑hungry; check which processes are consuming RAM (`top / htop`).  \n   - 506 MiB free suggests the kernel is already using almost all free memory for caching.  \n   - **No swap**: If the apps need more memory than 9 GiB available, they’ll start paging out or crash. If you anticipate higher memory loads, consider adding a swap file (e.g., `fallocate -l 4G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile`).\n\n2. **CPU / Load**  \n   - `free -h` doesn’t show CPU usage. Run `top -b -n 1` or `htop` to monitor CPU load.\n\n3. **Disk Space**  \n   - Not shown here. Check with `df -h` to ensure you have sufficient disk for logs, backups, etc.\n\n---\n\n### 🚀 Quick action steps\n\n| Action | Why / How |\n|--------|-----------|\n| **Add swap** | If your app may hit > 9 GiB, create a 4–8 GiB swapfile. |\n| **Profile RAM usage** | `top/htop` + `ps aux --sort=-%mem | head` to see the biggest consumers. |\n| **Clean cache** | Expire cache (free‑ing `buff/cache`) isn’t usually necessary; the kernel handles it. |\n| **Limit memory for critical processes** | In Render or Docker compose, set `MEMORY_LIMIT` env var / cgroup limits. |\n| **Check CPU** | Run `top -n 1` to see if any process is hitting 100 % CPU cycles. |\n\n---\n\n### 🔁 Quick Recap:\n\n- **OS:** Ubuntu, kernel 6.8, 64‑bit.  \n- **Memory:** 30 GiB total, 21 GiB used, 9 GiB available, no swap.  \n- **Potential Issue:** If you’re running memory‑intensive workers, you might hit the 9 GiB boundary. Add swap or limit worker memory.  \n- **Next:** Peek at `htop` output for deeper inspection.\n\nLet me know if you’d like a command snippet to add swap or to start monitoring memory usage automatically!"
     }
   ],
   "model": "pollinations-openai",
