@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "[System: Current time is 2026-09-25 01:38 AM (IST)]\nAbbe bhai 2 min baad tha wo almost tune 9 hr baad ka set kar diya chl ab 2 min baad ka hi lga de ek message ( I am happy )"
-    },
-    {
-      "role": "assistant",
-      "content": "```\n# SCHEDULE_MESSAGE 120\nI am happy\n```\n\nArre sorry bhai! Meri ghadi thodi ulte raste chal rahi thi. 😅 Lo abhi **2 minute baad** ke liye reminder set kar diya hai, bilkul time pe mil jayega! 😎👍"
-    },
-    {
-      "role": "user",
       "content": "[System: Current time is 2026-09-25 01:40 AM (IST)]\n1 se 10 tak count karo 5 sec ke time interval ke saath"
     },
     {
