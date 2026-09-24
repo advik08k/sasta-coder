@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Are aise nhi pehle ek message karo and turant aana chahiye then 2 second baad dusra , and please hinglish me baat karlo"
-    },
-    {
-      "role": "assistant",
-      "content": "**Hinglish mein quick bash script.**  \nYeh 1‑to‑10 tak count karega, lekin **pehla message turant** aayega, aur **baad mein** har dusre message ke beech 2 second ka wait hoga.  \n\n```bash\n# ---- count_with_delay.sh ----\n#!/usr/bin/env bash\n\nfor ((i=1; i<=10; i++)); do\n    echo \"$i\"          # pehla message turant\n    if [ $i -lt 10 ]; then      # 10 ke baad wait nahin\n        sleep 2\n    fi\ndone\n```\n\n**Kaise chalana?**\n\n1. File ko create karo:  \n   ```bash\n   cat <<'EOF' > count_with_delay.sh\n   #!/usr/bin/env bash\n   for ((i=1; i<=10; i++)); do\n       echo \"$i\"\n       if [ $i -lt 10 ]; then\n           sleep 2\n       fi\n   done\n   EOF\n   chmod +x count_with_delay.sh\n   ```\n\n2. Execute karo:  \n   ```bash\n   ./count_with_delay.sh\n   ```\n\n**Output waisa hi aayega:**\n\n```\n1\n(wait 2 sec)\n2\n(wait 2 sec)\n3\n...\n10\n```\n\n**Note:**  \n- Agar aap tail‑or f‑style inline command prefer karte ho, ye bhi kaam karega:  \n  ```bash\n  for i in {1..10}; do echo $i; [ $i -lt 10 ] && sleep 2; done\n  ```\n- Sabse pehle `echo 1` turant aayega; subsequent prints 2 second ke pause ke baad.  \n\nMujhe bataye shuru se show-hok, ya koi tweaks chahiye!"
-    },
-    {
-      "role": "user",
       "content": "Hlooo"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Bhai, abhi IST (Indian Standard Time) ke hisaab se **1:44 AM** ho raha hai (kyunki current time system prompt mein 2026-09-25 01:44 AM IST diya gaya hai). 😎 Batao, agla kya scene hai?"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-09-25 01:47 AM (IST)]\nhlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 Batao, kya haal-chal hain? Aur sunao, abhi kya plan hai, koi naya task ya coding karni hai? 😎"
     }
   ],
   "model": "gemini-3.6-flash",
