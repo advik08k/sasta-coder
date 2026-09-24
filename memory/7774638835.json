@@ -39,6 +39,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?"
+    },
+    {
+      "role": "user",
+      "content": "1 se 10 tak counting message send Karo ek ek message kar ke ... I mean alag alag"
+    },
+    {
+      "role": "assistant",
+      "content": "1  \n2  \n3  \n4  \n5  \n6  \n7  \n8  \n9  \n10"
     }
   ],
   "model": "pollinations-openai",
