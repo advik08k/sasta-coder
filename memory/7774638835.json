@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai, let me check your repositories and verify the access using the GitHub API! \n\n```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/user/repos\"}\n```"
-    },
-    {
-      "role": "user",
-      "content": "GitHub API Result:\nStatus 200:\n[{\"id\":1378042945,\"node_id\":\"R_kgDOUiNEQQ\",\"name\":\"abcd\",\"full_name\":\"advik08k/abcd\",\"private\":false,\"owner\":{\"login\":\"advik08k\",\"id\":252292662,\"node_id\":\"U_kgDODwmuNg\",\"avatar_url\":\"https://avatars.githubusercontent.com/u/252292662?v=4\",\"gravatar_id\":\"\",\"url\":\"https://api.github.com/users/advik08k\",\"html_url\":\"https://github.com/advik08k\",\"followers_url\":\"https://api.github.com/users/advik08k/followers\",\"following_url\":\"https://api.github.com/users/advik08k/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/advik08k/gists{/gist_id}\",\"starred_url\":\"https://api.github.com/users/advik08k/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/advik08k/subscriptions\",\"organizations_url\":\"https://api.github.com/users/advik08k/orgs\",\"repos_url\":\"https://api.github.com/users/advik08k/repos\",\"events_url\":\"https://api.github.com/users/advik08k/events{/privacy}\",\"received_events_url\":\"https://api.github.com/users/advik08k/received_events\",\"type\":\"User\",\"user_view_type\":\"public\",\"site_admin\":false},\"html_url\":\"https://github.com/advik08k/abcd\",\"description\":null,\"fork\":false,\"url\":\"https://api.github.com/repos/advik08k/abcd\",\"forks_url\":\"https://api.github.com/repos/advik08k/abcd/forks\",\"keys_url\":\"https://api.github.com/repos/advik08k/abcd/keys{/key_id}\",\"collaborators_url\":\"https://api.github.com/repos/advik08k/abcd/collaborators{/collaborator}\",\"teams_url\":\"https://api.github.com/repos/advik08k/abcd/teams\",\"hooks_url\":\"https://api.github.com/repos/advik08k/abcd/hooks\",\"issue_events_url\":\"https://api.github.com/repos/advik08k/abcd/issues/events{/number}\",\"events_url\":\"https://api.github.com/repos/advik08k/abcd/events\",\"assignees_url\":\"https://api.github.com/repos/advik08k/abcd/assignees{/user}\",\"branches_url\":\"https://api.github.com/repos/advik08k/abcd/branches{/branch}\",\"tags_url\":\"https://api.github.com/repos/advik08k/abcd/tags\",\"blobs_url\":\"https://api.github.com/repos/advik08k/abcd/git/blobs{/sha}\",\"git_tags_url\":\"https://api.github.com/\nAnalyze this and answer the user."
-    },
-    {
-      "role": "assistant",
       "content": "```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/users/advik08k/repos?per_page=100\"}\n```"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Bhai! Hello! 👋 \n\nBatao, aage kya plan hai? Memory fix (sliding window aur `/newtopic` command) wala code set karna hai kya? Ya kuch aur update karna hai? Hukum karo! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Bhai! Hello! 👋 \n\nLagta hai tu phir se seedha \"Hi\" bol ke testing kar raha hai! 😅 \n\nBatao, memory management wale issue ko fix karne ke liye sliding window aur `/newtopic` command ka code implement karein, ya kisi aur cheez par kaam karna hai? Hukum karo! 🚀"
     }
   ],
   "model": "gemini-3.6-flash",
