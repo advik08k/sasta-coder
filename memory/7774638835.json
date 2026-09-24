@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 Kako su stvari? Kada planiraš da ubaciš neki novi feature u bot, ili ti treba mnogo informacija o opremi? Ja tu sam da pomognem!"
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 How can I help you today?"
     }
   ],
   "model": "pollinations-openai",
