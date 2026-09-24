@@ -20,8 +20,11 @@ def log(msg):
 def load_config():
     global CONFIG
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.json")
-    with open(path) as f:
-        CONFIG = json.load(f)
+    if os.path.exists(path):
+        with open(path) as f:
+            CONFIG = json.load(f)
+    else:
+        CONFIG = {}
     log(f"config loaded: port={CONFIG.get('port', 8082)}")
 
 def load_cookies():
