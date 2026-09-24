@@ -88,7 +88,22 @@ For anything not covered by the specific tools above — branches, issues, PRs, 
 ```
 `method` is GET/POST/PUT/PATCH/DELETE, `path` is the API path starting with /, `body` is the JSON payload (omit for GET/DELETE with no body). This is real, unrestricted GitHub access bounded only by what the configured token is scoped to allow — use it carefully, and prefer the specific tools above when they already cover what's needed.
 
-5. GENERAL INSTRUCTIONS:
+7. TERMINAL ACCESS (Render Sandbox):
+To run bash/shell commands on the host server (Linux), use:
+`ash
+# RUN_TERMINAL
+ls -la
+`
+8. WEB SCRAPING:
+To fetch the raw text content of a website, use:
+`
+# FETCH_URL
+https://example.com
+`
+
+9. GENERAL INSTRUCTIONS:
+- IMPORTANT: You are provided with the full chat history. DO NOT re-answer old questions. ONLY respond to the LATEST user message at the very end of the history.
+
 - For long responses: structure with headers and bullet points.
 - Be concise but complete. Respond in user's language (Hindi/English mix is fine)."""
 
@@ -942,7 +957,13 @@ def run_bot():
         final_reply = ""
 
         while current_turn < max_turns:
-            msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + mem["history"]
+            
+            # Prevent Claude from answering all history at once
+            hist_copy = list(mem["history"])
+            if hist_copy and hist_copy[-1]["role"] == "user":
+                hist_copy[-1] = {"role": "user", "content": hist_copy[-1]["content"] + "\n\n[SYSTEM NOTE: This is the latest message. DO NOT reply to previous history, only reply to this specific prompt.]"}
+            msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + hist_copy
+
             reply = call_gemini(msgs, model=model)
             if is_gemini_error(reply):
                 hide_error(reply)
@@ -961,7 +982,43 @@ def run_bot():
             run_skill_match = re.search(r'```\s*# RUN_SKILL\s+(\S+)\s*```', reply, re.DOTALL)
             api_match = re.search(r'```(?:json)?\s*# GITHUB_API\s*(.*?)```', reply, re.DOTALL)
 
-            if api_match:
+            if term_match:
+                cmd = term_match.group(1).strip()
+                status_msg = await u.message.reply_text(f"??? Running: {cmd}...", parse_mode=ParseMode.MARKDOWN)
+                try:
+                    result = subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT, timeout=30).decode('utf-8', errors='replace')
+                except subprocess.CalledProcessError as e:
+                    result = e.output.decode('utf-8', errors='replace')
+                except Exception as e:
+                    result = str(e)
+                if not result.strip(): result = "(Success with no output)"
+                await status_msg.edit_text(f"`	ext
+{result[:3500]}
+`", parse_mode=ParseMode.MARKDOWN)
+                h.append({"role": "user", "content": f"Terminal Result:
+{result}
+Analyze this and answer the user."})
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            elif url_match:
+                url = url_match.group(1).strip()
+                status_msg = await u.message.reply_text(f"?? Fetching: {url}...", parse_mode=ParseMode.MARKDOWN)
+                try:
+                    r = requests.get(url, timeout=15)
+                    result = r.text[:10000] # get first 10k chars
+                except Exception as e:
+                    result = str(e)
+                await status_msg.edit_text(f"`	ext
+(Fetched {len(result)} bytes)
+`", parse_mode=ParseMode.MARKDOWN)
+                h.append({"role": "user", "content": f"Website Content:
+{result}
+Analyze this and answer the user."})
+                await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
+                current_turn += 1
+                continue
+            elif api_match:
                 try:
                     call = json.loads(api_match.group(1).strip())
                     method, path, body = call.get("method", "GET"), call.get("path", ""), call.get("body")
