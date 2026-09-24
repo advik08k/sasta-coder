@@ -1,5 +1,5 @@
 httpx
-python-telegram-bot
+python-telegram-bot[job-queue]
 requests
 
 curl_cffi

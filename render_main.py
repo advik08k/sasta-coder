@@ -102,6 +102,21 @@ To fetch the raw text content of a website, use:
 https://example.com
 `
 
+8.1 PROACTIVE / SCHEDULED MESSAGES:
+If the user wants you to remind them or send a message in the future (e.g. "message me at 4 PM", "kal bhej dena"), calculate the delay in SECONDS from the CURRENT TIME (provided in your prompt), and output EXACTLY:
+```
+# SCHEDULE_MESSAGE <delay_in_seconds>
+<Your message content here>
+```
+The system will automatically send this message to the user when the time comes. Do NOT write Python scripts for reminders. Use this tool.
+
+8. WEB SCRAPING (Legacy):
+To fetch the raw text content of a website, use:
+`
+# FETCH_URL
+https://example.com
+`
+
 
 
 10. DEVELOPER & AGENT SKILLS:
@@ -962,7 +977,14 @@ def run_bot():
                 content = fetch_url_content(url)
                 url_contexts.append(f"--- Content from {url} ---\n{content}\n-------------------")
         
-        final_text = text
+                text = u.message.text or ""
+        
+        # Inject current time
+        import datetime
+        now_ist = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30))).strftime("%Y-%m-%d %I:%M %p (IST)")
+        time_context = f"[System: Current time is {now_ist}]\n"
+        final_text = time_context + text
+
         if url_contexts:
             final_text += "\n\n" + "\n\n".join(url_contexts) + "\n\n(Note for AI: The user provided these links. Use the extracted content above to answer their prompt.)"
 
@@ -1016,6 +1038,7 @@ def run_bot():
             api_match = re.search(r'```(?:json)?\s*# GITHUB_API\s*(.*?)```', reply, re.DOTALL)
             term_match = re.search(r'```(?:bash|sh|text)?\s*# RUN_TERMINAL\s*(.*?)```', reply, re.DOTALL)
             url_match = re.search(r'```\w*\s*# FETCH_URL\s+(\S+)\s*```', reply, re.DOTALL)
+            schedule_match = re.search(r'```(?:bash|sh|text)?\s*# SCHEDULE_MESSAGE\s+(\d+)\n(.*?)```', reply, re.DOTALL)
 
             if term_match:
                 cmd = term_match.group(1).strip()
@@ -1045,6 +1068,19 @@ def run_bot():
                 await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
                 current_turn += 1
                 continue
+            elif schedule_match:
+                delay = int(schedule_match.group(1))
+                msg_to_send = schedule_match.group(2).strip()
+                
+                async def send_scheduled(context: ContextTypes.DEFAULT_TYPE):
+                    try:
+                        await context.bot.send_message(chat_id=context.job.chat_id, text=context.job.data)
+                    except Exception as e:
+                        pass
+                
+                c.job_queue.run_once(send_scheduled, delay, chat_id=u.effective_chat.id, data=msg_to_send)
+                await u.message.reply_text(f"? Done! I have scheduled your message to be sent in {delay} seconds.")
+                return
             elif api_match:
                 try:
                     call = json.loads(api_match.group(1).strip())
