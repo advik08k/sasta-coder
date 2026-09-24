@@ -102,6 +102,31 @@ To fetch the raw text content of a website, use:
 https://example.com
 `
 
+8.2 LONG-RUNNING / BACKGROUND TASKS (Loops, Counting, Continuous Monitoring):
+If the user wants a continuous task (like "count 1 to 10 every 5 seconds", "monitor this URL"), you MUST write a Python script that loops and sends messages back to the user.
+Wrap the code EXACTLY like this:
+```python
+# RUN_BACKGROUND_SCRIPT
+import os, time, requests
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+CHAT_ID = os.environ.get("USER_CHAT_ID")
+
+def send_msg(text):
+    requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage", json={"chat_id": CHAT_ID, "text": text})
+
+for i in range(1, 11):
+    send_msg(f"Count: {i}")
+    time.sleep(5)
+```
+The system will run this script in the background.
+
+8. WEB SCRAPING (Legacy):
+To fetch the raw text content of a website, use:
+`
+# FETCH_URL
+https://example.com
+`
+
 8.1 PROACTIVE / SCHEDULED MESSAGES:
 If the user wants you to remind them or send a message in the future (e.g. "message me at 4 PM", "kal bhej dena"), calculate the delay in SECONDS from the CURRENT TIME (provided in your prompt), and output EXACTLY:
 ```
@@ -1039,6 +1064,7 @@ def run_bot():
             term_match = re.search(r'```(?:bash|sh|text)?\s*# RUN_TERMINAL\s*(.*?)```', reply, re.DOTALL)
             url_match = re.search(r'```\w*\s*# FETCH_URL\s+(\S+)\s*```', reply, re.DOTALL)
             schedule_match = re.search(r'```(?:bash|sh|text)?\s*# SCHEDULE_MESSAGE\s+(\d+)\n(.*?)```', reply, re.DOTALL)
+            bg_match = re.search(r'```(?:python|py)?\s*# RUN_BACKGROUND_SCRIPT\s*(.*?)```', reply, re.DOTALL)
 
             if term_match:
                 cmd = term_match.group(1).strip()
@@ -1068,6 +1094,22 @@ def run_bot():
                 await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
                 current_turn += 1
                 continue
+            elif bg_match:
+                script_code = bg_match.group(1).strip()
+                status_msg = await u.message.reply_text("?? Launching background script...", parse_mode=ParseMode.MARKDOWN)
+                
+                script_path = os.path.join(os.getcwd(), f"bg_script_{int(time.time())}.py")
+                with open(script_path, "w", encoding="utf-8") as f:
+                    f.write(script_code)
+                
+                env = os.environ.copy()
+                env["TELEGRAM_BOT_TOKEN"] = BOT_TOKEN
+                env["USER_CHAT_ID"] = str(u.effective_chat.id)
+                
+                subprocess.Popen([sys.executable, script_path], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+                
+                await status_msg.edit_text(f"? Background script launched! [Task ID: `{os.path.basename(script_path)}`]")
+                return
             elif schedule_match:
                 delay = int(schedule_match.group(1))
                 msg_to_send = schedule_match.group(2).strip()
