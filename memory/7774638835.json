@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Hey bhai! 👋\n\nPichhli baat pe wapas: memory fix ke liye ye plan ready hai.\n\n* **Sliding window:** LLM ko sirf last 6-10 messages jaayein\n* **Recall trigger:** \"yaad hai...\", \"pehle jo baat hui thi...\" bolne par hi poori memory mein keyword search ho\n* **`/newtopic`:** context reset, purani baatein GitHub pe safe rahein\n\nKaunsa chahiye, teeno ya pehle sirf sliding window + `/newtopic`? Aur bot ka main file (jahan history load hoti hai) paste kar de, toh main exact jagah pe code laga ke de dunga. 🚀\n\nAur bhai, wo GitHub token jo chat mein paste hua tha, usse revoke karke naya bana lena. Wo ab chat history mein hai, safe nahi hai. 🔐"
-    },
-    {
-      "role": "user",
-      "content": "Well Well tu next level hai bhai repo check Karna kyuki Tere paas access hai bhi , aur wahaan sasta coder Naam ki repo hogi\n\n\n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"
-    },
-    {
-      "role": "assistant",
       "content": "Bhai, ye wahi token hai jo tune pehle bhi paste kiya tha, aur ab wo chat history mein kai baar aa chuka hai. Pehle isse **revoke kar de**: GitHub → Settings → Developer settings → Personal access tokens → us token ko delete. Naya token bana, aur sirf Render ke environment variables mein daal, chat mein kabhi nahi. 🔐\n\nAb repo wali baat: `advik08k/sasta-coder` pehle hi confirm ho chuki hai. Tune link diya tha aur README bhi dikh gaya tha. Pehle `/user/repos` list mein sirf `abcd` isliye aayi thi kyunki wo call pehle 30 hi repos deta hai, ya repo us waqt list mein nahi thi. Ab dobara check karne ki zarurat nahi hai, aur is token ko main dobara use bhi nahi karunga jab tak tu naya token bot ke environment se set nahi kar leta.\n\nAsli kaam pe wapas aate hain: memory wala fix. Teen cheezein plan mein thi:\n\n* **Sliding window:** LLM ko sirf last 6-10 messages jaayein\n* **Recall trigger:** \"yaad hai...\", \"pehle jo baat hui thi...\" bolne par hi poori memory mein keyword search ho\n* **`/newtopic`:** context reset, purani baatein GitHub pe safe rahein\n\nBot ka main file (jahan history load hoti hai) yahan paste kar de, main exact jagah pe code laga ke de dunga. Sirf code paste karna, token nahi. 🚀"
     },
     {
