@@ -2,22 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai! Hello! 👋 \n\nBatao, aage kya plan hai? Memory fix (sliding window aur `/newtopic` command) wala code set karna hai kya? Ya kuch aur update karna hai? Hukum karo! 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Hi"
-    },
-    {
-      "role": "assistant",
-      "content": "Bhai! Hello! 👋 \n\nLagta hai tu phir se seedha \"Hi\" bol ke testing kar raha hai! 😅 \n\nBatao, memory management wale issue ko fix karne ke liye sliding window aur `/newtopic` command ka code implement karein, ya kisi aur cheez par kaam karna hai? Hukum karo! 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Okay"
-    },
-    {
-      "role": "assistant",
       "content": "Bhai! \"Okay\" sun kar ekdum aisi feeling aa rahi hai jaise tu keh raha ho — *\"Chal bhai, shuru ho ja, code likh kar de de!\"* 😎\n\nChalo phir, bina time waste kiye main tujhe **Smart Memory Fix (Sliding Window + `/newtopic` command)** ka complete code snippet de deta hoon. Ise tu apne bot ke main python file mein integrate kar lena.\n\n---\n\n### 🧠 Smart Memory Implementation Code\n\nApne bot code mein jahan tu GitHub se memory load karke Gemini ko bhejta hai, wahan yeh changes kar le:\n\n#### 1. Sliding Window Logic (Context Limit)\nPuri history LLM ko bhejne ke bajaye, sirf recent messages bhejo taaki bot purane topics par confuse na ho:\n\n```python\n# Constants\nMAX_CONTEXT_MESSAGES = 10  # Sirf last 10 messages (5 user + 5 bot turns) context mein jayenge\n\n\ndef get_smart_context(full_history):\n  \"\"\"Puri history se sirf recent messages nikalta hai taaki context fresh rahe.\"\"\"\n  if not full_history:\n    return []\n  return (\n      full_history[-MAX_CONTEXT_MESSAGES:]\n      if len(full_history) > MAX_CONTEXT_MESSAGES\n      else full_history\n  )\n```\n\n#### 2. `/newtopic` Command Handling\nJab user `/newtopic` command de, toh current session/memory cache ko clear kar do taaki ek naya fresh topic start ho sake (purani history GitHub memory file mein safe rahegi, bas current prompt mein nahi aayegi):\n\n```python\n# Command handler for Telegram bot\nasync def handle_new_topic(update, context):\n  user_id = update.effective_user.id\n\n  # Agar aap local session dictionary ya state maintain kar rahe ho, use clear kar do\n  # Jaise ki: user_sessions[user_id] = []\n\n  await update.message.reply_text(\n      \"🔄 **Topic Reset!** Purani baatein GitHub memory mein safe hain,\"\n      \" lekin ab hum ek naye topic par fresh shuruat kar rahe hain. 🚀\"\n  )\n```\n\n#### 3. Optional Recall Trigger (\"Yaad hai kya...\")\nAgar user specifically purani kisi baat ke baare mein puche, tab poori memory mein keyword search karke relevant message fetch karne ka logic:\n\n```python\ndef recall_past_memory(full_history, query):\n  \"\"\"Agar user purani baat yaad dilane ko kahe, toh keyword match karke relevant message nikalo.\"\"\"\n  keywords = [\n      w.lower() for w in query.split() if len(w) > 3\n  ]  # Chote words chhhod kar\n  relevant_messages = []\n\n  for msg in full_history:\n    content = msg.get(\"content\", \"\").lower()\n    if any(kw in content for kw in keywords):\n      relevant_messages.append(msg)\n\n  # Sirf top 3-4 relevant purane messages wapas do\n  return relevant_messages[-3:] if relevant_messages else []\n```\n\n---\n\n### 🚀 Kaise integrate karein?\n1. Jab user ka message aaye, check karo ki kya usne koi recall keyword use kiya hai ya `/newtopic` command di hai.\n2. Normal chat ke liye `get_smart_context(history)` use karke Gemini API ko payload bhejo.\n3. Isse bot ka **context pollution** khatam ho jayega aur woh hamesha current topic par pin-pointed focus rakhega!\n\nBhai, bata yeh logic theek baith raha hai na tere bot ke structure ke hisaab se? Isme kuch aur customize karna ho toh bata! 🔥"
     },
     {
@@ -131,6 +115,14 @@
     {
       "role": "assistant",
       "content": "**🖥️ Your Render machine (Ubuntu‑based) Snapshot:**\n\n| Item | Value | Notes |\n|------|-------|-------|\n| **OS** | Ubuntu 20/22/24 (kernel `6.8.0-1052-aws`) | “Ubuntu SMP… 6.8.0” means it’s a recent LTS (likely 22.04 or 24.04). |\n| **CPU arch** | `x86_64` | 64‑bit. |\n| **Total RAM** | **30 GiB** | Whole system memory. |\n| **Used RAM** | **21 GiB** | ~70 % – you’re using a lot of RAM, probably from app processes. |\n| **Free RAM** | **506 MiB** | Strictly available memory for new processes. |\n| **Buffered/Cache** | **9.5 GiB** | OS cache (file system cache/ buffers). This can be reclaimed quickly when needed. |\n| **Available RAM** | **9.1 GiB** | RAM that can be allocated right now (free + reclaimable). |\n| **Swap** | **0 B** | No swap space configured. |\n\n---\n\n### 🔍 What this tells you\n\n1. **Memory Health**  \n   - 30 GiB total, ~9 GiB usable (`available`).  \n   - 21 GiB used → your services are memory‑hungry; check which processes are consuming RAM (`top / htop`).  \n   - 506 MiB free suggests the kernel is already using almost all free memory for caching.  \n   - **No swap**: If the apps need more memory than 9 GiB available, they’ll start paging out or crash. If you anticipate higher memory loads, consider adding a swap file (e.g., `fallocate -l 4G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile`).\n\n2. **CPU / Load**  \n   - `free -h` doesn’t show CPU usage. Run `top -b -n 1` or `htop` to monitor CPU load.\n\n3. **Disk Space**  \n   - Not shown here. Check with `df -h` to ensure you have sufficient disk for logs, backups, etc.\n\n---\n\n### 🚀 Quick action steps\n\n| Action | Why / How |\n|--------|-----------|\n| **Add swap** | If your app may hit > 9 GiB, create a 4–8 GiB swapfile. |\n| **Profile RAM usage** | `top/htop` + `ps aux --sort=-%mem | head` to see the biggest consumers. |\n| **Clean cache** | Expire cache (free‑ing `buff/cache`) isn’t usually necessary; the kernel handles it. |\n| **Limit memory for critical processes** | In Render or Docker compose, set `MEMORY_LIMIT` env var / cgroup limits. |\n| **Check CPU** | Run `top -n 1` to see if any process is hitting 100 % CPU cycles. |\n\n---\n\n### 🔁 Quick Recap:\n\n- **OS:** Ubuntu, kernel 6.8, 64‑bit.  \n- **Memory:** 30 GiB total, 21 GiB used, 9 GiB available, no swap.  \n- **Potential Issue:** If you’re running memory‑intensive workers, you might hit the 9 GiB boundary. Add swap or limit worker memory.  \n- **Next:** Peek at `htop` output for deeper inspection.\n\nLet me know if you’d like a command snippet to add swap or to start monitoring memory usage automatically!"
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 Kako su stvari? Kada planiraš da ubaciš neki novi feature u bot, ili ti treba mnogo informacija o opremi? Ja tu sam da pomognem!"
     }
   ],
   "model": "pollinations-openai",
