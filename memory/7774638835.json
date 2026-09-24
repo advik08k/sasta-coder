@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Heyà bhai! 👋 Ekdum full energy! 🚀\n\nBatao, aaj Sasta Coder bot mein kya scene set karna hai? Koi naya feature add karein, code fix karein, ya koi mast idea discuss karein? Hukum karo! 😎🔥"
-    },
-    {
-      "role": "user",
-      "content": "Heyy"
-    },
-    {
-      "role": "assistant",
       "content": "Heyy bhai! 👋\n\nLagta hai tu baar baar greet kar raha hai, koi issue toh nahi? Agar bot ya reply mein kuch gadbad lag rahi hai (jaise same jawab repeat ho raha ho), toh seedha bata de, main dekh leta hoon.\n\nWarna bol, aaj kya karna hai? Memory fix ka code integrate karna hai, ya kuch aur? 🚀"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "I’m on a sandbox that **doesn’t have external network access**, so running `pip install pyjokes` from here would fail with a “Couldn’t resolve host” error.  \n\nIf you run the command on your own Render instance (or any machine that has internet), you’ll see something like:\n\n```bash\n$ pip install pyjokes\nDefaulting to user installation because normal site-packages is not writeable\nCollecting pyjokes\n  Downloading pyjokes‑0.6.0.tar.gz (4.2 kB)\nInstalling collected packages: pyjokes\nSuccessfully installed pyjokes-0.6.0\n```\n\nOnce it’s installed, you can use the script below and run it:\n\n```bash\n$ python3 joke.py\nWhy don’t skeletons fight each other? They don’t have the guts.\n```\n\n---\n\n### What you can do on the Render server\n\n1. **SSH into the Render shell or open the terminal**  \n2. Run the install command shown above.  \n3. Create `joke.py` with the code I provided.  \n4. Execute `python3 joke.py` to get a random joke.\n\nLet me know if you’d like me to generate the script for you automatically or run any other command!"
+    },
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 How can I help you today?"
     }
   ],
   "model": "pollinations-openai",
