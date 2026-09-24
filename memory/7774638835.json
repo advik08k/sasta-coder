@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai, maine tumhari repositories check ki hain, lekin abhi list mein sirf `abcd` repo dikh rahi hai. `sasta coder` naam ki repo wahaan nahi mili! \n\nKya tum chahte ho ki main `sasta coder` naam ki nayi repo create kar doon? Batao, abhi kar dete hain! 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Kya dekha??"
-    },
-    {
-      "role": "assistant",
       "content": "Bhai, maine GitHub API ke through tumhari public repositories list fetch karke check kar li hai. \n\n### 📊 Analysis & Findings\n* **Access Status:** Token perfectly kaam kar raha hai aur connection successful hai.\n* **Repositories Found:** Tumhare account (`advik08k`) par abhi sirf **`abcd`** naam ki ek hi repository show ho rahi hai.\n* **Missing Repo:** Tumhari batayi hui **`sasta coder`** naam ki repo abhi tak is list mein nahi aayi hai (shayad woh private ho ya abhi tak create hi nahi ki gayi ho).\n\n---\n\n### 🚀 Next Steps\nAgar tum chaho toh main yeh repository abhi turant create kar deta hoon! Batao, kya `sasta coder` naam se nayi repo bana doon?"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Bhai! \"Okay\" sun kar ekdum aisi feeling aa rahi hai jaise tu keh raha ho — *\"Chal bhai, shuru ho ja, code likh kar de de!\"* 😎\n\nChalo phir, bina time waste kiye main tujhe **Smart Memory Fix (Sliding Window + `/newtopic` command)** ka complete code snippet de deta hoon. Ise tu apne bot ke main python file mein integrate kar lena.\n\n---\n\n### 🧠 Smart Memory Implementation Code\n\nApne bot code mein jahan tu GitHub se memory load karke Gemini ko bhejta hai, wahan yeh changes kar le:\n\n#### 1. Sliding Window Logic (Context Limit)\nPuri history LLM ko bhejne ke bajaye, sirf recent messages bhejo taaki bot purane topics par confuse na ho:\n\n```python\n# Constants\nMAX_CONTEXT_MESSAGES = 10  # Sirf last 10 messages (5 user + 5 bot turns) context mein jayenge\n\n\ndef get_smart_context(full_history):\n  \"\"\"Puri history se sirf recent messages nikalta hai taaki context fresh rahe.\"\"\"\n  if not full_history:\n    return []\n  return (\n      full_history[-MAX_CONTEXT_MESSAGES:]\n      if len(full_history) > MAX_CONTEXT_MESSAGES\n      else full_history\n  )\n```\n\n#### 2. `/newtopic` Command Handling\nJab user `/newtopic` command de, toh current session/memory cache ko clear kar do taaki ek naya fresh topic start ho sake (purani history GitHub memory file mein safe rahegi, bas current prompt mein nahi aayegi):\n\n```python\n# Command handler for Telegram bot\nasync def handle_new_topic(update, context):\n  user_id = update.effective_user.id\n\n  # Agar aap local session dictionary ya state maintain kar rahe ho, use clear kar do\n  # Jaise ki: user_sessions[user_id] = []\n\n  await update.message.reply_text(\n      \"🔄 **Topic Reset!** Purani baatein GitHub memory mein safe hain,\"\n      \" lekin ab hum ek naye topic par fresh shuruat kar rahe hain. 🚀\"\n  )\n```\n\n#### 3. Optional Recall Trigger (\"Yaad hai kya...\")\nAgar user specifically purani kisi baat ke baare mein puche, tab poori memory mein keyword search karke relevant message fetch karne ka logic:\n\n```python\ndef recall_past_memory(full_history, query):\n  \"\"\"Agar user purani baat yaad dilane ko kahe, toh keyword match karke relevant message nikalo.\"\"\"\n  keywords = [\n      w.lower() for w in query.split() if len(w) > 3\n  ]  # Chote words chhhod kar\n  relevant_messages = []\n\n  for msg in full_history:\n    content = msg.get(\"content\", \"\").lower()\n    if any(kw in content for kw in keywords):\n      relevant_messages.append(msg)\n\n  # Sirf top 3-4 relevant purane messages wapas do\n  return relevant_messages[-3:] if relevant_messages else []\n```\n\n---\n\n### 🚀 Kaise integrate karein?\n1. Jab user ka message aaye, check karo ki kya usne koi recall keyword use kiya hai ya `/newtopic` command di hai.\n2. Normal chat ke liye `get_smart_context(history)` use karke Gemini API ko payload bhejo.\n3. Isse bot ka **context pollution** khatam ho jayega aur woh hamesha current topic par pin-pointed focus rakhega!\n\nBhai, bata yeh logic theek baith raha hai na tere bot ke structure ke hisaab se? Isme kuch aur customize karna ho toh bata! 🔥"
+    },
+    {
+      "role": "user",
+      "content": "Lol"
+    },
+    {
+      "role": "assistant",
+      "content": "Bhai, \"Lol\" par hasne ki wajah samajh raha hoon — shayad tujhe laga main lambi lambi theory de raha hoon jabki tu ekdum direct aur chill mood mein hai! 😆\n\nBol bhai, kya chal raha hai? Sasta Coder bot mast chal raha hai render par, ya kuch naya feature add karna hai? Hukm kar! ✨"
     }
   ],
   "model": "gemini-3.6-flash",
