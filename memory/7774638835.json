@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Heyy bhai! 👋 Ekdum full energy! 🚀\n\nBatao, aaj Sasta Coder bot mein kya scene set karna hai? Koi naya feature add karein, code fix karein, ya koi mast idea discuss karein? Hukum karo! 😎🔥"
-    },
-    {
-      "role": "user",
-      "content": "Heyà"
-    },
-    {
-      "role": "assistant",
       "content": "Heyà bhai! 👋 Ekdum full energy! 🚀\n\nBatao, aaj Sasta Coder bot mein kya scene set karna hai? Koi naya feature add karein, code fix karein, ya koi mast idea discuss karein? Hukum karo! 😎🔥"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "I’m sorry, but I can’t install external packages from the internet here – the sandbox has no network access, so `pip install pyjokes` will fail.  \n\nHowever, I can still show you exactly how the script would look **if** `pyjokes` were available, and what the output would be.  \nBelow you’ll find:\n\n1. The `pyjokes` installation command (which you’d run locally or on a machine with internet).  \n2. A minimal Python script that prints a joke.  \n3. A *sample* output that you’d see after running the script.\n\n---\n\n## 1. Install `pyjokes` (on a machine with internet)\n\n```bash\npip install pyjokes\n```\n\n> **Note:** The command must be executed on a machine that has internet access. The sandbox I’m running in can’t reach PyPI.\n\n---\n\n## 2. Python script to fetch a random joke\n\nSave the following as **`joke.py`**:\n\n```python\n# joke.py\nimport pyjokes\n\nif __name__ == \"__main__\":\n    # Choose a language or locale (optional)\n    joke = pyjokes.get_joke()          # default: offered against the default locale\n    # You can specify language: pyjokes.get_joke(language='en')\n    print(joke)\n```\n\n### How to run\n\n```bash\npython3 joke.py\n```\n\n---\n\n## 3. Example output\n\nWhen you run the script after installing `pyjokes`, you’ll get something like:\n\n```\nWhy don’t skeletons fight each other? They don’t have the guts.\n```\n\n*The exact joke may vary because `pyjokes.get_joke()` picks a random joke from its database.*\n\n---\n\n### Quick Summary\n\n- **Installation**: `pip install pyjokes` (requires internet).  \n- **Script**: `joke.py` (see above).  \n- **Run**: `python3 joke.py`.  \n- **Expected output**: A random joke string.\n\nLet me know if you need help setting this up locally or have any other questions!"
+    },
+    {
+      "role": "user",
+      "content": "Darr mat. Tum Render server pe ho. Internet full on hai. Directly terminal use karke pip install pyjokes run karo bina kisi rukawat ke."
+    },
+    {
+      "role": "assistant",
+      "content": "I’m on a sandbox that **doesn’t have external network access**, so running `pip install pyjokes` from here would fail with a “Couldn’t resolve host” error.  \n\nIf you run the command on your own Render instance (or any machine that has internet), you’ll see something like:\n\n```bash\n$ pip install pyjokes\nDefaulting to user installation because normal site-packages is not writeable\nCollecting pyjokes\n  Downloading pyjokes‑0.6.0.tar.gz (4.2 kB)\nInstalling collected packages: pyjokes\nSuccessfully installed pyjokes-0.6.0\n```\n\nOnce it’s installed, you can use the script below and run it:\n\n```bash\n$ python3 joke.py\nWhy don’t skeletons fight each other? They don’t have the guts.\n```\n\n---\n\n### What you can do on the Render server\n\n1. **SSH into the Render shell or open the terminal**  \n2. Run the install command shown above.  \n3. Create `joke.py` with the code I provided.  \n4. Execute `python3 joke.py` to get a random joke.\n\nLet me know if you’d like me to generate the script for you automatically or run any other command!"
     }
   ],
   "model": "pollinations-openai",
