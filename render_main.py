@@ -1014,12 +1014,8 @@ def run_bot():
                 except Exception as e:
                     result = str(e)
                 if not result.strip(): result = "(Success with no output)"
-                await status_msg.edit_text(f"`	ext
-{result[:3500]}
-`", parse_mode=ParseMode.MARKDOWN)
-                h.append({"role": "user", "content": f"Terminal Result:
-{result}
-Analyze this and answer the user."})
+                await status_msg.edit_text(f"```text\n{result[:3500]}\n```", parse_mode=ParseMode.MARKDOWN)
+                h.append({"role": "user", "content": f"Terminal Result:\n{result}\nAnalyze this and answer the user."})
                 await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
                 current_turn += 1
                 continue
@@ -1031,12 +1027,8 @@ Analyze this and answer the user."})
                     result = r.text[:10000] # get first 10k chars
                 except Exception as e:
                     result = str(e)
-                await status_msg.edit_text(f"`	ext
-(Fetched {len(result)} bytes)
-`", parse_mode=ParseMode.MARKDOWN)
-                h.append({"role": "user", "content": f"Website Content:
-{result}
-Analyze this and answer the user."})
+                await status_msg.edit_text(f"```text\n{len(result)}\n```", parse_mode=ParseMode.MARKDOWN)
+                h.append({"role": "user", "content": f"Website Content:\n{result}\nAnalyze this and answer the user."})
                 await c.bot.send_chat_action(chat_id=u.effective_chat.id, action="typing")
                 current_turn += 1
                 continue
