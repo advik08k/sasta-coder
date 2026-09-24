@@ -95,6 +95,14 @@
     {
       "role": "assistant",
       "content": "Heyyyyy! 😄 How’s it going? Anything you’d like to dive into today?"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-09-25 01:28 AM (IST)]\nHi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 Batao, aaj kya help chahiye? Koi coding task, script, ya koi aur cheez karni hai?"
     }
   ],
   "model": "gemini-3.6-flash",
