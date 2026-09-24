@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "[System: Current time is 2026-09-25 01:36 AM (IST)]\nOkay to abhi 1:37am (ist)  pe mujhe message karna subah ho gyi maamu"
-    },
-    {
-      "role": "assistant",
-      "content": "```\n# SCHEDULE_MESSAGE 32400\nSubah ho gayi maamu! ☀️ Uth jao, naya din aur nayi shuruwat! 🚀\n```\n\nArre bilkul! Tera reminder set kar diya hai. Thik subah ke 1:37 AM se 9 ghante baad (yani 10:37 AM IST pe) tujhe ye message mil jayega. Tab tak aram se so ja! 😎💤"
-    },
-    {
-      "role": "user",
       "content": "[System: Current time is 2026-09-25 01:38 AM (IST)]\nAbbe bhai 2 min baad tha wo almost tune 9 hr baad ka set kar diya chl ab 2 min baad ka hi lga de ek message ( I am happy )"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hloo bhai! 👋 Sab kuch ekdum control aur safe mein hai. Batao, ab kya karna hai? Koi nayi script chalani hai ya kuch aur discuss karna hai? 😎🚀"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-09-25 01:56 AM (IST)]\nHlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hlo bhai! 👋 Kaise ho? Sab theek-thaak? Batao, abhi kya chal raha hai aur kya help chahiye? 😎🚀"
     }
   ],
   "model": "gemini-3.6-flash",
