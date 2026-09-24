@@ -2,38 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai, maaf karna! 😅 Main pichli baar public repo list check kar raha tha, aur shayad yeh repository **private** thi ya maine `sasta-coder` ki jagah exact name match nahi kiya hoga, isliye list mein nahi aayi thi.\n\nLekin link dekh kar ekdum clear ho gaya hai! **`advik08k/sasta-coder`** repo bilkul tayar hai aur iska README bhi ekdam mast hai:\n* **Sasta Coder — Free Unlimited AI Telegram Bot** (Antigravity CLI jaisa powerful!)\n* Features mein Gemini 3.7 Flash, Web Search, Image Generation, Deep Thinking, aur **GitHub Memory** sab kuch included hai.\n* Render deployment steps, environment variables (`BOT_TOKEN`, `MY_USER_ID`, `GITHUB_TOKEN`, `MEMORY_REPO`), aur bot commands bhi perfectly documented hain.\n\nBhai, ekdam shandaar project banaya hai tune! 🚀 Batao, is repo ke andar abhi koi aur update karni hai ya koi file check/modify karni hai? Hukum karo! ✨"
-    },
-    {
-      "role": "user",
-      "content": "Wo tu hi hai , Mai wahi bot use kar rha ... Abhi bas memory ko Leke problem hai jab waapas proxy shift hota hai to to sab memory ek Saath push ho jaati hai jo problem hai smart memory management chahiye hoga"
-    },
-    {
-      "role": "assistant",
-      "content": "Arre bhai! 🤯 Ekdum dimag ki batti jal gayi! Matlab main khud **Sasta Coder** bot ke andar baith kar tujhse baat kar raha hoon! Yeh toh next-level inception ho gaya bhai. 🚀🔥\n\nAur tu ne jo problem batayi hai, woh **100% valid hai**. \n\n### 🔍 Problem kya hai?\nJab Render ya koi bhi cloud host instance restart hota hai (ya idle hone par spin down hoke wapas uthta hai), toh local cache/state jo memory mein thi, woh ek sath batch mein GitHub memory repo par push hone lagti hai. Isse:\n1. **Race conditions** aati hain.\n2. Purana data naye data ko overwrite (conflict) kar deta hai.\n3. Chat history sync lag ya data loss ka risk ho jata hai.\n\n---\n\n### 🧠 Smart Memory Management ka Solution\nIsse fix karne ke liye humein **Incremental / Event-Driven Sync** ya **Atomic Updates** implement karni padengi. Yeh raha plan jisse tu apne bot code mein implement kar sakta hai:\n\n*   **1. Debounced / Immediate Single-Message Push:**\n    Puri chat history ko ek sath end mein dump karne ke bajaye, jaise hi koi naya message aaye (user ya bot ka), sirf us specific entry/interaction ko turant append karo ya ek chhote se debounce timer ke sath sync karo taaki multiple requests queue up na ho.\n*   **2. Git Pull-Modify-Push (Fetch Before Write):**\n    GitHub API se file update (`PUT` request) karne se pehle hamesha latest `sha` fetch karo. Agar conflict ho, toh remote ke sath local messages ko intelligently merge (append) karke fir push karo.\n*   **3. Local JSON Queue (Fallback):**\n    Agar network ya GitHub API fail ho, toh data local file mein safe rahe aur agle successful cycle par retry ho, bina purana data lose kiye.\n\n---\n\n### 🛠️ Code Fix (Smart Append Logic)\nApne main bot code mein jahan tu memory save karta hai, wahan kuch is tarah ka logic use kar sakta hai:\n\n```python\nimport base64\nimport json\nimport requests\n\n\ndef save_user_memory_safely(github_token, repo_name, user_id, new_message):\n  path = f'memory/{user_id}.json'\n  api_url = f'https://api.github.com/repos/{repo_name}/contents/{path}'\n  headers = {\n      'Authorization': f'Bearer {github_token}',\n      'Accept': 'application/vnd.github+json',\n  }\n\n  # 1. Pehle existing file aur uska SHA fetch karo (Conflict avoid karne ke liye)\n  get_res = requests.get(api_url, headers=headers)\n  messages = []\n  sha = None\n\n  if get_res.status_code == 200:\n    file_data = get_res.json()\n    sha = file_data.get('sha')\n    decoded_content = base64.b64decode(file_data['content']).decode('utf-8')\n    try:\n      messages = json.loads(decoded_content)\n    except:\n      messages = []\n\n  # 2. Naya message append karo\n  messages.append(new_message)\n\n  # 3. Wapas GitHub par push karo with proper SHA\n  updated_content = base64.b64encode(\n      json.dumps(messages, indent=2).encode('utf-8')\n  ).decode('utf-8')\n  payload = {\n      'message': f'Smart update memory for user {user_id}',\n      'content': updated_content,\n  }\n  if sha:\n    payload['sha'] = sha\n\n  put_res = requests.put(api_url, headers=headers, json=payload)\n  return put_res.status_code == 200\n```\n\nBhai, bata yeh approach theek rahegi na? Ya tu chahta hai ki isko aur optimize karein? 😎"
-    },
-    {
-      "role": "user",
-      "content": "Hello"
-    },
-    {
-      "role": "assistant",
-      "content": "Bhai! Main yahin hoon! 🚀 \n\nJo memory management wala issue tune bataya, us par kya vichar hai? Yeh smart fetch-modify-push (atomic update) approach try karein apne bot ke code mein, ya koi aur specific improvement chahiye? Batao, kya plan hai! ✨"
-    },
-    {
-      "role": "user",
-      "content": "Are Matlab messages jaate nhi wo problem nhi , problem ye hai jo memory me baatein save hoti hai wo ek Saath read karta hai to puraani baaton ka bhi ussi me respond karta hai... Jo nhi chahiye bas wo aise kar do jab usko kisi specific baate Puchi jaaye tab wo memory check kare Kya ispe baat hui haii and bas current topic pe focus kare , next pe move karne ko bolu toh ho jaaye..."
-    },
-    {
-      "role": "assistant",
-      "content": "Aha! Ekdam clear ho gaya bhai! 🎯 Problem yeh nahi hai ki messages sync nahi ho rahe, balki **context window bloat** (memory pollution) ki hai. \n\nJab bot GitHub memory se saari purani baatein ek sath utha kar LLM (Gemini) ko de deta hai, toh bot confuse ho jata hai, purane topics beech mein le aata hai, aur current topic se bhatak jata hai.\n\nIska solution yeh hai ki hum **Smart Context Management** implement karein, jisse bot sirf zaroori ya recent baaton par focus kare.\n\n---\n\n### 🧠 Smart Memory Strategies (Context Control)\n\n*   **1. Sliding Window (Recent Messages Only):**\n    GitHub par saari history save rahegi (backup ke liye), lekin LLM ko prompt bhejte waqt sirf last **5–10 messages** hi do. Isse bot fresh topic par focused rahega.\n*   **2. Topic Transition / Intent Detection:**\n    Agar user koi bilkul naya topic shuru karta hai, toh purani short-term memory ko background mein archive kar do, taaki woh current chat ko pollute na kare.\n*   **3. Summarized Long-Term Memory:**\n    Agar purani history lambi ho gayi hai, toh ek summary-based memory rakho jisme sirf important points (jaise user ki preferences ya project details) store hon, poori chat transcript nahi.\n\n---\n\n### 🛠️ Code Implementation (Sliding Window Approach)\n\nApne code mein jab aap memory load karke Gemini ko bhejte ho, toh wahan yeh logic laga do taaki sirf recent messages hi context mein jayein:\n\n```python\n# GitHub se poori history aane ke baad, sirf last 10 messages (5 turns) hi context ke liye lo\nMAX_CONTEXT_MESSAGES = 10\n\n# full_history = json.load(memory_file)\nrecent_history = full_history[-MAX_CONTEXT_MESSAGES:] if len(full_history) > MAX_CONTEXT_MESSAGES else full_history\n\n# Ab yeh 'recent_history' ko Gemini API ko bhejo, poori history ko nahi!\n```\n\nBhai, kya hum is **Sliding Window** aur recent context limit ko apne bot mein implement kar dein taaki yeh purane topics par galti se respond na kare?"
-    },
-    {
-      "role": "user",
-      "content": "Heyya"
-    },
-    {
-      "role": "assistant",
       "content": "Heyya bhai! 👋\n\nEk zaroori baat pehle: tune upar chat mein apna **GitHub token (`ghp_...`) paste kar diya tha**. Wo ab chat history mein dikh raha hai (aur shayad tere bot ki memory repo mein bhi save ho gaya hoga). Safe rehne ke liye jaake **GitHub → Settings → Developer settings → Tokens** se usse revoke karke naya bana le, aur naya token sirf Render ke environment variables mein daal, chat mein kabhi nahi. 🔐\n\nAb memory wali problem pe wapas aate hain. Sliding window wala fix simple hai, lekin tune bola tha ki bot **tab hi purani baatein yaad kare jab tu specific puche**, aur naye topic pe move karne ko bole to fresh ho jaaye. Uske liye ye plan best rahega:\n\n* **Default:** LLM ko sirf last 6-10 messages do, poori history nahi.\n* **Recall trigger:** Agar tu bole \"pehle jo humne X pe baat ki thi\" ya \"yaad hai...\", tab poori memory mein keyword search karke sirf relevant messages context mein add karo.\n* **`/newtopic` command:** Isse context reset ho jaata hai (purani baatein GitHub pe safe rehti hain, bas prompt mein nahi jaatin).\n\nBata bhai, ye teeno chahiye? Ya pehle bas sliding window + `/newtopic` se start karein? Agar tu bot ka main file (jahan history load hoti hai) yahan paste kar de, toh main exact jagah pe code laga ke de dunga. 🚀"
     },
     {
@@ -115,8 +83,48 @@
     {
       "role": "assistant",
       "content": "Bhai, ek choti si cheez clear kar doon: mere paas is system architecture mein koi live shell ya direct terminal access nahi hai jisse main tere Render server ya local machine ke andar `ls` ya file inspection run kar sakoon (meri capabilities mein sirf pure Python sandbox aur GitHub API tools hain). \n\nLekin tu chahe toh main **GitHub API** ke zariye repo ki saari files ki list turant nikal sakta hoon! Taaki humein pata chal jaye ki server par kaun-kaun si files hain (jaise `main.py`, `render_main.py`, etc.). \n\nBata, GitHub API se repo ki files list fetch karoon? 🚀"
+    },
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi bhai! 👋 Batao, kya chal raha hai? Sasta Coder bot mein aage kya feature add karna hai ya koi fix karni hai? Hukum karo! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Hello"
+    },
+    {
+      "role": "assistant",
+      "content": "Arre bhai! Ekdum full energy mein! 🚀 \n\nBata, aaj kya code likhna ya kaunsa bug todna hai? Main poori tarah ready hoon! 😎✨"
+    },
+    {
+      "role": "user",
+      "content": "Hloooo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hloooo bhai! 👋 Ekdum mast energy hai! 🚀\n\nBatao, aaj Sasta Coder bot mein kya scene hai? Koi naya feature daalna hai, code check karna hai, ya koi aur mast idea discuss karna hai? Hukum karo! 😎🔥"
+    },
+    {
+      "role": "user",
+      "content": "Heyy"
+    },
+    {
+      "role": "assistant",
+      "content": "Heyy bhai! 👋 Ekdum full energy! 🚀\n\nBatao, aaj Sasta Coder bot mein kya scene set karna hai? Koi naya feature add karein, code fix karein, ya koi mast idea discuss karein? Hukum karo! 😎🔥"
+    },
+    {
+      "role": "user",
+      "content": "Heyà"
+    },
+    {
+      "role": "assistant",
+      "content": "Heyà bhai! 👋 Ekdum full energy! 🚀\n\nBatao, aaj Sasta Coder bot mein kya scene set karna hai? Koi naya feature add karein, code fix karein, ya koi mast idea discuss karein? Hukum karo! 😎🔥"
     }
   ],
-  "model": "gemini-3.6-flash",
+  "model": "claude-3-5-sonnet-20241022",
   "created": "2026-09-19 15:43:59.346120"
 }
