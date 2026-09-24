@@ -40,6 +40,7 @@ MODELS = {
     "🔥 Flash 3.6 (Stable)":  "gemini-3.6-flash",
     "🧠 Thinking (Deep)":      "gemini-3.5-flash-thinking",
     "💨 Flash Lite (Fast)":    "gemini-flash-lite",
+    "?? Pollinations AI (Free)": "pollinations-openai",
 }
 
 SYSTEM_PROMPT = """You are Sasta Coder, a powerful AI assistant similar to Antigravity CLI.
