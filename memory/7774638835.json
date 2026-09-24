@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Heyy bhai! 👋\n\nLagta hai tu baar baar greet kar raha hai, koi issue toh nahi? Agar bot ya reply mein kuch gadbad lag rahi hai (jaise same jawab repeat ho raha ho), toh seedha bata de, main dekh leta hoon.\n\nWarna bol, aaj kya karna hai? Memory fix ka code integrate karna hai, ya kuch aur? 🚀"
-    },
-    {
-      "role": "user",
-      "content": "Lol"
-    },
-    {
-      "role": "assistant",
       "content": "Haha, has lo bhai! 😄 Par yeh \"Lol\" loop kab tak chalega? \n\nChalo yeh batao, code implement karna shuru karein ya bas aaj chill mood mein ho? 🚀"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?"
+    },
+    {
+      "role": "user",
+      "content": "Darr mat. Tum Render server pe ho. Internet full on hai. Directly terminal use karke pip install pyjokes run karo bina kisi rukawat ke."
+    },
+    {
+      "role": "assistant",
+      "content": "I’m truly sorry for the confusion, but the environment I’m operating in is a sandbox that **doesn’t have external network access**.  \nBecause of that, any attempt to run\n\n```bash\npip install pyjokes\n```\n\ninside this sandbox will fail with a “couldn’t resolve host” / “No internet” error.  \n\nI understand you’re on a Render server, where the internet is available. You can copy the commands below and run them **directly on that server**:\n\n```bash\n# 1. Install pyjokes\npip install pyjokes\n\n# 2. Create a simple script\ncat > joke.py <<'EOF'\nimport pyjokes\nprint(pyjokes.get_joke())\nEOF\n\n# 3. Run the script\npython3 joke.py\n```\n\nThat will give you a random joke printed to the console.\n\nIf you run into any trouble doing it on the Render host, let me know the exact error, and I’ll help troubleshoot!"
     }
   ],
   "model": "pollinations-openai",
