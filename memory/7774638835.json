@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Bhai, \"Lol\" par hasne ki wajah samajh raha hoon — shayad tujhe laga main lambi lambi theory de raha hoon jabki tu ekdum direct aur chill mood mein hai! 😆\n\nBol bhai, kya chal raha hai? Sasta Coder bot mast chal raha hai render par, ya kuch naya feature add karna hai? Hukm kar! ✨"
-    },
-    {
-      "role": "user",
-      "content": "Check server files using terminal"
-    },
-    {
-      "role": "assistant",
       "content": "Bhai, ek choti si cheez clear kar doon: mere paas is system architecture mein koi live shell ya direct terminal access nahi hai jisse main tere Render server ya local machine ke andar `ls` ya file inspection run kar sakoon (meri capabilities mein sirf pure Python sandbox aur GitHub API tools hain). \n\nLekin tu chahe toh main **GitHub API** ke zariye repo ki saari files ki list turant nikal sakta hoon! Taaki humein pata chal jaye ki server par kaun-kaun si files hain (jaise `main.py`, `render_main.py`, etc.). \n\nBata, GitHub API se repo ki files list fetch karoon? 🚀"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?"
+    },
+    {
+      "role": "user",
+      "content": "Ender server ki specs check karo OS RAM CPU"
+    },
+    {
+      "role": "assistant",
+      "content": "**Ender Server Overview (as of last check)**  \n\n| Item | Details | Notes |\n|------|---------|-------|\n| **Operating System** | Ubuntu ≥ 22.04 LTS (kernel `6.8.0-1052-aws`) | 64‑bit, SMP, AWS‑optimized. |\n| **Total RAM** | **30 GiB** | Whole system memory. |\n| **Used RAM** | **21 GiB** (≈ 70 %) | Substantial load; monitor with `top`/`htop`. |\n| **Free RAM** | **506 MiB** | Barely available for new processes. |\n| **Buffered/Cache** | **9.5 GiB** | Cache that can be reclaimed. |\n| **Available RAM** | **9.1 GiB** | Current reclaimable memory. |\n| **Swap** | **0 B** | No swap configured (consider adding if you anticipate higher memory demands). |\n| **CPU Core Count** | *Not captured* | To determine CPU cores/W units, run `nproc` or `lscpu`. |\n\n**What to do next?**\n\n1. **CPU Check** – Run `nproc` for core count or `lscpu` for full CPU info.  \n2. **Immediate Profiling** – `top -b -n 1` or `htop` to see current CPU load.  \n3. **Swap** – Add a swap file if memory pressure is expected.  \n\nFeel free to run these commands now or let me know any specific metrics you need."
     }
   ],
   "model": "pollinations-openai",
