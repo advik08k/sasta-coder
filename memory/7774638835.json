@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Sure bhai! Aaj aapko kis cheez mein help chahiye? Koi code fix, feature add karna hai, ya kuch aur discuss karna hai? 🎉"
+    },
+    {
+      "role": "user",
+      "content": "Hlo"
+    },
+    {
+      "role": "assistant",
+      "content": "Hlo! 👋 Kya chal raha hai? Any coding help ya feature discussion? Batao!"
     }
   ],
   "model": "pollinations-openai",
