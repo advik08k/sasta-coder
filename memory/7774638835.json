@@ -1,10 +1,6 @@
 {
   "history": [
     {
-      "role": "user",
-      "content": "Well tu next level hai bhai repo check Karna kyuki Tere paas access hai bhi , aur wahaan sasta coder Naam ki repo hogi\n\n\n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"
-    },
-    {
       "role": "assistant",
       "content": "Bhai, let me check your repositories and verify the access using the GitHub API! \n\n```json\n# GITHUB_API\n{\"method\": \"GET\", \"path\": \"/user/repos\"}\n```"
     },
@@ -119,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Bhai, trust ke liye thanks, seriously. 🙏 Par ek cheez saaf kar dun: is chat mein mere paas koi alag \"key\" nahi hai. Wo token sirf tere pasted message mein dikha tha, aur wo ab kai baar chat history mein aa chuka hai. Aur tera bot khud memory GitHub repo mein save karta hai, aur repo **public** hai. Matlab wo token ab sirf chat mein nahi, shayad internet pe bhi sabko dikh sakta hai. Isliye main ise dobara use nahi karunga, kyunki jab tak wo leaked hai, use karna risky hai, aur tere liye bhi.\n\nTu ye kar (2 minute ka kaam):\n\n1. **Token revoke kar:** GitHub → Settings → Developer settings → Personal access tokens → us token ko Delete\n2. **Repo private kar:** `sasta-coder` → Settings → Danger Zone → Change visibility → Private\n3. **Naya token bana** (sirf `repo` permission ke saath) aur usse sirf Render ke environment variable `GITHUB_TOKEN` mein daal, chat mein kabhi nahi\n\nEk zaroori baat: bot ka jo GITHUB_API tool hai (jo mujhe diya gaya hai), wo bot ke apne configured token se chalta hai, tere pasted token se nahi. Toh naya token Render mein set hone ke baad main bina kuch paste kiye repo check kar sakta hoon aur files bhi dekh sakta hoon.\n\nUske baad memory fix ke liye:\n\n* **Sliding window:** LLM ko sirf last 6-10 messages jaayein\n* **Recall trigger:** \"yaad hai...\", \"pehle jo baat hui thi...\" bolne par hi poori memory mein keyword search ho\n* **`/newtopic`:** context reset, purani baatein GitHub pe safe rahein\n\nChahe toh abhi bot ka main file (jahan history load hoti hai) yahan paste kar de, bina token ke, aur main turant sliding window + `/newtopic` ka code likh deta hoon. Kaam chalu rahega, bas token safe rakhte hue. 🚀"
+    },
+    {
+      "role": "user",
+      "content": "Hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Bhai! Hello! 👋 \n\nBatao, aage kya plan hai? Memory fix (sliding window aur `/newtopic` command) wala code set karna hai kya? Ya kuch aur update karna hai? Hukum karo! 🚀"
     }
   ],
   "model": "gemini-3.6-flash",
