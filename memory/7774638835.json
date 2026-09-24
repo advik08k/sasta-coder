@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "user",
-      "content": "Hlooo"
-    },
-    {
-      "role": "assistant",
-      "content": "Hey! 👋 How can I help you today?"
-    },
-    {
-      "role": "user",
       "content": "Heyyyyyy"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 Batao, kya haal-chal hain? Aur sunao, abhi kya plan hai, koi naya task ya coding karni hai? 😎"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-09-25 01:47 AM (IST)]\nBol na abcd"
+    },
+    {
+      "role": "assistant",
+      "content": "A se Apple, B se Balla, C se Cat, D se Dog! 🐕\n\nLo bhai, puri ABCD sun lo:\n**A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z** 😎 \n\nAur batao, aage kya sunna hai? 🚀"
     }
   ],
   "model": "gemini-3.6-flash",
