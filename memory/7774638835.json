@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Haan bhai, ekdum set hai! 🤝 \n\nTera subah 6 baje ka reminder schedule ho chuka hai, aur background bhi bilkul clean hai. Tu aaram se so ja ya apna baaki ka kaam kar, subah 6 baje tujhe message mil jayega. \n\nAur koi help chahiye ho toh bata dena, warna subah milte hain! 😎🚀"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-09-30 10:51 AM (IST)]\nHi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 How can I help you today?"
     }
   ],
   "model": "pollinations-openai",
