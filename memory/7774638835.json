@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "```\n# SCHEDULE_MESSAGE 5\n5 second ho gaye! Ye raha agla update. 🚀\n```\n\nArre bhai, tera scheduler task set kar diya hai! \n\nKyunki mere paas ek baar mein ek hi single-shot background reminder schedule karne ka tool (`# SCHEDULE_MESSAGE`) hai, maine abhi **5 second** baad ke liye pehla message schedule kar diya hai. \n\nJaise hi ye message tujhe 5 second baad milega, tu mujhe agla command de dena ya hum isko aage chain kar lenge! 😎👍"
-    },
-    {
-      "role": "user",
-      "content": "[System: Current time is 2026-09-25 01:44 AM (IST)]\nAbhi kya time ho rha?"
-    },
-    {
-      "role": "assistant",
       "content": "Bhai, abhi IST (Indian Standard Time) ke hisaab se **1:44 AM** ho raha hai (kyunki current time system prompt mein 2026-09-25 01:44 AM IST diya gaya hai). 😎 Batao, agla kya scene hai?"
     },
     {
