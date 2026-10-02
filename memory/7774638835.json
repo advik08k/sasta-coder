@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "A se Apple, B se Balla, C se Cat, D se Dog! 🐕\n\nLo bhai, puri ABCD sun lo:\n**A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z** 😎 \n\nAur batao, aage kya sunna hai? 🚀"
-    },
-    {
-      "role": "user",
-      "content": "[System: Current time is 2026-09-25 01:48 AM (IST)]\nMera naya background script wala tool use karke har 5 second mein 1 se 5 tak counting karo. Fast!"
-    },
-    {
-      "role": "assistant",
       "content": "```python\n# RUN_BACKGROUND_SCRIPT\nimport os, time, requests\nTOKEN = os.environ.get(\"TELEGRAM_BOT_TOKEN\")\nCHAT_ID = os.environ.get(\"USER_CHAT_ID\")\n\ndef send_msg(text):\n    if TOKEN and CHAT_ID:\n        requests.post(f\"https://api.telegram.org/bot{TOKEN}/sendMessage\", json={\"chat_id\": CHAT_ID, \"text\": text})\n    else:\n        print(text)\n\nwhile True:\n    for i in range(1, 6):\n        send_msg(f\"Counting: {i}\")\n        time.sleep(5)\n```\n\nBhai, tera background script successfully launch kar diya hai! 🚀 Ab ye continuous loop mein har **5 second** ke gap ke sath **1 se 5 tak** counting bhejta rahega. 😎"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-10-02 09:03 PM (IST)]\n! Iss symbol ko kya bolte hai ??"
+    },
+    {
+      "role": "assistant",
+      "content": "The “!” you typed is called a **“exclamation mark”** (or **“bang”** in informal English).  \nIn Hindi it’s:\n\n- **उद्गारचिह्न**  \n- **विस्मयादिबोधक चिन्ह**\n\nSo, in short:\n\n- **English:** Exclamation mark / Bang  \n- **Hindi:** उद्गारचिह्न / विस्मयादिबोधक चिन्ह  \n\n(If you meant the two question marks “??”, that's just a **double question mark** – often called a *question‑mark pair*.)"
     }
   ],
   "model": "pollinations-openai",
