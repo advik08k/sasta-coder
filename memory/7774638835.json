@@ -2,14 +2,6 @@
   "history": [
     {
       "role": "assistant",
-      "content": "Hey! 👋 Batao, kya haal-chal hain? Aur sunao, abhi kya plan hai, koi naya task ya coding karni hai? 😎"
-    },
-    {
-      "role": "user",
-      "content": "[System: Current time is 2026-09-25 01:47 AM (IST)]\nBol na abcd"
-    },
-    {
-      "role": "assistant",
       "content": "A se Apple, B se Balla, C se Cat, D se Dog! 🐕\n\nLo bhai, puri ABCD sun lo:\n**A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z** 😎 \n\nAur batao, aage kya sunna hai? 🚀"
     },
     {
@@ -123,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Sure thing! 🙌 But first, I need a bit more detail to make sure I’m on the same page:\n\n| What you want to **train** | Why you want to train it | What you already have |\n|---------------------------|--------------------------|-----------------------|\n| 1️⃣ **Machine‑learning model** (e.g., NLP, vision, time‑series) | e.g., “I need a chatbot that can answer technical questions.” | Data, architecture idea, libraries |\n| 2️⃣ **Custom code/algorithm** (e.g., optimization routine, numerical method) | e.g., “I need a faster solver for large sparse systems.” | Existing implementation or baseline |\n| 3️⃣ **Skill/plugin** for this AI (e.g., a reusable “skill” you can call later) | e.g., “I want a `# SALUTATE` skill that greets users.” | Existing template or logic |\n| 4️⃣ **Chat routine** (e.g., set up a scheduled message or interactive flow) | e.g., “I want a daily reminder that runs at 6 AM.” | Already tried with `# SCHEDULE_MESSAGE` |\n| 5️⃣ **Other training‑type** (e.g., fine‑tune a pre‑trained model, calibrate a threshold, etc.) | | |\n\n**Next Steps**\n\n1. **Pick the category above** (or let me know if it’s something else).  \n2. **Tell me any constraints** – data size, computation limits, libraries you’re comfortable with, deadlines, etc.  \n3. **If it’s code or a skill, share a snippet or a brief spec** – I can help you flesh it out, run it, or guide you through the GitHub workflow.  \n\nOnce I know what you’re aiming for, I’ll give you a concrete plan (including code, repo steps, or scheduling commands). Let’s do it! 🚀"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-10-02 09:02 PM (IST)]\nHi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 How can I help you today?"
     }
   ],
   "model": "pollinations-openai",
