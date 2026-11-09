@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?<|im_end|>"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-11-09 11:01 AM (IST)]\nWho R u?"
+    },
+    {
+      "role": "assistant",
+      "content": "I’m **Sasta Coder**, your AI assistant. I can code, build agents, run scripts, create GitHub repos, and more—just let me know what you need!"
     }
   ],
   "model": "pollinations-openai",
