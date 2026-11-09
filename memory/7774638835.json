@@ -115,6 +115,14 @@
     {
       "role": "assistant",
       "content": "Hey! 👋 How can I help you today?"
+    },
+    {
+      "role": "user",
+      "content": "[System: Current time is 2026-11-09 10:59 AM (IST)]\nHi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hey! 👋 How can I help you today?<|im_end|>"
     }
   ],
   "model": "pollinations-openai",
